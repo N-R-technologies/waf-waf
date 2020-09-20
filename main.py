@@ -1,5 +1,6 @@
 from netfilterqueue import NetfilterQueue
 from scapy.layers.inet import IP
+from scapy.all import *
 import os
 import atexit
 
@@ -16,9 +17,9 @@ atexit.register(exit_handler)
 #print(new_str)
 def print_and_accept(pkt):
     packet = (IP(pkt.get_payload()))
-    for p in packet:
-        a = p.show(dump=True)
-        print(a)
+    if Raw in packet:
+        load = (packet[Raw].load)
+        hexdump(load)
     pkt.accept()
 os.system("sudo iptables -I INPUT -j NFQUEUE --queue-num 1")
 
