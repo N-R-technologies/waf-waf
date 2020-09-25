@@ -3,20 +3,20 @@ import subprocess
 SSID_HEADER_LEN = 4
 
 def get_ssid():
-    '''
+    """
     This function will return the ssid of the connected network
     :return: the ssid of the connected network
-    '''
+    """
     command = "nmcli -t -f active,ssid dev wifi | grep yes"
     ssid = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
     return ssid[SSID_HEADER_LEN: -1]
 
 def get_details(ssid):
-    '''
+    """
     This function will return all the details of the connected network
     :param ssid: the ssid of the connected network
     :return: all the details about the connected network from the command "nmcli -t -s connection show <network ssid>"
-    '''
+    """
     command = "nmcli -t -s connection show " + ssid
     details = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
     # storing each detail in a dictionary
@@ -28,13 +28,13 @@ def get_details(ssid):
     details_dict.popitem() # last item is empty for some reason
     return details_dict
 
-def findInFile(signature, file):
-    '''
+def find_in_file(signature, file):
+    """
     This function will check if the given signature appears in the given file
     :param signature: the signature to check if appears in the file
     :param file: the file that contains the common signature type (for example common passwords)
     :return: True if the given signature appears in the given file, otherwise, False
-    '''
+    """
     signature += '\n'
     with open(file, 'r') as f:
         for line in f:
@@ -47,8 +47,9 @@ def main():
     if ssid != "":
         details = get_details(ssid)
         password = details['802-11-wireless-security.psk']
-        print(findInFile(ssid, "commonssids.txt"))
-        print(findInFile(password, "passwords.txt"))
+        encryption = details['802-11-wireless-security.key-mgmt']
+        print(find_in_file(ssid, "commonssids.txt"))
+        print(find_in_file(password, "passwords.txt"))
     else:
         print("Please Connect to a Network to Start the Scanning")
 
