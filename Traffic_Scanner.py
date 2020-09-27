@@ -1,5 +1,6 @@
 from netfilterqueue import NetfilterQueue
 from scapy.layers.inet import IP
+from scapy.layers.inet import TCP
 from scapy.all import *
 import os
 import atexit
@@ -26,10 +27,22 @@ def print_and_accept(pkt):
     :param pkt: the received packet that the program will check if it's might be an attack or not.
     """
     packet = IP(pkt.get_payload())
-    if Raw in packet:
-        load = packet[Raw].load
-        hexdump(load)
-        print()
+    if (TCP in packet) and (packet[TCP].sport == 80) and (str(packet).find("HTTP") != -1):
+        ret = "***************************************HTTP PACKET****************************************************\n"
+        ret += "\n".join(packet.sprintf("{Raw:%Raw.load%}\n").split(r"\r\n"))
+        unknown = ""
+        if (ret.find("Accept-Ranges")!= -1):
+            unknown += ret[ret.find("Accept-Ranges") + 21:]
+            ret = ret[:ret.find("Accept-Ranges")+21]
+
+        else:
+            unknown += ret[ret.find("Connection") + 21:]
+            ret = ret[:ret.find("Connection") + 23]
+        ret += "*****************************************************************************************************\n"
+        print(ret)
+        print("****************UNKNOWN**************")
+        print(unknown)
+        print("*************************************")
     pkt.accept()
 
 def main():
