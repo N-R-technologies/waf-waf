@@ -1,3 +1,10 @@
+"""iterators are the way for us to move throw an list or dict or every data structure wich is iterable
+every iterator have two functions: next and iter
+iter function will return the iterator, which is the general data structure like list or dict
+next function will return the next item in the iterator, if the iterator is not infinite so it will raise
+StopIteration exception when we do next function on the last item.
+the for loop, just look like while loop that use with iterators like the example in line 63
+we can create our own iterators, just by overriding the next and iter function"""
 import os
 class accord:
     def __init__(self, frequence):
@@ -65,8 +72,8 @@ def play_yonatan_the_small():
             break
 
 def main():
-    #play_yonatan_the_small()
+    play_yonatan_the_small()
     #print_numbers_divided_by(20)
-    create_print_accords()
+    #create_print_accords()
 if __name__ == "__main__":
     main()
