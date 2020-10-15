@@ -166,6 +166,8 @@ def get_estimated_crack_time(password):
             else:
                 type, estimated_time2 = convert_to_suitable_format(estimated_time2)
                 print_estimated_time(estimated_time2, type, 2)
+                print("remember good and strong password must contain at least 8 characters, including"
+                      "numbers, bot upper and lower letters, and special symbols like: * or &")
 
 
 def estimate_crack_time_engine1(password_length, have_numbers, have_upper, have_lower, have_symbols):
