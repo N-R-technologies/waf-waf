@@ -1,6 +1,5 @@
 import subprocess
 from math import pow
-
 SSID_HEADER_LEN = 4
 
 
