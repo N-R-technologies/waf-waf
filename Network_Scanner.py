@@ -1,6 +1,5 @@
 import subprocess
 from math import pow
-from access_points import get_scanner
 SSID_HEADER_LEN = 4
 PASSWORD_HEADER_LEN = 29
 
@@ -40,7 +39,7 @@ def get_details(ssid):
     :type ssid: string
     :return: all the details about the connected network from the command "nmcli -t -s connection show <network ssid>"
     """
-    command = 'nmcli -t -s connection show "' + ssid + '"'  + '| grep ^802-11-wireless-security.psk:'
+    command = 'nmcli -t -s connection show "' + ssid + '"' + '| grep ^802-11-wireless-security.psk:'
     details = dict()
     details["password"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[PASSWORD_HEADER_LEN:]
     command = "nmcli -t -f IN-USE,SECURITY device wifi list | grep '^\*'"
@@ -56,17 +55,17 @@ def convert_to_suitable_format(estimated_time):
     :return estimated_time: the new estimated time (no longer in seconds)
     :rtype type: string
     :rtype estimated_time: int"""
-    timeType = ""
+    time_type = ""
     if estimated_time < 60:
-        timeType = "seconds"
+        time_type = "seconds"
     elif (estimated_time > 60) and (estimated_time < 60 * 60):
-        timeType = "minutes"
+        time_type = "minutes"
         estimated_time = estimated_time / 60
     elif (estimated_time > 60 * 60) and (estimated_time < 60 * 60 * 24):
-        timeType = "hours"
+        time_type = "hours"
         estimated_time = estimated_time / (60 * 60)
     elif (estimated_time > 60 * 60 * 24) and (estimated_time < 60 * 60 * 24 * 30):
-        timeType = "days"
+        time_type = "days"
         estimated_time = estimated_time / (60 * 60 * 24)
     else:
         timeType = "month"
@@ -154,15 +153,15 @@ def get_estimated_crack_time(password):
             print(e.__str__())
         else:
             estimated_time1 = estimate_crack_time_engine1(len(password), have_numbers, have_upper, have_lower, have_symbol)
-            timeType, estimated_time1 = convert_to_suitable_format(estimated_time1)
-            print_estimated_time(estimated_time1, timeType, 1)
+            time_type, estimated_time1 = convert_to_suitable_format(estimated_time1)
+            print_estimated_time(estimated_time1, time_type, 1)
             try:
                 estimated_time2 = estimate_crack_time_engine2(len(password), have_numbers, have_upper, have_lower, have_symbol)
             except EngineError as e:
                 print(e.__str__())
             else:
-                timeType, estimated_time2 = convert_to_suitable_format(estimated_time2)
-                print_estimated_time(estimated_time2, timeType, 2)
+                time_type, estimated_time2 = convert_to_suitable_format(estimated_time2)
+                print_estimated_time(estimated_time2, time_type, 2)
                 print("remember good and strong password must contain at least 8 characters, including"
                       "numbers, bot upper and lower letters, and special symbols like: * or &")
 
@@ -251,6 +250,17 @@ def check_evil_twin(ssid):
     return all_access_points.count(ssid + '\n') > 1
 
 
+def print_warning_ssid_open():
+    """function print all the steps you need to hide your wifi access"""
+    print("WARNING!\nEveryone have access to your wifi")
+    print("In case you want the devices need also know your wifi name in order to connect it", end=" ")
+    print("Just follow the next steps:\n1.Open http://192.168.1.1 (without quotation marks)", end=" ")
+    print("from a browser. Enter 'admin' into the 'User Name' and 'Password' fields to log in to your router.")
+    print('2. Select "Wireless" then "Basic Wireless Settings" from the menus.', end=" ")
+    print('Set "SSID Broadcast" to "Disabled" if your router operates on a dual band,', end=" ")
+    print('Set "SSID Broadcast" to "Disabled\n3. Click "Save Settings" to hide your SSID.')
+
+
 def main():
     ssid = get_ssid()
     if check_evil_twin(ssid):
@@ -258,7 +268,9 @@ def main():
     else:
         print("no evil twin detected in your wifi network")
     if ssid != "":
-        details = get_details(ssid)
+        if ssid != "--":
+            print_warning_ssid_open()
+        """details = get_details(ssid)
         check_evil_twin(ssid)
         password = details["password"]
         encryption_type = details["encryption_type"]
@@ -271,7 +283,7 @@ def main():
         if router_password != '\n':
             print(find_in_file(router_password, "passwords_router.txt"))
     else:
-        print("Please Connect to a Network to Start the Scanning")
+        print("Please Connect to a Network to Start the Scanning")"""
 
 
 if __name__ == "__main__":
