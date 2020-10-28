@@ -1,6 +1,8 @@
 import subprocess
 from math import pow
+from access_points import get_scanner
 SSID_HEADER_LEN = 4
+PASSWORD_HEADER_LEN = 29
 
 
 class EngineError(Exception):
@@ -28,7 +30,7 @@ def get_ssid():
     """
     command = "nmcli -t -f active,ssid dev wifi | grep yes"
     ssid = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
-    return ssid[SSID_HEADER_LEN: -1]
+    return [single_ssid[SSID_HEADER_LEN:] for single_ssid in ssid.split('\n') if (len(single_ssid) > 1 and single_ssid[0] == 'y')][0]
 
 
 def get_details(ssid):
@@ -38,16 +40,12 @@ def get_details(ssid):
     :type ssid: string
     :return: all the details about the connected network from the command "nmcli -t -s connection show <network ssid>"
     """
-    command = "nmcli -t -s connection show " + ssid
-    details = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
-    # storing each detail in a dictionary
-    details_dict = dict()
-    for detail in details.split("\n"):
-        key = detail[:detail.find(":")]
-        value = detail[detail.find(":") + 1:]
-        details_dict[key] = value
-    details_dict.popitem()  # last item is empty for some reason
-    return details_dict
+    command = 'nmcli -t -s connection show "' + ssid + '"'  + '| grep ^802-11-wireless-security.psk:'
+    details = dict()
+    details["password"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[PASSWORD_HEADER_LEN:]
+    command = "nmcli -t -f IN-USE,SECURITY device wifi list | grep '^\*'"
+    details["encryption_type"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[2:]
+    return details
 
 
 def convert_to_suitable_format(estimated_time):
@@ -58,35 +56,35 @@ def convert_to_suitable_format(estimated_time):
     :return estimated_time: the new estimated time (no longer in seconds)
     :rtype type: string
     :rtype estimated_time: int"""
-    type = ""
+    timeType = ""
     if estimated_time < 60:
-        type = "seconds"
+        timeType = "seconds"
     elif (estimated_time > 60) and (estimated_time < 60 * 60):
-        type = "minutes"
+        timeType = "minutes"
         estimated_time = estimated_time / 60
     elif (estimated_time > 60 * 60) and (estimated_time < 60 * 60 * 24):
-        type = "hours"
+        timeType = "hours"
         estimated_time = estimated_time / (60 * 60)
     elif (estimated_time > 60 * 60 * 24) and (estimated_time < 60 * 60 * 24 * 30):
-        type = "days"
+        timeType = "days"
         estimated_time = estimated_time / (60 * 60 * 24)
     else:
-        type = "month"
-    return type, int(estimated_time)
+        timeType = "month"
+    return timeType, int(estimated_time)
 
 
-def print_estimated_time(estimated_time, type, engine_num):
+def print_estimated_time(estimated_time, timeType, engine_num):
     """function print the estimated time it would take to crack your password
     :param estimated_time: the estimated time ot would take to crack your password
-    :param type: the type of the time (like hours or minutes)
+    :param timeType: the type of the time (like hours or minutes)
     :param engine_num: the number of the engine which calculated this time
     :type estimated_time: int
-    :type type: string
+    :type timeType: string
     :type engine_num: int
     :return: none"""
     if type != "month":
         print("The engine number " + str(engine_num) + " calculate that it would take about " +
-              str(estimated_time) + " " + type + " to crack your password")
+              str(estimated_time) + " " + timeType + " to crack your password")
     else:
         print("The engine number " + str(engine_num) +
               " calculate that it would take more than a month to crack your password")
@@ -156,15 +154,15 @@ def get_estimated_crack_time(password):
             print(e.__str__())
         else:
             estimated_time1 = estimate_crack_time_engine1(len(password), have_numbers, have_upper, have_lower, have_symbol)
-            type, estimated_time1 = convert_to_suitable_format(estimated_time1)
-            print_estimated_time(estimated_time1, type, 1)
+            timeType, estimated_time1 = convert_to_suitable_format(estimated_time1)
+            print_estimated_time(estimated_time1, timeType, 1)
             try:
                 estimated_time2 = estimate_crack_time_engine2(len(password), have_numbers, have_upper, have_lower, have_symbol)
             except EngineError as e:
                 print(e.__str__())
             else:
-                type, estimated_time2 = convert_to_suitable_format(estimated_time2)
-                print_estimated_time(estimated_time2, type, 2)
+                timeType, estimated_time2 = convert_to_suitable_format(estimated_time2)
+                print_estimated_time(estimated_time2, timeType, 2)
                 print("remember good and strong password must contain at least 8 characters, including"
                       "numbers, bot upper and lower letters, and special symbols like: * or &")
 
@@ -211,7 +209,8 @@ def estimate_crack_time_engine2(password_length, have_numbers, have_upper, have_
     :type have_upper: boolean
     :type have_lower: boolean
     :type have_symbols: boolean
-    :return: the time in seconds it would take to crack your password"""
+    :return: the time in seconds it would take to crack your password
+    :rtype: integer"""
     time_crack_table = [[0, 0, 3, 10], [0, 8, 180, 780],
                         [0, 300, 10800, 61200], [4, 345600, -1, -1],
                         [40, -1, -1, -1], [360, -1, -1, -1],
@@ -223,29 +222,54 @@ def estimate_crack_time_engine2(password_length, have_numbers, have_upper, have_
         time_in_seconds = 0
     else:
         if have_numbers and have_upper and have_lower and have_symbols:
-            type = 3
+            password_strength = 3
         elif have_numbers and have_upper and have_lower:
-            type = 2
+            password_strength = 2
         elif have_upper and have_lower and not have_symbols:
-            type = 1
+            password_strength = 1
         elif have_numbers and not (have_upper or have_lower or have_symbols):
-            type = 0
+            password_strength = 0
         else:
             raise EngineError(2)
-        time_in_seconds = time_crack_table[password_length - 5][type]
+        time_in_seconds = time_crack_table[password_length - 5][password_strength]
         if time_in_seconds == -1:
             time_in_seconds = 1000000
     return time_in_seconds
 
 
+def check_evil_twin(ssid):
+    """function check if there is another access point in the close range of the server
+    which have the same ssid as the user's network
+    :param all_access_points: all the access point in close range
+    :param ssid: the ssid of the user's network
+    :type ssid: string
+    :return: if there is access point with the same ssid
+    :rtype: boolean
+    """
+    command = "nmcli -f SSID device wifi list"
+    all_access_points = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
+    return all_access_points.count(ssid + '\n') > 1
+
+
 def main():
     ssid = get_ssid()
+    if check_evil_twin(ssid):
+        print("there is an access point in your network with the same name!")
+    else:
+        print("no evil twin detected in your wifi network")
     if ssid != "":
         details = get_details(ssid)
-        password = details['802-11-wireless-security.psk']
-        encryption = details['802-11-wireless-security.key-mgmt']
+        check_evil_twin(ssid)
+        password = details["password"]
+        encryption_type = details["encryption_type"]
         print(find_in_file(ssid, "commonssids.txt"))
         get_estimated_crack_time()
+        router_username = input("enter your password for the router, if you don't know, press enter")
+        if router_username != '\n':
+            print(find_in_file(router_username, "users_router.txt.txt"))
+        router_password = input("enter your password for the router, if you don't know, press enter")
+        if router_password != '\n':
+            print(find_in_file(router_password, "passwords_router.txt"))
     else:
         print("Please Connect to a Network to Start the Scanning")
 
