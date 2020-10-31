@@ -1,5 +1,4 @@
 import subprocess
-from math import pow
 SSID_HEADER_LEN = 4
 PASSWORD_HEADER_LEN = 29
 
@@ -72,21 +71,21 @@ def convert_to_suitable_format(estimated_time):
     return timeType, int(estimated_time)
 
 
-def print_estimated_time(estimated_time, timeType, engine_num):
+def get_estimated_time(estimated_time, time_type, engine_num):
     """function print the estimated time it would take to crack your password
     :param estimated_time: the estimated time ot would take to crack your password
-    :param timeType: the type of the time (like hours or minutes)
+    :param time_type: the type of the time (like hours or minutes)
     :param engine_num: the number of the engine which calculated this time
     :type estimated_time: int
-    :type timeType: string
+    :type time_type: string
     :type engine_num: int
-    :return: none"""
+    :return: the estimated crack time
+    :rtype: string"""
     if type != "month":
-        print("The engine number " + str(engine_num) + " calculate that it would take about " +
-              str(estimated_time) + " " + timeType + " to crack your password")
-    else:
-        print("The engine number " + str(engine_num) +
-              " calculate that it would take more than a month to crack your password")
+        return("The engine number " + str(engine_num) + " calculate that it would take about " +
+               str(estimated_time) + " " + time_type + " to crack your password")
+    return("The engine number " + str(engine_num) +
+           " calculate that it would take more than a month to crack your password")
 
 
 def analyze_password(password):
@@ -143,7 +142,8 @@ def get_estimated_crack_time(password):
     to two separate engines
     :param password: the password
     :type password: string
-    :return: none"""
+    :return: the estimated crack time
+    :rtype: string"""
     if find_in_file(password, "passwords.txt"):
         print("Your password will crack instantly because its a common password")
     else:
@@ -151,19 +151,20 @@ def get_estimated_crack_time(password):
             have_lower, have_upper, have_numbers, have_symbol = analyze_password(password)
         except InvalidChar as e:
             print(e.__str__())
+            return e.__str__()
         else:
             estimated_time1 = estimate_crack_time_engine1(len(password), have_numbers, have_upper, have_lower, have_symbol)
             time_type, estimated_time1 = convert_to_suitable_format(estimated_time1)
-            print_estimated_time(estimated_time1, time_type, 1)
+            crack_time1 = get_estimated_time(estimated_time1, time_type, 1)
             try:
                 estimated_time2 = estimate_crack_time_engine2(len(password), have_numbers, have_upper, have_lower, have_symbol)
             except EngineError as e:
                 print(e.__str__())
+                return crack_time1, e.__str__()
             else:
                 time_type, estimated_time2 = convert_to_suitable_format(estimated_time2)
-                print_estimated_time(estimated_time2, time_type, 2)
-                print("remember good and strong password must contain at least 8 characters, including"
-                      "numbers, bot upper and lower letters, and special symbols like: * or &")
+                crack_time2 = get_estimated_time(estimated_time2, time_type, 2)
+                return crack_time1, crack_time2
 
 
 def estimate_crack_time_engine1(password_length, have_numbers, have_upper, have_lower, have_symbols):
@@ -189,7 +190,7 @@ def estimate_crack_time_engine1(password_length, have_numbers, have_upper, have_
         password_type += 10
     if have_symbols:
         password_type += 30
-    combinations = pow(password_type, password_length)
+    combinations = password_type ** password_length  # ** - means pow
     crack_time_seconds = combinations / KEYS_PER_SECOND
     if crack_time_seconds < 1:
         return 0
@@ -239,7 +240,6 @@ def estimate_crack_time_engine2(password_length, have_numbers, have_upper, have_
 def check_evil_twin(ssid):
     """function check if there is another access point in the close range of the server
     which have the same ssid as the user's network
-    :param all_access_points: all the access point in close range
     :param ssid: the ssid of the user's network
     :type ssid: string
     :return: if there is access point with the same ssid
@@ -250,40 +250,89 @@ def check_evil_twin(ssid):
     return all_access_points.count(ssid + '\n') > 1
 
 
-def print_warning_ssid_open():
-    """function print all the steps you need to hide your wifi access"""
-    print("WARNING!\nEveryone have access to your wifi")
-    print("In case you want the devices need also know your wifi name in order to connect it", end=" ")
-    print("Just follow the next steps:\n1.Open http://192.168.1.1 (without quotation marks)", end=" ")
-    print("from a browser. Enter 'admin' into the 'User Name' and 'Password' fields to log in to your router.")
-    print('2. Select "Wireless" then "Basic Wireless Settings" from the menus.', end=" ")
-    print('Set "SSID Broadcast" to "Disabled" if your router operates on a dual band,', end=" ")
-    print('Set "SSID Broadcast" to "Disabled\n3. Click "Save Settings" to hide your SSID.')
+def get_warning_ssid_open(router_ip):
+    """function return all the steps you need to hide your wifi access
+    :param router_ip: the router's ip
+    :type router_ip: string
+    :return: the steps you need to do for hiding your wifi
+    :rtype: string"""
+    warning = ""
+    warning += "WARNING!\nEveryone have access to your wifi"
+    warning += "In case you want the devices need also know your wifi name in order to connect it"
+    warning += "Just follow the next steps:\n1.Open http://" + router_ip
+    warning += "from a browser. Enter your 'User Name' and 'Password' fields to log in to your router"
+    warning += "If you have issues logging in the router's website, contact your router's manufacturer\n"
+    warning += '2. Select "Wireless" then "Basic Wireless Settings" from the menus.'
+    warning += 'Set "SSID Broadcast" to "Disabled" if your router operates on a dual band,'
+    warning += 'Set "SSID Broadcast" to "Disabled\n3. Click "Save Settings" to hide your SSID.\n'
+    warning += "Pay attention, that steps are not the same for all kind of routers, so if you can't find the exact"
+    warning += "key words, try looking for similar ones instead"
+    return warning
+
+
+def print_conclusion(conclusion):
+    """function print the conclusion of the network scanner
+    :param conclusion: the conclusion of the scan
+    :type conclusion: list
+    :return: none"""
+    print("*****************************conclusion*****************************")
+    print("evil twin result:")
+    print(conclusion[0])
+    if len(conclusion) == 1:
+        print(conclusion[1])
+    else:
+        if conclusion[1] != "--":  # not sure, need check
+            print(get_warning_ssid_open())
+        if conclusion[2]:
+            print("your wifi name is a common one, for your safety, try changing it to less common name")
+        if conclusion[3] is tuple:
+            print("first result of engine calculate estimated time: ")
+            print(conclusion[3][0])
+            print("second result of engine calculate estimated time: ")
+            print(conclusion[3][1])
+            print("remember good and strong password must contain at least 8 characters, including", end=" ")
+            print("numbers, both upper and lower letters, and special symbols like: * or &")
+        else:
+            print(conclusion[3])
+        if conclusion[4] is bool:
+            if conclusion[4]:
+                print("your username for the router is a common username, try to change it in your router's website")
+            else:
+                print("Good News: your username is not in the common usernames list, so you're safe in this perspective")
+        if conclusion[5] is bool:
+            if conclusion[5]:
+                print("your password for the router is a common password, try to change it in your router's website")
+            else:
+                print("Good News: your password is not in the common passwords list, so you're safe in this perspective")
 
 
 def main():
     ssid = get_ssid()
+    conclusion = []
     if check_evil_twin(ssid):
-        print("there is an access point in your network with the same name!")
+        conclusion.append("there is an access point in your network with the same name!")
     else:
-        print("no evil twin detected in your wifi network")
+        conclusion.append("no evil twin detected in your wifi network")
     if ssid != "":
-        if ssid != "--":
-            print_warning_ssid_open()
-        """details = get_details(ssid)
-        check_evil_twin(ssid)
+        conclusion.append(ssid)
+        details = get_details(ssid)
         password = details["password"]
         encryption_type = details["encryption_type"]
-        print(find_in_file(ssid, "commonssids.txt"))
-        get_estimated_crack_time()
+        conclusion.append(find_in_file(ssid, "commonssids.txt"))
+        conclusion.append(get_estimated_crack_time(password))
         router_username = input("enter your password for the router, if you don't know, press enter")
         if router_username != '\n':
-            print(find_in_file(router_username, "users_router.txt.txt"))
+            conclusion.append(find_in_file(router_username, "users_router.txt.txt"))
+        else:
+            conclusion.append("no_username")
         router_password = input("enter your password for the router, if you don't know, press enter")
         if router_password != '\n':
-            print(find_in_file(router_password, "passwords_router.txt"))
+            conclusion.append(find_in_file(router_password, "passwords_router.txt"))
+        else:
+            conclusion.append("no_password")
     else:
-        print("Please Connect to a Network to Start the Scanning")"""
+        conclusion.append("Please Connect to a Network to Start the Scanning")
+    print_conclusion(conclusion)
 
 
 if __name__ == "__main__":
