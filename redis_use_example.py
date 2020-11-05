@@ -10,7 +10,9 @@ import threading
 
 def run_redis_server():
     """function run the redis server"""
-    command = '~/Downloads/redis-6.0.9/src/redis-server'
+    command = 'sudo service redis-server stop'
+    subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
+    command = '~/Downloads/redis-6.0.9/src/redis-server' # need to change this later so it won't be an absolute file path
     subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
 
 
