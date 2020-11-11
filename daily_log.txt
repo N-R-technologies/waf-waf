@@ -1,0 +1,11 @@
+The following IP address tried to attack you with <attack name> at <time>: <IP address>
+In order to defend yourself from future <attack name> attacks, we suggest you to have a look on those websites:
+<URL 1>
+<URL 2>
+<URL 3>
+
+The following IP address tried to attack you with <attack name> at <time>: <IP address>
+In order to defend yourself from future <attack name> attacks, we suggest you to have a look on those websites:
+<URL 1>
+<URL 2>
+
