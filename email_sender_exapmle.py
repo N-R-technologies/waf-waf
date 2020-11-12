@@ -1,25 +1,21 @@
 import yagmail
 import smtplib
-import sqlite3
 import time
 
 def read_daily_log():
+    """ This function will read the daily log text file """
     with open("daily_log.txt", 'r') as f:
         return f.read()
 
 def get_email_addresses():
-    email_addresses = list()
-    try:
-        conn = sqlite3.connect("email_addresses_database.sqlite")
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM EMAIL_ADDRESSES")
-        email_addresses = cur.fetchall()
-    except Exception as e:
-        print(e)
-
+    """ This function will read the users email addresses from the toml configuration file """
+    email_addresses = dict()
+    # reading data from emails.toml here
+    # see "toml_use_example" to check how to read data from toml files
     return email_addresses
 
 def send_emails(email_addresses, daily_log):
+    """ This function will send the daily log to the users email addresses """
     """
     email_addresses.append("bot email address") # remove this line later. it is used to send an email to ourselves
     print("Sending emails...")
@@ -37,7 +33,7 @@ def send_emails(email_addresses, daily_log):
     except Exception as e:
         print(e)
 """
-    email_addresses.append("bot email address")
+    email_addresses['bot name'] = "bot email address"
     FROM = "bot email address"
     TO = email_addresses
     SUBJECT = "Daily log"

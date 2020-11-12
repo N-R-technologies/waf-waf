@@ -1,35 +1,49 @@
 import socket
 import signal
 import threading
+
+
 class MyProxy:
     def __init__(self, config):
+        """ This function will create and run the proxy server """
+        print("Starting the proxy...")
         # Create a TCP socket
-        self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Shutdown on Ctrl+C
         signal.signal(signal.SIGINT, self.shutdown)
 
-
-
         # Re-use the socket
-        self.serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         # bind the socket to a public host, and a port
-        self.serverSocket.bind((config['HOST_NAME'], config['BIND_PORT']))
+        self.server_socket.bind((config['HOST_NAME'], config['BIND_PORT']))
 
-        self.serverSocket.listen(50)  # become a server socket
-        self.__clients = {}
+        self.server_socket.listen(50)  # become a server socket
+        self.__clients = dict()
+
+        print("Done!\n")
+        print("Waiting for clients connection...")
         while True:
-            # Establish the connection
-            (clientSocket, client_address) = self.serverSocket.accept()
-            print("client accepted")
-            d = threading.Thread(target=self.proxy_thread, args=(clientSocket, client_address))
-            d.setDaemon(True)
-            d.start()
+            try:
+                # Establish the connection
+                (client_socket, client_address) = self.server_socket.accept()
+                print("Client accepted!")
+                d = threading.Thread(target=self.proxy_thread, args=(client_socket, client_address))
+                d.setDaemon(True)
+                d.start()
+            except Exception:
+                break
+
     def shutdown(self, signum, stack):
-        self.serverSocket.close()
-    def proxy_thread(self, clientSocket, client_address):
+        """ This function will close the proxy server """
+        print("\nClosing the proxy...")
+        self.server_socket.close()
+        print("Done!")
+
+    def proxy_thread(self, client_socket, client_address):
+        """ This function will handle clients """
         # get the request from browser
-        request = clientSocket.recv(1024).decode()
+        request = client_socket.recv(1024).decode()
         print(request)
         # parse the first line
         first_line = request.split('\n')[0]
@@ -53,42 +67,41 @@ class MyProxy:
         webserver = ""
         port = -1
         if port_pos == -1 or webserver_pos < port_pos:
-
             # default port
             port = 80
             webserver = temp[:webserver_pos]
 
-        else:  # specific port
+        else:
+            # specific port
             port = int((temp[(port_pos + 1):])[:webserver_pos - port_pos - 1])
             webserver = temp[:port_pos]
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((webserver, port))
         s.sendall(request.encode())
-        print("connect to server")
+
         while True:
             try:
-                print("get data from server")
-                serverData = s.recv(1024)
+                server_data = s.recv(1024)
 
-                if len(serverData) > 0:
-                    print("server send:")
-                    print(serverData)
-                    clientSocket.send(serverData)  # send to client
+                if len(server_data) > 0:
+                    print(server_data)
+                    client_socket.send(server_data)  # send to client
                 else:
                     break
 
-            except:
+            except Exception:
                 s.close()
-                clientSocket.close()
+                client_socket.close()
                 break
 
 
 def main():
-    config = {}
+    config = dict()
     config['HOST_NAME'] = 'localhost'
     config['BIND_PORT'] = 12345
-    poopoo = MyProxy(config)
+    MyProxy(config)
+
 
 if __name__ == "__main__":
     main()

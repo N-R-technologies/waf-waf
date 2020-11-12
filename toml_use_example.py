@@ -1,4 +1,6 @@
 import toml
+
+
 def main():
     file_content = """
     [emails]
@@ -6,15 +8,21 @@ def main():
     ron = "ronkonis@gmail.com"     
     """
     parsed_content = toml.loads(file_content)  # parsing our data into toml format
+
     with open("example_file.toml", 'w') as write_file:  # open the file for writing, if doesn't exist create it
-        print("writing content to file")
+        print("Writing content to file...")
         toml.dump(parsed_content, write_file)  # write content to file
-    write_file.close()
+        print("Done!\nClosing the file...\n")
+        write_file.close()
+
     with open("example_file.toml", 'r') as read_file:  # open the file for reading
-        print("content of the file:")
+        print("Reading content from...")
         toml_content = toml.loads(read_file.read())
+        print("Done!\n")
+        print("File's content:")
         print(toml_content)
-    read_file.close()
+        print("Closing the file...")
+        read_file.close()
 
 
 if __name__ == "__main__":
