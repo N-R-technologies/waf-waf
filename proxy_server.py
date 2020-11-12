@@ -38,7 +38,7 @@ class MyProxy:
         """ This function will close the proxy server """
         print("\nClosing the proxy...")
         self.server_socket.close()
-        print("Done!")
+        print("Proxy closed successfully")
 
     def proxy_thread(self, client_socket, client_address):
         """ This function will handle clients """

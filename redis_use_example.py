@@ -22,7 +22,7 @@ def exit_handler(redis_object):
     """ This function will shutdown the redis server at program exit """
     print("\nClosing the redis server...")
     redis_object.shutdown()
-    print("Done!")
+    print("Redis server closed successfully")
 
 
 def main():
@@ -35,10 +35,10 @@ def main():
         redis_object.ping()
         print("The server is already running\n")
     except redis.exceptions.ConnectionError:
-        print("The server is not currently running\nStarting it...\n")
+        print("The server is not currently running\nStarting it...")
         threading.Thread(target=run_redis_server).start()
         time.sleep(0.05)  # need to wait for the program to run the redis server
-        print("The server is now running!")
+        print("The server is now running!\n")
 
     redis_object.set('name', 'my waf project')
     print(redis_object.get('name').decode())  # decoding the data because it's received as binary
