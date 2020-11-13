@@ -1,8 +1,8 @@
 import sys
-# insert at 1, 0 is the script path (or '' in REPL)
+# importing the bcc library from another folder
 sys.path.insert(1, '/usr/lib/python3/dist-packages')
 
-from bcc import BPF  # ignore this error, the program is able to run
+from bcc import BPF  # ignore this error, BPF is imported from the line above
 
 
 def main():
