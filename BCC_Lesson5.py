@@ -1,4 +1,3 @@
-from __future__ import print_function
 import sys
 # importing the bcc library from another folder
 sys.path.insert(1, '/usr/lib/python3/dist-packages')
@@ -47,7 +46,7 @@ def main():
     while True:
         try:
             (task, pid, cpu, flags, ts, ms) = bpf.trace_fields()
-            print("Sync count:", ms)
+            print("Sync count:", ms.decode())  # the type of ms is bytes, so it's being decoded
         except KeyboardInterrupt:
             print("\nTracing stopped")
             break
