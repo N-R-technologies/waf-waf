@@ -27,7 +27,7 @@ def main():
     # in less than a second. If it does, the program will also print the elapsed time between each call
     global bpf
     prog = """
-    #include <linux/sched.h>
+    #include <linux/sched.h> // included in order to use "TASK_COMM_LEN"
     
     // define output data structure in C
     typedef struct data_t

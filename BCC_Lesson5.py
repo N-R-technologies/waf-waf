@@ -9,8 +9,6 @@ def main():
     # This BPF program will print how many times the system function
     # "sync" has been called everytime time it is being called
     prog = """
-    #include <uapi/linux/ptrace.h>
-
     BPF_HASH(last);
 
     int trace_sync_count(struct pt_regs *ctx)
