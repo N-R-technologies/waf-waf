@@ -1,5 +1,4 @@
 import sys
-
 # importing the bcc library from another folder
 sys.path.insert(1, '/usr/lib/python3/dist-packages')
 
@@ -18,6 +17,7 @@ def print_event(cpu, data, size):
     time_detected = (float(event.ts - start)) / 1000000000
     # time elapsed since the program first detected more than one "sync" calls in less than a second
     time_elapsed = float(event.delta) / 1000000000
+    # time elapsed since the last "sync" call
     print("Multiple sync calls detected at %.2f seconds" % time_detected, end=" - ")
     print("Time elapsed between calls: %.3f milliseconds" % time_elapsed)
 
@@ -33,7 +33,7 @@ def main():
     typedef struct data_t
     {
         u32 pid; // process id
-        u64 ts;
+        u64 ts; // process calling time
         u64 delta;
         char comm[TASK_COMM_LEN]; // process name
     } data_t;
@@ -44,16 +44,17 @@ def main():
     int sync_timing(struct pt_regs *ctx)
     {
         data_t data = {};
-        u64 *tsp, key = 0;
+        u64 *storedTime;
+        u64 key = 0;
         
         data.pid = bpf_get_current_pid_tgid();
         bpf_get_current_comm(&data.comm, sizeof(data.comm));
         // attempt to read stored timestamp
-        tsp = last.lookup(&key);
-        if (tsp != NULL)
+        storedTime = last.lookup(&key);
+        if (storedTime != NULL)
         {
             data.ts = bpf_ktime_get_ns();
-            data.delta = data.ts - *tsp;
+            data.delta = data.ts - *storedTime;
             if (data.delta < 1000000000)
             {
                 // if time is less than 1 second
