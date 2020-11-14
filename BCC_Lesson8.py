@@ -16,10 +16,10 @@ def print_event(cpu, data, size):
         start = event.ts
     time_detected = (float(event.ts - start)) / 1000000000
     # time elapsed since the program first detected more than one "sync" calls in less than a second
-    time_elapsed = float(event.delta) / 1000000000
+    time_elapsed = float(event.delta) / 1000000
     # time elapsed since the last "sync" call
     print("Multiple sync calls detected at %.2f seconds" % time_detected, end=" - ")
-    print("Time elapsed between calls: %.3f milliseconds" % time_elapsed)
+    print("Time elapsed between calls: %.f milliseconds" % time_elapsed)
 
 
 def main():
