@@ -12,6 +12,7 @@ def print_event(cpu, data, size):
     global bpf
     global start
     event = bpf["events"].event(data)  # receive data_t's data from the bpf program
+    # format output
     if start == 0:
         start = event.ts
     time_detected = (float(event.ts - start)) / 1000000000
@@ -49,7 +50,7 @@ def main():
         
         data.pid = bpf_get_current_pid_tgid();
         bpf_get_current_comm(&data.comm, sizeof(data.comm));
-        // attempt to read stored timestamp
+        // attempt to read stored time
         storedTime = last.lookup(&key);
         if (storedTime != NULL)
         {

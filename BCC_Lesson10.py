@@ -33,6 +33,8 @@ def main():
     {
         u64 *storedTime;
         u64 delta;
+
+        // attempt to read stored time
         storedTime = start.lookup(&req);
         if (storedTime != NULL)
         {
@@ -45,7 +47,6 @@ def main():
 
     # load BPF program
     bpf = BPF(text=prog)
-
     if BPF.get_kprobe_functions(b'blk_start_request'):
         # called for every request (i think)
         bpf.attach_kprobe(event="blk_start_request", fn_name="trace_start")
@@ -68,7 +69,7 @@ def main():
             if int(bflags_s, 16) & REQ_WRITE:
                 type_s = "W"  # write operation
             elif bytes_s == "0":  # see "blk_fill_rwbs()" for logic
-                type_s = "M"  # idk what is this type
+                type_s = "M"  # i don't know what is this type
             else:
                 type_s = "R"  # read operation
             ms = float(int(us_s, 10)) / 1000  # time it took to complete the operation

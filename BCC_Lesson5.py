@@ -43,8 +43,8 @@ def main():
     # format output
     while True:
         try:
-            (task, pid, cpu, flags, ts, ms) = bpf.trace_fields()
-            print("Sync count:", ms.decode())  # the type of ms is bytes, so it's being decoded
+            (task, pid, cpu, flags, ts, msg) = bpf.trace_fields()
+            print("Sync count:", msg.decode())  # the type of msg is bytes, so it's being decoded
         except KeyboardInterrupt:
             print("\nTracing stopped")
             break
