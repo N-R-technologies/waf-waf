@@ -1,35 +1,34 @@
-from mitmproxy import proxy, options
+from mitmproxy import proxy, options, ctx
 from mitmproxy.tools.dump import DumpMaster
 
-import typing
+HOST = "127.0.0.1"
+PORT = 8080
 
-from mitmproxy import command
-from mitmproxy import ctx
-from mitmproxy import flow
 
 class MyAddon:
-    @command.command("myaddon.addheader")
-    def addheader(self, flows: typing.Sequence[flow.Flow]) -> None:
-        for f in flows:
-            f.request.headers["myheader"] = "value"
-        ctx.log.alert("done")
+    def __init__(self):
+        self.counter = 0
+
+    def response(self, flow) -> None:
+        self.counter += 1
+        ctx.log.info("%d responses have been received so far" % self.counter)
 
 
 addons = [
     MyAddon()
 ]
 
+options = options.Options(listen_host=HOST, listen_port=PORT)
+options.add_option("body_size_limit", int, 0, "")
+options.add_option("intercept_active", bool, False, "")
+options.add_option("keep_host_header", bool, True, "")
+proxy_config = proxy.config.ProxyConfig(options)
 
-opts = options.Options(listen_host='127.0.0.1', listen_port=8080)
-opts.add_option("body_size_limit", int, 0, "")
-opts.add_option("keep_host_header", bool, True, "")
-pconf = proxy.config.ProxyConfig(opts)
-
-m = DumpMaster(None)
-m.server = proxy.server.ProxyServer(pconf)
-m.addons.add(addons)
+proxy = DumpMaster(options)
+proxy.server = proxy.server.ProxyServer(proxy_config)
+proxy.addons.add(addons)
 
 try:
-    m.run()
+    proxy.run()
 except KeyboardInterrupt:
-    m.shutdown()
+    proxy.shutdown()

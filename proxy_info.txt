@@ -1,9 +1,11 @@
-this is a text file which include all the new things we know about the proxy.py
-file. first, there are the addons class build in functions, that are using for modify or seeing the transportation
-the proxy get into it. and options is the way for us to set up options for our proxy;
-errors we have:
-1 the package the proxy get does not move throw the response/request functions
-in the addons.
-2 the websites does not trust the mitmproxy default certificate (as much as i know), so we need to make them
-trust the certificate.
+This is a text file which include all the new things we know about the proxy.py file.
+There are the addons class build in functions, that are using for modify or seeing the transportation
+the proxy get into it, and options are the way for us to configure our proxy.
+To run the proxy from the project directory, run the following command in the terminal:
+~/Downloads/mitmproxy-5.3.0-linux/mitmproxy -s proxy.py
 
+Errors we have:
+1. The package the proxy get does not move throw the response/request functions
+in the addons. - Fixed
+2. The websites does not trust the mitmproxy default certificate (as much as i know), so we need to make them
+trust the certificate.
