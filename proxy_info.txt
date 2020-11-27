@@ -3,7 +3,7 @@ There are the addons class build in functions, that are using for modify or seei
 the proxy get into it, and options are the way for us to configure our proxy.
 =======================================================================================
 To run the proxy from the project directory, run the following command in the terminal:
-~/Downloads/mitmproxy-5.3.0-linux/mitmproxy -s proxy.py
+mitmproxy --set ssl_insecure -s proxy.py
 =======================================================================================
 Things you should know about the proxy while it's running:
 * To navigate between packets in the flow menu, use your arrow keys.
