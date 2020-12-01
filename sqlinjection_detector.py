@@ -26,7 +26,7 @@ def find_sql_injection(request):
 
 
 def find_in_set(request):
-    if re.search("\bfind_in_set\b.*?\(.+?,.+?\)", request):
+    if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request):
         return MEDIUM_RISK
     return NO_RISK
 
@@ -39,7 +39,7 @@ def find_in_set(request):
 
 
 def find_master_access(request):
-    if re.search("\bsqlite_master\b", request):
+    if re.search(r"\bsqlite_master\b", request):
         return LARGE_RISK
     return NO_RISK
 
@@ -52,7 +52,7 @@ def find_master_access(request):
 
 
 def check_user_disclosure(request):
-    if re.search("\bmysql.*?\..*?user\b", request):
+    if re.search(r"\bmysql.*?\..*?user\b", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -65,7 +65,7 @@ def check_user_disclosure(request):
 
 
 def check_union_select(request):
-    if re.search("\bunion\b.+?\bselect\b", request):
+    if re.search(r"\bunion\b.+?\bselect\b", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -78,7 +78,7 @@ def check_union_select(request):
 
 
 def check_update_command(request):
-    if re.search("\bupdate\b.+?\bset\b", request):
+    if re.search(r"\bupdate\b.+?\bset\b", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -91,7 +91,7 @@ def check_update_command(request):
 
 
 def check_drop_command(request):
-    if re.search("\bdrop\b.+?\b(database|table)\b", request):
+    if re.search(r"\bdrop\b.+?\b(database|table)\b", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -104,7 +104,7 @@ def check_drop_command(request):
 
 
 def check_delete_command(request):
-    if re.search("\bdelete\b.+?\bfrom\b", request):
+    if re.search(r"\bdelete\b.+?\bfrom\b", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -117,7 +117,7 @@ def check_delete_command(request):
 
 
 def check_comment_syntax(request):
-    if re.search("--.+?", request):
+    if re.search(r"--.+?", request):
         return VERY_LITTLE_RISK
     return NO_RISK
 
@@ -130,7 +130,7 @@ def check_comment_syntax(request):
 
 
 def check_mongo_db_command(request):
-    if re.search("\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", request):
+    if re.search(r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", request):
         return MEDIUM_RISK
     return NO_RISK
 
@@ -143,7 +143,7 @@ def check_mongo_db_command(request):
 
 
 def check_cstyle_comment(request):
-    if re.search(" \/\*.*?\*\/", request):
+    if re.search(r" \/\*.*?\*\/", request):
         return LITTLE_RISK
     return NO_RISK
 
@@ -156,7 +156,7 @@ def check_cstyle_comment(request):
 
 
 def check_blind_benchmark(request):
-    if re.search("bbenchmark\b.*?\(.+?,.+?\)", request):
+    if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request):
         return MEDIUM_RISK
     return NO_RISK
 
