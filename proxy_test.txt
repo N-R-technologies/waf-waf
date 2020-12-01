@@ -373,3 +373,38 @@
   response = Response(200, text/html; charset=utf-8, 82b)
   client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:52354>
   server_conn = <ServerConnection: [TLSv1.3: local.company.dev] local.company.dev:8000>>
+<HTTPFlow
+  request = Request(GET local.company.dev:8000/)
+  response = Response(200, text/html; charset=utf-8, 373b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:52624>
+  server_conn = <ServerConnection: [TLSv1.3: local.company.dev] local.company.dev:8000>>
+<HTTPFlow
+  request = Request(POST clients4.google.com:443/chrome-sync/command/?client=Google+Chrome&client_id=hTJiNrNdDosVk0KHhyrj7A%3D%3D)
+  response = Response(200, application/vnd.google.octet-stream-compressible, 457b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: h2] [::1]:52628>
+  server_conn = <ServerConnection: [TLSv1.3: clients4.google.com] [ALPN: h2] clients4.google.com:443>>
+<HTTPFlow
+  request = Request(POST oauthaccountmanager.googleapis.com:443/v1/issuetoken)
+  response = Response(200, application/json; charset=UTF-8, 515b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: h2] [::1]:52630>
+  server_conn = <ServerConnection: [TLSv1.3: oauthaccountmanager.googleapis.com] [ALPN: h2] oauthaccountmanager.googleapis.com:443>>
+<HTTPFlow
+  request = Request(POST clients4.google.com:443/chrome-sync/command/?client=Google+Chrome&client_id=hTJiNrNdDosVk0KHhyrj7A%3D%3D)
+  response = Response(200, application/vnd.google.octet-stream-compressible, 359b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: h2] [::1]:52628>
+  server_conn = <ServerConnection: [TLSv1.3: clients4.google.com] [ALPN: h2] clients4.google.com:443>>
+<HTTPFlow
+  request = Request(GET local.company.dev:8000/search/?q=Israel)
+  response = Response(200, text/html; charset=utf-8, 86b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:52626>
+  server_conn = <ServerConnection: [TLSv1.3: local.company.dev] local.company.dev:8000>>
+<HTTPFlow
+  request = Request(POST clients4.google.com:443/chrome-sync/command/?client=Google+Chrome&client_id=hTJiNrNdDosVk0KHhyrj7A%3D%3D)
+  response = Response(200, application/vnd.google.octet-stream-compressible, 600b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: h2] [::1]:52628>
+  server_conn = <ServerConnection: [TLSv1.3: clients4.google.com] [ALPN: h2] clients4.google.com:443>>
+<HTTPFlow
+  request = Request(GET safebrowsing.googleapis.com:443/v4/threatListUpdates:fetch?$req=Ch0KDGdvb2dsZWNocm9tZRINODYuMC40MjQwLjE5MxopCAcQAhobCg0IBxAGGAEiAzAwMTABEPDFCBoCGAUINW6LIgQgASACKAEaKQgFEAIaGwoNCAUQBhgBIgMwMDEwARDh6AkaAhgFt8B50iIEIAEgAigBGicIARACGhkKDQgBEAYYASIDMDAxMAMQFBoCGAW0gZovIgQgASACKAMaKQgBEAIaGwoNCAEQBhgBIgMwMDEwARDCmAgaAhgFWIt5biIEIAEgAigBGicIChAIGhkKDQgKEAgYASIDMDAxMAEQBhoCGAUrFDWWIgQgASACKAEaKAgBEAgaGgoNCAEQCBgBIgMwMDEwBBDbHBoCGAVsiWCoIgQgASACKAQaJwgJEAIaGQoNCAkQBhgBIgMwMDEwBhADGgIYBfzV0n8iBCABIAIoBhooCA8QAhoaCg0IDxAGGAEiAzAwMTABEO9SGgIYBWb8R4AiBCABIAIoARooCAgQAhoaCg0ICBAGGAEiAzAwMTABEMkKGgIYBdzPPIMiBCABIAIoARooCA0QAhoaCg0IDRAGGAEiAzAwMTABEOx_GgIYBceJLAUiBCABIAIoARonCAkQAhoZCg0ICRAGGAEiAzAwMTABEB8aAhgFknyJVyIEIAEgAigBGikIAxACGhsKDQgDEAYYASIDMDAxMAEQzJ4IGgIYBX-Ovu8iBCABIAIoARopCA4QAhobCg0IDhAGGAEiAzAwMTABEIrUBBoCGAV_1tyKIgQgASACKAEaKAgQEAIaGgoNCBAQBhgBIgMwMDEwARDyBhoCGAUFKuPjIgQgASACKAEiAggB&$ct=application/x-protobuf&key=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw)
+  response = Response(200, application/x-protobuf, 94.22k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: h2] [::1]:52634>
+  server_conn = <ServerConnection: [TLSv1.3: safebrowsing.googleapis.com] [ALPN: h2] safebrowsing.googleapis.com:443>>
