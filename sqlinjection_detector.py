@@ -233,11 +233,276 @@ def check_blind_tsql(request):
     return check_risk_found(request, r"\bwaitfor\b.*?\b(delay|time(out)?)\b", VERY_LOW_RISK)
 
 
+"""check if the user try to run from input the mysql length command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
 
 
+def check_length_command(request):
+    return check_risk_found(request, r"\b(char_|bit_)?length\b.*?\(.+?\)", VERY_LITTLE_RISK)
 
 
+"""check if the user try to run from input the mysql hex/unhex command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
 
 
+def check_hex_command(request):
+    return check_risk_found(request, r"\b(un)?hex\b.*?\(.+?\)", VERY_LITTLE_RISK)
 
 
+"""check if the user try to run from input the mysql to base 64/ from base 64 command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_base64_command(request):
+    return check_risk_found(request, r"\b(from|to)_base64\b.*?\(.+?\)", VERY_LOW_RISK)
+
+
+"""check if the user try to run from input the SQL substr command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_substr_command(request):
+    return check_risk_found(request, r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL user command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_user_command(request):
+    return check_risk_found(request, r"\b(current_)?user\b.*?\(.*?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL version command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_version_command(request):
+    return check_risk_found(request, r" \bversion\b.*?\(.*?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL system variable command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_system_variable(request):
+    return check_risk_found(request, r"@@.+?", UNIMPORTANT_RISK)
+
+
+"""check if the user try to run from input the SQL oct command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_oct_command(request):
+    return check_risk_found(request, r"\boct\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL ord command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_ord_command(request):
+    return check_risk_found(request, r"\bord\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL ascii command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_ascii_command(request):
+    return check_risk_found(request, r" \bascii\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL bin command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_bin_command(request):
+    return check_risk_found(request, r"\bbin\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL char command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_char_command(request):
+    return check_risk_found(request, r"\bcha?r\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL where command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_where_command(request):
+    return check_risk_found(request, r"\bwhere\b.+?(\b(not_)?(like|regexp)\b|[=<>])", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL if command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_if_command(request):
+    return check_risk_found(request, r"\bif\b.*?\(.+?,.+?,.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL ifnull command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_ifnull_command(request):
+    return check_risk_found(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)", LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL where command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_where_condition_command(request):
+    return check_risk_found(request, r"\bwhere\b.+?(\b(n?and|x?or|not)\b|(\&\&|\|\|))", LITTLE_RISK)
+
+
+"""check if the user try to run from input the SQL case command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_case_command(request):
+    return check_risk_found(request, r"\bcase\b.+?\bwhen\b.+?\bend\b", VERY_LOW_RISK)
+
+
+"""check if the user try to run from input the MSSQL exec command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_exec_command(request):
+    return check_risk_found(request, r"\bexec\b.+?\bxp_cmdshell\b", VERY_DANGEROUS)
+
+
+"""check if the user try to run from input the SQL create command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_create_command(request):
+    return check_risk_found(request, r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", VERY_LOW_RISK)
+
+
+"""check if the user try to run from input the SQL insert command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_insert_command(request):
+    return check_risk_found(request, r"\binsert\b.+?\binto\b.*?\bvalues\b.*?\(.+?\)", LOW_RISK)
+
+
+"""check if the user try to run from input the SQL insert command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_select_command(request):
+    return check_risk_found(request, r"\bselect\b.+?\bfrom\b", LITTLE_RISK)
+
+
+"""check if the user try to run from input the PgSQL information disclosure “pg_user”
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_user_info_disclosure(request):
+    return check_risk_found(request, r"\bpg_user\b", LARGE_RISK)
+
+
+"""check if the user try to run from input the PgSQL information disclosure “pg_database”
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_db_info_disclosure(request):
+    return check_risk_found(request, r"\bpg_database\b", LARGE_RISK)
+
+
+"""check if the user try to run from input the PgSQL information disclosure “pg_shadow”
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_shadow_info_disclosure(request):
+    return check_risk_found(request, r"\bpg_shadow\b", LARGE_RISK)
+
+
+"""check if the user try to run from input the DATABASE command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_db_command(request):
+    return check_risk_found(request, r"\b(current_)?database\b.*?\(.*?\)", VERY_LITTLE_RISK)
