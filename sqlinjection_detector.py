@@ -18,6 +18,12 @@ def find_sql_injection(request):
     pass
 
 
+def check_risk_found(request, regex_expression, risk):
+    if re.search(regex_expression, request):
+        return risk
+    return NO_RISK
+
+
 """check if the user try to run from the input common MySQL function “find_in_set”
 :param request: the request packet
 :type request: integer
@@ -26,9 +32,7 @@ def find_sql_injection(request):
 
 
 def find_in_set(request):
-    if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request):
-        return MEDIUM_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bfind_in_set\b.*?\(.+?,.+?\)", MEDIUM_RISK)
 
 
 """check if the user try to run from the input SQLite information disclosure “sqlite_master”
@@ -39,9 +43,7 @@ def find_in_set(request):
 
 
 def find_master_access(request):
-    if re.search(r"\bsqlite_master\b", request):
-        return LARGE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bsqlite_master\b", LARGE_RISK)
 
 
 """check if the user try to run from the input MySQL information disclosure “mysql.user”
@@ -52,9 +54,7 @@ def find_master_access(request):
 
 
 def check_user_disclosure(request):
-    if re.search(r"\bmysql.*?\..*?user\b", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bmysql.*?\..*?user\b", LITTLE_RISK)
 
 
 """check if the user try to run from the input Common SQL command “union select”
@@ -65,9 +65,7 @@ def check_user_disclosure(request):
 
 
 def check_union_select(request):
-    if re.search(r"\bunion\b.+?\bselect\b", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bunion\b.+?\bselect\b", LITTLE_RISK)
 
 
 """check if the user try to run from the input Common SQL command “update”
@@ -78,9 +76,7 @@ def check_union_select(request):
 
 
 def check_update_command(request):
-    if re.search(r"\bupdate\b.+?\bset\b", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bupdate\b.+?\bset\b", LITTLE_RISK)
 
 
 """check if the user try to run from the input Common SQL command “drop”
@@ -91,9 +87,7 @@ def check_update_command(request):
 
 
 def check_drop_command(request):
-    if re.search(r"\bdrop\b.+?\b(database|table)\b", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bdrop\b.+?\b(database|table)\b", LITTLE_RISK)
 
 
 """check if the user try to run from the input Common SQL command “delete”
@@ -104,9 +98,7 @@ def check_drop_command(request):
 
 
 def check_delete_command(request):
-    if re.search(r"\bdelete\b.+?\bfrom\b", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\bdelete\b.+?\bfrom\b", LITTLE_RISK)
 
 
 """check if the user try to run from the input Common SQL comment syntax
@@ -117,9 +109,7 @@ def check_delete_command(request):
 
 
 def check_comment_syntax(request):
-    if re.search(r"--.+?", request):
-        return VERY_LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r"--.+?", VERY_LITTLE_RISK)
 
 
 """check if the user try to run from the input Common mongoDB commands
@@ -130,9 +120,7 @@ def check_comment_syntax(request):
 
 
 def check_mongo_db_command(request):
-    if re.search(r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", request):
-        return MEDIUM_RISK
-    return NO_RISK
+    return check_risk_found(request, r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", MEDIUM_RISK)
 
 
 """check if the user try to run from the input Common C-style comment
@@ -143,12 +131,10 @@ def check_mongo_db_command(request):
 
 
 def check_cstyle_comment(request):
-    if re.search(r" \/\*.*?\*\/", request):
-        return LITTLE_RISK
-    return NO_RISK
+    return check_risk_found(request, r" \/\*.*?\*\/", LITTLE_RISK)
 
 
-"""check if the user try to run from the input blind mysql benchmark
+"""check if the user try to run from the input blind sql benchmark
 :param request: the request packet
 :type request: integer
 :return: the risk level if found, zero if not
@@ -156,12 +142,95 @@ def check_cstyle_comment(request):
 
 
 def check_blind_benchmark(request):
-    if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request):
-        return MEDIUM_RISK
-    return NO_RISK
+    return check_risk_found(request, r"bbenchmark\b.*?\(.+?,.+?\)", MEDIUM_RISK)
 
 
+"""check if the user try to run from the input blind sql sleep
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
 
+
+def check_blind_sql_sleep(request):
+    return check_risk_found(request, r"\bsleep\b.*?\(.+?\)", VERY_LITTLE_RISK)
+
+
+"""check if the user try to run from the input blind mysql disclosure "load_file"
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_load_file_disclosure(request):
+    return check_risk_found(request, r"\bload_file\b.*?\(.+?\)", LARGE_RISK)
+
+
+"""check if the user try to run from the input blind mysql disclosure "load_data"
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_load_data_disclosure(request):
+    return check_risk_found(request, r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", LARGE_RISK)
+
+
+"""check if the user try to run from the input MySQL file write "into outfile"
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_write_into_outfile(request):
+    return check_risk_found(request, r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", HIGH_RISK)
+
+
+"""check if the user try to run from the input the command concat
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_concat_command(request):
+    return check_risk_found(request, r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", LITTLE_RISK)
+
+
+"""check if the user try to run from the input mysql information disclosure
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_information_disclosure(request):
+    return check_risk_found(request, r"\binformation_schema\b", LARGE_RISK)
+
+
+"""check if the user try to run from input the pgsql sleep command
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_sleep_pg_command(request):
+    return check_risk_found(request, r"\bpg_sleep\b.*?\(.+?\)", MEDIUM_RISK)
+
+
+"""check if the user try to run from input the blind tsql "waitfor"
+:param request: the request packet
+:type request: integer
+:return: the risk level if found, zero if not
+:rtype integer"""
+
+
+def check_blind_tsql(request):
+    return check_risk_found(request, r"\bwaitfor\b.*?\b(delay|time(out)?)\b", VERY_LOW_RISK)
 
 
 
