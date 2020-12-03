@@ -13,3 +13,8 @@ Things you should know about the proxy while it's running:
 * To exit the navigated packet, press 'Q'.
 * To exit the proxy, press 'Q' followed by 'Y', or press 'Ctrl+C' followed by 'Y'.
   ('Ctrl+C' can be used anytime, but 'Q' can only be used in the flow menu).
+* To run the django website just write python3 manage.py runserver_plus --cert-file certs/local.crt --key-file certs/local.key.pem --reloader-interval 2 0.0.0.0:8000
+* Enter on your browser: https://local.company.dev:8000/
+=======================================================================================
+Errors we have:
+We don't have any errors right now! :)
