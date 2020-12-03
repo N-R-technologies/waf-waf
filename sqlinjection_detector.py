@@ -13,15 +13,10 @@ HIGH_RISK = 8
 VERY_DANGEROUS = 9
 
 
+
 def find_sql_injection(request):
     # need to call al the check function and calculate the risk level
     pass
-
-
-def check_risk_found(request, regex_expression, risk):
-    if re.search(regex_expression, request):
-        return risk
-    return NO_RISK
 
 
 """check if the user try to run from the input common MySQL function “find_in_set”
@@ -32,7 +27,7 @@ def check_risk_found(request, regex_expression, risk):
 
 
 def find_in_set(request):
-    return check_risk_found(request, r"\bfind_in_set\b.*?\(.+?,.+?\)", MEDIUM_RISK)
+    return MEDIUM_RISK if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from the input SQLite information disclosure “sqlite_master”
@@ -43,7 +38,7 @@ def find_in_set(request):
 
 
 def find_master_access(request):
-    return check_risk_found(request, r"\bsqlite_master\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bsqlite_master\b", request) else NO_RISK
 
 
 """check if the user try to run from the input MySQL information disclosure “mysql.user”
@@ -54,7 +49,7 @@ def find_master_access(request):
 
 
 def check_user_disclosure(request):
-    return check_risk_found(request, r"\bmysql.*?\..*?user\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bmysql.*?\..*?user\b", request) else NO_RISK
 
 
 """check if the user try to run from the input Common SQL command “union select”
@@ -65,7 +60,7 @@ def check_user_disclosure(request):
 
 
 def check_union_select(request):
-    return check_risk_found(request, r"\bunion\b.+?\bselect\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bunion\b.+?\bselect\b", request) else NO_RISK
 
 
 """check if the user try to run from the input Common SQL command “update”
@@ -76,7 +71,7 @@ def check_union_select(request):
 
 
 def check_update_command(request):
-    return check_risk_found(request, r"\bupdate\b.+?\bset\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bupdate\b.+?\bset\b", request) else NO_RISK
 
 
 """check if the user try to run from the input Common SQL command “drop”
@@ -87,7 +82,7 @@ def check_update_command(request):
 
 
 def check_drop_command(request):
-    return check_risk_found(request, r"\bdrop\b.+?\b(database|table)\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bdrop\b.+?\b(database|table)\b", request) else NO_RISK
 
 
 """check if the user try to run from the input Common SQL command “delete”
@@ -98,7 +93,7 @@ def check_drop_command(request):
 
 
 def check_delete_command(request):
-    return check_risk_found(request, r"\bdelete\b.+?\bfrom\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bdelete\b.+?\bfrom\b", request) else NO_RISK
 
 
 """check if the user try to run from the input Common SQL comment syntax
@@ -109,7 +104,7 @@ def check_delete_command(request):
 
 
 def check_comment_syntax(request):
-    return check_risk_found(request, r"--.+?", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"--.+?", request) else NO_RISK
 
 
 """check if the user try to run from the input Common mongoDB commands
@@ -120,7 +115,7 @@ def check_comment_syntax(request):
 
 
 def check_mongo_db_command(request):
-    return check_risk_found(request, r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", MEDIUM_RISK)
+    return MEDIUM_RISK if re.search(r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", request) else NO_RISK
 
 
 """check if the user try to run from the input Common C-style comment
@@ -131,7 +126,7 @@ def check_mongo_db_command(request):
 
 
 def check_cstyle_comment(request):
-    return check_risk_found(request, r" \/\*.*?\*\/", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r" \/\*.*?\*\/", request) else NO_RISK
 
 
 """check if the user try to run from the input blind sql benchmark
@@ -142,7 +137,7 @@ def check_cstyle_comment(request):
 
 
 def check_blind_benchmark(request):
-    return check_risk_found(request, r"bbenchmark\b.*?\(.+?,.+?\)", MEDIUM_RISK)
+    return MEDIUM_RISK if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from the input blind sql sleep
@@ -153,7 +148,7 @@ def check_blind_benchmark(request):
 
 
 def check_blind_sql_sleep(request):
-    return check_risk_found(request, r"\bsleep\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bsleep\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from the input blind mysql disclosure "load_file"
@@ -164,7 +159,7 @@ def check_blind_sql_sleep(request):
 
 
 def check_load_file_disclosure(request):
-    return check_risk_found(request, r"\bload_file\b.*?\(.+?\)", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bload_file\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from the input blind mysql disclosure "load_data"
@@ -175,7 +170,7 @@ def check_load_file_disclosure(request):
 
 
 def check_load_data_disclosure(request):
-    return check_risk_found(request, r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", request) else NO_RISK
 
 
 """check if the user try to run from the input MySQL file write "into outfile"
@@ -186,7 +181,7 @@ def check_load_data_disclosure(request):
 
 
 def check_write_into_outfile(request):
-    return check_risk_found(request, r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", HIGH_RISK)
+    return HIGH_RISK if re.search(r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", request) else NO_RISK
 
 
 """check if the user try to run from the input the command concat
@@ -197,7 +192,7 @@ def check_write_into_outfile(request):
 
 
 def check_concat_command(request):
-    return check_risk_found(request, r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from the input mysql information disclosure
@@ -208,7 +203,7 @@ def check_concat_command(request):
 
 
 def check_information_disclosure(request):
-    return check_risk_found(request, r"\binformation_schema\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\binformation_schema\b", request) else NO_RISK
 
 
 """check if the user try to run from input the pgsql sleep command
@@ -219,7 +214,7 @@ def check_information_disclosure(request):
 
 
 def check_sleep_pg_command(request):
-    return check_risk_found(request, r"\bpg_sleep\b.*?\(.+?\)", MEDIUM_RISK)
+    return MEDIUM_RISK if re.search(request, r"\bpg_sleep\b.*?\(.+?\)") else NO_RISK
 
 
 """check if the user try to run from input the blind tsql "waitfor"
@@ -230,7 +225,7 @@ def check_sleep_pg_command(request):
 
 
 def check_blind_tsql(request):
-    return check_risk_found(request, r"\bwaitfor\b.*?\b(delay|time(out)?)\b", VERY_LOW_RISK)
+    return VERY_LOW_RISK if re.search(r"\bwaitfor\b.*?\b(delay|time(out)?)\b", request) else NO_RISK
 
 
 """check if the user try to run from input the mysql length command
@@ -241,7 +236,7 @@ def check_blind_tsql(request):
 
 
 def check_length_command(request):
-    return check_risk_found(request, r"\b(char_|bit_)?length\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(request, r"\b(char_|bit_)?length\b.*?\(.+?\)") else NO_RISK
 
 
 """check if the user try to run from input the mysql hex/unhex command
@@ -252,7 +247,7 @@ def check_length_command(request):
 
 
 def check_hex_command(request):
-    return check_risk_found(request, r"\b(un)?hex\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\b(un)?hex\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the mysql to base 64/ from base 64 command
@@ -263,7 +258,7 @@ def check_hex_command(request):
 
 
 def check_base64_command(request):
-    return check_risk_found(request, r"\b(from|to)_base64\b.*?\(.+?\)", VERY_LOW_RISK)
+    return VERY_LOW_RISK if re.search(r"\b(from|to)_base64\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL substr command
@@ -274,7 +269,7 @@ def check_base64_command(request):
 
 
 def check_substr_command(request):
-    return check_risk_found(request, r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL user command
@@ -285,7 +280,7 @@ def check_substr_command(request):
 
 
 def check_user_command(request):
-    return check_risk_found(request, r"\b(current_)?user\b.*?\(.*?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\b(current_)?user\b.*?\(.*?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL version command
@@ -296,7 +291,7 @@ def check_user_command(request):
 
 
 def check_version_command(request):
-    return check_risk_found(request, r" \bversion\b.*?\(.*?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r" \bversion\b.*?\(.*?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL system variable command
@@ -307,7 +302,7 @@ def check_version_command(request):
 
 
 def check_system_variable(request):
-    return check_risk_found(request, r"@@.+?", UNIMPORTANT_RISK)
+    return UNIMPORTANT_RISK if re.search(r"@@.+?", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL oct command
@@ -318,7 +313,7 @@ def check_system_variable(request):
 
 
 def check_oct_command(request):
-    return check_risk_found(request, r"\boct\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\boct\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL ord command
@@ -329,7 +324,7 @@ def check_oct_command(request):
 
 
 def check_ord_command(request):
-    return check_risk_found(request, r"\bord\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bord\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL ascii command
@@ -340,7 +335,7 @@ def check_ord_command(request):
 
 
 def check_ascii_command(request):
-    return check_risk_found(request, r" \bascii\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r" \bascii\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL bin command
@@ -351,7 +346,7 @@ def check_ascii_command(request):
 
 
 def check_bin_command(request):
-    return check_risk_found(request, r"\bbin\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bbin\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL char command
@@ -362,7 +357,7 @@ def check_bin_command(request):
 
 
 def check_char_command(request):
-    return check_risk_found(request, r"\bcha?r\b.*?\(.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bcha?r\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL where command
@@ -373,7 +368,7 @@ def check_char_command(request):
 
 
 def check_where_command(request):
-    return check_risk_found(request, r"\bwhere\b.+?(\b(not_)?(like|regexp)\b|[=<>])", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bwhere\b.+?(\b(not_)?(like|regexp)\b|[=<>])", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL if command
@@ -384,7 +379,7 @@ def check_where_command(request):
 
 
 def check_if_command(request):
-    return check_risk_found(request, r"\bif\b.*?\(.+?,.+?,.+?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\bif\b.*?\(.+?,.+?,.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL ifnull command
@@ -395,7 +390,7 @@ def check_if_command(request):
 
 
 def check_ifnull_command(request):
-    return check_risk_found(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)", LITTLE_RISK)
+    return LITTLE_RISK if re.search(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)") else NO_RISK
 
 
 """check if the user try to run from input the SQL where command
@@ -406,7 +401,7 @@ def check_ifnull_command(request):
 
 
 def check_where_condition_command(request):
-    return check_risk_found(request, r"\bwhere\b.+?(\b(n?and|x?or|not)\b|(\&\&|\|\|))", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bwhere\b.+?(\b(n?and|x?or|not)\b|(\&\&|\|\|))", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL case command
@@ -417,7 +412,7 @@ def check_where_condition_command(request):
 
 
 def check_case_command(request):
-    return check_risk_found(request, r"\bcase\b.+?\bwhen\b.+?\bend\b", VERY_LOW_RISK)
+    return VERY_LOW_RISK if re.search(r"\bcase\b.+?\bwhen\b.+?\bend\b", request) else NO_RISK
 
 
 """check if the user try to run from input the MSSQL exec command
@@ -428,7 +423,7 @@ def check_case_command(request):
 
 
 def check_exec_command(request):
-    return check_risk_found(request, r"\bexec\b.+?\bxp_cmdshell\b", VERY_DANGEROUS)
+    return VERY_DANGEROUS if re.search(r"\bexec\b.+?\bxp_cmdshell\b", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL create command
@@ -439,7 +434,7 @@ def check_exec_command(request):
 
 
 def check_create_command(request):
-    return check_risk_found(request, r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", VERY_LOW_RISK)
+    return VERY_LOW_RISK if re.search(r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL insert command
@@ -450,7 +445,7 @@ def check_create_command(request):
 
 
 def check_insert_command(request):
-    return check_risk_found(request, r"\binsert\b.+?\binto\b.*?\bvalues\b.*?\(.+?\)", LOW_RISK)
+    return LOW_RISK if re.search(r"\binsert\b.+?\binto\b.*?\bvalues\b.*?\(.+?\)", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL insert command
@@ -461,7 +456,7 @@ def check_insert_command(request):
 
 
 def check_select_command(request):
-    return check_risk_found(request, r"\bselect\b.+?\bfrom\b", LITTLE_RISK)
+    return LITTLE_RISK if re.search(r"\bselect\b.+?\bfrom\b", request) else NO_RISK
 
 
 """check if the user try to run from input the PgSQL information disclosure “pg_user”
@@ -472,7 +467,7 @@ def check_select_command(request):
 
 
 def check_user_info_disclosure(request):
-    return check_risk_found(request, r"\bpg_user\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bpg_user\b", request) else NO_RISK
 
 
 """check if the user try to run from input the PgSQL information disclosure “pg_database”
@@ -483,7 +478,7 @@ def check_user_info_disclosure(request):
 
 
 def check_db_info_disclosure(request):
-    return check_risk_found(request, r"\bpg_database\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bpg_database\b", request) else NO_RISK
 
 
 """check if the user try to run from input the PgSQL information disclosure “pg_shadow”
@@ -494,7 +489,7 @@ def check_db_info_disclosure(request):
 
 
 def check_shadow_info_disclosure(request):
-    return check_risk_found(request, r"\bpg_shadow\b", LARGE_RISK)
+    return LARGE_RISK if re.search(r"\bpg_shadow\b", request) else NO_RISK
 
 
 """check if the user try to run from input the DATABASE command
@@ -505,4 +500,13 @@ def check_shadow_info_disclosure(request):
 
 
 def check_db_command(request):
-    return check_risk_found(request, r"\b(current_)?database\b.*?\(.*?\)", VERY_LITTLE_RISK)
+    return VERY_LITTLE_RISK if re.search(r"\b(current_)?database\b.*?\(.*?\)", request) else NO_RISK
+
+
+def check_common_sql_commands(request):
+    return 1 if re.search(r"""(?:^\s*[;>\"]\s*(?:union|select|create|rename|truncate|load|alter|delete|updateiinsert|desc))|
+(?:(?:select|create|rename|truncate|load|alter|delete|update|insert|desc)\s+(?:concat|char|load_file)\s?\(?)|(?:end\s*\);)""", request) else 0
+
+if re.search(r"(lol?:lool)", "abcde lollool"):
+    print("hello")
+#print(check_common_sql_commands()
