@@ -502,32 +502,52 @@ def check_shadow_info_disclosure(request):
 def check_db_command(request):
     return VERY_LITTLE_RISK if re.search(r"\b(current_)?database\b.*?\(.*?\)", request) else NO_RISK
 
+def findnth(haystack, needle, n):
+    parts= haystack.split(needle, n+1)
+    if len(parts)<=n+1:
+        return -1
+    return len(haystack)-len(parts[-1])-len(needle)
 
 def check_common_sql_commands(request):
-    matchsList = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
-    dangerousLevel = 0
+    matchs_list = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
+    dangerous_level = 0
     operators_lst = ['>', '<', '=', 'LIKE']
-    for match in matchsList:
+    for match in matchs_list:
         if match != '':
-            dangerousLevel += 1
+            dangerous_level += 1
     if ';' in request:
-        statementsList = request.split(';')
-        if statementsList[-1] == '':
-            statementsList = statementsList[:-1]
-        for sqlStatement in statementsList:
-            sqlStatement = sqlStatement.strip()
+        statements_list = request.split(';')
+        if statements_list[-1] == '':
+            statements_list = statements_list[:-1]
+        for sql_statement in statements_list:
+            sql_statement = sql_statement.strip()
+            # check for every statement if its an or operator
+            if re.search(r"""(.+or)(.*[=,>,<]|.*like|(.*between.+and))""", sql_statement):
+                finish_state = []
+                sql_temp_statement = sql_statement
+                for or_state in sql_temp_statement.split("or")[1:]:
+                    if 'LIKE' in or_state or '=' in or_state:
 
-            if re.search(r"""(.+or)(.*[=,>,<] | .*LIKE)""", sqlStatement):
-                if 'LIKE' in sqlStatement or '=' in sqlStatement:
+                        or_state = or_state.replace('=', '==')
+                        or_state = or_state.replace('LIKE', '==')
+                        finish_state.append(or_state)
+                    elif "between" in or_state:
+                        middle_value = or_state[:or_state.find("between")]
+                        lower_value = or_state[or_state.find("between")+6:or_state.find("and")]
+                        higher_value = or_state[or_state.find("and")+3:]
+                        finish_state.append("(" + middle_value + ">" + lower_value + ") " + "and " + "(" + middle_value + "<" + higher_value + ")")
+                    else:
+                        finish_state.append(or_state)
+                try:
+                    if eval("or".join(finish_state)):  # check if the or operator returns true
+                        dangerous_level += 2
+                except:  # means that the or statement is incorrect
+                    pass
+            if re.search(r"""alter table( +)(.+\S)( +)((add( +)(.+\S))|(drop collum( +)(.+\S)))""", sql_statement):
+                dangerous_level += 2
 
-                    sqlStatement = sqlStatement.replace('=', '==')
-                    sqlStatement = sqlStatement.replace('LIKE', '==')
-                    if(eval(sqlStatement[sqlStatement.find("or") + 2:])):
-                        print("dangerous")
 
 
 
 
-    #print(re.search(r"""('(''|[^'])*')|(;)|(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)""", request))
-
-check_common_sql_commands('feef#; 12 or 1 LIKE 2 or 3 < 6;')
+check_common_sql_commands('feef#; 12 or 1 LIKE "2" or 3 < 6;')
