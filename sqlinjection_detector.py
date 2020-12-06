@@ -504,9 +504,30 @@ def check_db_command(request):
 
 
 def check_common_sql_commands(request):
-    return 1 if re.search(r"""(?:^\s*[;>\"]\s*(?:union|select|create|rename|truncate|load|alter|delete|updateiinsert|desc))|
-(?:(?:select|create|rename|truncate|load|alter|delete|update|insert|desc)\s+(?:concat|char|load_file)\s?\(?)|(?:end\s*\);)""", request) else 0
+    matchsList = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
+    dangerousLevel = 0
+    operators_lst = ['>', '<', '=', 'LIKE']
+    for match in matchsList:
+        if match != '':
+            dangerousLevel += 1
+    if ';' in request:
+        statementsList = request.split(';')
+        if statementsList[-1] == '':
+            statementsList = statementsList[:-1]
+        for sqlStatement in statementsList:
+            sqlStatement = sqlStatement.strip()
 
-if re.search(r"(lol?:lool)", "abcde lollool"):
-    print("hello")
-#print(check_common_sql_commands()
+            if re.search(r"""(.+or)(.*[=,>,<] | .*LIKE)""", sqlStatement):
+                if 'LIKE' in sqlStatement or '=' in sqlStatement:
+
+                    sqlStatement = sqlStatement.replace('=', '==')
+                    sqlStatement = sqlStatement.replace('LIKE', '==')
+                    if(eval(sqlStatement[sqlStatement.find("or") + 2:])):
+                        print("dangerous")
+
+
+
+
+    #print(re.search(r"""('(''|[^'])*')|(;)|(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)""", request))
+
+check_common_sql_commands('feef#; 12 or 1 LIKE 2 or 3 < 6;')
