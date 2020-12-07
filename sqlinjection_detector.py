@@ -518,7 +518,7 @@ def check_common_sql_commands(request):
     for sql_statement in statements_list:
         sql_statement = sql_statement.strip()
         # check for every statement if its an or operator
-        if re.search(r"""(\S+\s+or)\s+\S+((\s*([=,>,<]|>=|<=)\s*)|(\s+like\s+)|(\s+between\s+\S+\s+and\s+))\S+""", sql_statement):
+        if re.search(r"""(\S+\s+\bor\b)\s+\S+((\s*([=,>,<]|>=|<=)\s*)|(\s+\blike\b\s+)|(\s+\bbetween\b\s+\S+\s+\band\b\s+))\S+""", sql_statement):
             finish_state = []
             sql_temp_statement = sql_statement
             for or_state in sql_temp_statement.split("or")[1:]:
@@ -540,7 +540,7 @@ def check_common_sql_commands(request):
             except:  # means that the or statement is incorrect
                 pass
         #  check the alter table command if exists in the sql statement
-        elif re.search(r"""alter\s+table\s+\S+\s+((add\s+\S+)|(drop\s+column\s+\S+))""", sql_statement):
+        elif re.search(r"""\balter\b\s+\btable\b\s+\S+\s+((\badd\b)|(\bdrop\b\s+\bcolumn\b))\s+\S+""", sql_statement):
             dangerous_level += 2
 
 
