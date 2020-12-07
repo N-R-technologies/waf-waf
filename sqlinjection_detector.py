@@ -518,7 +518,7 @@ def check_common_sql_commands(request):
     for sql_statement in statements_list:
         sql_statement = sql_statement.strip()
         # check for every statement if its an or operator
-        if re.search(r"""(\S+\s+\bor\b)\s+\S+((\s*([=,>,<]|>=|<=)\s*)|(\s+\blike\b\s+)|(\s+\bbetween\b\s+\S+\s+\band\b\s+))\S+""", sql_statement):
+        if re.search(r"""(\S+\s+\bor\b)\s+\S+((\s*([<=>]|<=|>=)\s*)|(\s+\blike\b\s+)|(\s+\bbetween\b\s+\S+\s+\band\b\s+))\S+""", sql_statement):
             finish_state = []
             sql_temp_statement = sql_statement
             for or_state in sql_temp_statement.split("or")[1:]:
