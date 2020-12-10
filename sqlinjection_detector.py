@@ -504,9 +504,55 @@ def check_db_command(request):
 
 
 def check_common_sql_commands(request):
-    return 1 if re.search(r"""(?:^\s*[;>\"]\s*(?:union|select|create|rename|truncate|load|alter|delete|updateiinsert|desc))|
-(?:(?:select|create|rename|truncate|load|alter|delete|update|insert|desc)\s+(?:concat|char|load_file)\s?\(?)|(?:end\s*\);)""", request) else 0
+    match_list = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
+    dangerous_level = 0
+    operators_lst = ['>', '<', '=', 'LIKE', '>=', '<=']
+    dangerous_level += len([match for match in match_list if match != ''])
+    statements_list = []
+    if ';' in request:
+        statements_list = request.split(';')
+    else:
+        statements_list.append(request)
+    if statements_list[-1] == '':
+        statements_list = statements_list[:-1]
+    for sql_statement in statements_list:
+        sql_statement = sql_statement.strip()
+        # check for every statement if its an or operator
+        if re.search(r"""(\S+\s+or)\s+\S+((\s*([=,>,<]|>=|<=)\s*)|(\s+like\s+)|(\s+between\s+\S+\s+and\s+))\S+""", sql_statement):
+            finish_state = []
+            sql_temp_statement = sql_statement
+            for or_state in sql_temp_statement.split("or")[1:]:
+                if 'like' in or_state or '=' in or_state:
 
-if re.search(r"(lol?:lool)", "abcde lollool"):
-    print("hello")
-#print(check_common_sql_commands()
+                    or_state = or_state.replace('=', '==')
+                    or_state = or_state.replace('like', '==')
+                    finish_state.append(or_state)
+                elif "between" in or_state:
+                    middle_value = or_state[:or_state.find("between")]
+                    lower_value = or_state[or_state.find("between")+6:or_state.find("and")]
+                    higher_value = or_state[or_state.find("and")+3:]
+                    finish_state.append("(" + middle_value + ">" + lower_value + ") " + "and " + "(" + middle_value + "<" + higher_value + ")")
+                else:
+                    finish_state.append(or_state)
+            try:
+                if eval("or".join(finish_state)):  # check if the or operator returns true
+                    dangerous_level += 2
+            except:  # means that the or statement is incorrect
+                pass
+        #  check the alter table command if exists in the sql statement
+        elif re.search(r"""alter\s+table\s+\S+\s+(?#check the alter table statement
+        )(add|drop\s+?column)\s+\S+(?#check if there is add or drop column)""", sql_statement):
+            dangerous_level += 2
+        elif re.search(r"""delete\s+?\S+?\s+?from\s+?\S+?"""):
+            dangerous_level += 3
+        elif re.search(r"""create\s+?(database|table|index|view)\s+?\S+?""", sql_statement):
+            dangerous_level += 2;
+        elif re.search(r"""drop\s+?(?P<deleteinfo>database|index|table)\s+?\S+?"""):
+            dangerous_level += 5;
+        elif re.search(r"""where\s+exists\s+\S+""", sql_statement):
+            dangerous_level += 1;
+
+
+
+
+check_common_sql_commands('')
