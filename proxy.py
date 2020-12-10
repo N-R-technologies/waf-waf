@@ -13,6 +13,10 @@ class MyAddon:
         f = open("proxy_test.txt", 'a')
         f.write(str(flow) + '\n')
         f.close()
+        enter_if_statement = False
+        if enter_if_statement:  # We need to replace this with "is the flow malicious?"
+            if flow.killable:
+                flow.kill()
 
 
 addons = [
