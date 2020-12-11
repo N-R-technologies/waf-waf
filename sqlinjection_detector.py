@@ -542,15 +542,48 @@ def check_common_sql_commands(request):
         #  check the alter table command if exists in the sql statement
         elif re.search(r"""alter\s+table\s+\S+\s+(?#check the alter table statement
         )(add|drop\s+?column)\s+\S+(?#check if there is add or drop column)""", sql_statement):
-            dangerous_level += 2
-        elif re.search(r"""delete\s+?\S+?\s+?from\s+?\S+?"""):
-            dangerous_level += 3
-        elif re.search(r"""create\s+?(database|table|index|view)\s+?\S+?""", sql_statement):
-            dangerous_level += 2;
-        elif re.search(r"""drop\s+?(?P<deleteinfo>database|index|table)\s+?\S+?"""):
-            dangerous_level += 5;
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""delete\s+?\S+?\s+?from\s+?\S+?""", sql_statement):
+            dangerous_level += HIGH_RISK
+        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+\S+""", sql_statement):
+            dangerous_level += VERY_DANGEROUS
         elif re.search(r"""where\s+exists\s+\S+""", sql_statement):
-            dangerous_level += 1;
+            dangerous_level += VERY_LOW_RISK
+        elif re.search(r"""update\s+\S+\s+set\s+\S+""", sql_statement):
+            dangerous_level += VERY_LOW_RISK
+        elif re.search(r"""truncate\s+table\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""revoke\s+\S+\s+on\s+\S+\s+from\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""grant\s+(select|insert|update|delete|references|alter|all).+?\bon\b\s+\S+\s+to\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""select\s+.+?\s+from\s+\S+\s+union(\s+all)?\s+select\s+.+?\s+from\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        revoke_grant_statement = re.search(r"""(?:grant|revoke)(?P<permission>.+?)on\s+\S+\s+(?:to|from)\s+.+?""", sql_statement)
+        if revoke_grant_statement:
+            permissions_statement = revoke_grant_statement.group("permission")
+            permission_lst = re.findall(r"""(P<permissions>select|insert|update|delete|references|alter|all){1,7}""", permissions_statement)
+            if len(permission_lst) > 0:
+                if "all" in permission_lst:
+                    dangerous_level += VERY_DANGEROUS
+                else:
+                    if "insert" in permission_lst:
+                        dangerous_level += MEDIUM_RISK
+                    if "delete" in permission_lst:
+                        dangerous_level += MEDIUM_RISK
+                    if "insert" in permission_lst:
+                        dangerous_level += MEDIUM_RISK
+                    if "update" in permission_lst:
+                        dangerous_level += MEDIUM_RISK
+                    if "references" in permission_lst:
+                        dangerous_level += LOW_RISK
+                    if "alter" in permission_lst:
+                        dangerous_level += HIGH_RISK
+                    
+
+
 
 
 
