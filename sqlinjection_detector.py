@@ -555,12 +555,16 @@ def check_common_sql_commands(request):
             dangerous_level += VERY_LOW_RISK
         elif re.search(r"""truncate\s+table\s+\S+""", sql_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""revoke\s+\S+\s+on\s+\S+\s+from\s+\S+""", sql_statement):
-            dangerous_level += MEDIUM_RISK
         elif re.search(r"""grant\s+(select|insert|update|delete|references|alter|all).+?\bon\b\s+\S+\s+to\s+\S+""", sql_statement):
             dangerous_level += MEDIUM_RISK
+        elif re.search(r"""\binsert\s+into\b""", sql_statement):
+            dangerous_level += VERY_LOW_RISK
         elif re.search(r"""select\s+.+?\s+from\s+\S+\s+union(\s+all)?\s+select\s+.+?\s+from\s+\S+""", sql_statement):
             dangerous_level += MEDIUM_RISK
+        elif re.search(r"""select\s+.+?\s+into\s+\S+\s+from\s+\S+""", sql_statement):
+            dangerous_level += MEDIUM_RISK
+        elif re.search(r"""\bselect\b.+?\bfrom\s+\S+""", sql_statement):
+            dangerous_level += VERY_LOW_RISK
         revoke_grant_statement = re.search(r"""(?:grant|revoke)(?P<permission>.+?)on\s+\S+\s+(?:to|from)\s+.+?""", sql_statement)
         if revoke_grant_statement:
             permissions_statement = revoke_grant_statement.group("permission")
@@ -581,7 +585,7 @@ def check_common_sql_commands(request):
                         dangerous_level += LOW_RISK
                     if "alter" in permission_lst:
                         dangerous_level += HIGH_RISK
-                    
+
 
 
 
