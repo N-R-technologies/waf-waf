@@ -506,7 +506,7 @@ def check_db_command(request):
 def check_common_sql_commands(request):
     match_list = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
     dangerous_level = 0
-    operators_lst = ['>', '<', '=', 'LIKE', '>=', '<=']
+    operators_list = ['>', '<', '=', 'LIKE', '>=', '<='] # why do we need this operators list?
     dangerous_level += len([match for match in match_list if match != ''])
     statements_list = []
     if ';' in request:
@@ -518,20 +518,23 @@ def check_common_sql_commands(request):
     for sql_statement in statements_list:
         sql_statement = sql_statement.strip()
         # check for every statement if its an or operator
-        if re.search(r"""(\S+\s+or)\s+\S+((\s*([=,>,<]|>=|<=)\s*)|(\s+like\s+)|(\s+between\s+\S+\s+and\s+))\S+""", sql_statement):
+        if re.search(r"""or\s+(?:not\s+)*(?P<statement>\s*(?:.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(==|<=|>=|!=|<>).+?)\s*(?# operators
+            )|(?:not\s+)*(?:.+?\s+like\s+.+|.+?\s+between\s+.+?and\s+.+|.+?\s+in\s*\(.+\)))""", sql_statement):
             finish_state = []
-            sql_temp_statement = sql_statement
-            for or_state in sql_temp_statement.split("or")[1:]:
-                if 'like' in or_state or '=' in or_state:
-
+            for or_state in sql_statement.split("or")[1:]:
+                if "like" in or_state or '=' in or_state or "==" in or_state:
                     or_state = or_state.replace('=', '==')
                     or_state = or_state.replace('like', '==')
                     finish_state.append(or_state)
-                elif "between" in or_state:
+                elif "<>" in or_state:
+                    or_state = or_state.replace('<>', '!=')
+                    finish_state.append(or_state)
+                elif "between" in or_state and "and" in or_state:
                     middle_value = or_state[:or_state.find("between")]
-                    lower_value = or_state[or_state.find("between")+6:or_state.find("and")]
-                    higher_value = or_state[or_state.find("and")+3:]
+                    lower_value = or_state[or_state.find("between") + 6: or_state.find("and")]
+                    higher_value = or_state[or_state.find("and") + 3:]
                     finish_state.append("(" + middle_value + ">" + lower_value + ") " + "and " + "(" + middle_value + "<" + higher_value + ")")
+                elif "in"
                 else:
                     finish_state.append(or_state)
             try:
@@ -540,40 +543,40 @@ def check_common_sql_commands(request):
             except:  # means that the or statement is incorrect
                 pass
         #  check the alter table command if exists in the sql statement
-        elif re.search(r"""alter\s+table\s+\S+\s+(?#check the alter table statement
-        )(add|drop\s+?column)\s+\S+(?#check if there is add or drop column)""", sql_statement):
+        elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sql_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""delete\s+?\S+?\s+?from\s+?\S+?""", sql_statement):
+        elif re.search(r"""delete\s+.+?\s+from\s+.+""", sql_statement):
             dangerous_level += HIGH_RISK
-        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+\S+""", sql_statement):
+        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", sql_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+\S+""", sql_statement):
+        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sql_statement):
             dangerous_level += VERY_DANGEROUS
-        elif re.search(r"""where\s+exists\s+\S+""", sql_statement):
+        elif re.search(r"""where\s+exists\s+.+""", sql_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""update\s+\S+\s+set\s+\S+""", sql_statement):
+        elif re.search(r"""update\s+.+?\s+set\s+.+""", sql_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""truncate\s+table\s+\S+""", sql_statement):
+        elif re.search(r"""truncate\s+table\s+.+""", sql_statement):
             dangerous_level += MEDIUM_RISK
+        # do we really need the following elif??
         elif re.search(r"""grant\s+(select|insert|update|delete|references|alter|all).+?\bon\b\s+\S+\s+to\s+\S+""", sql_statement):
             dangerous_level += MEDIUM_RISK
         elif re.search(r"""\binsert\s+into\b""", sql_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""select\s+.+?\s+from\s+\S+\s+union(\s+all)?\s+select\s+.+?\s+from\s+\S+""", sql_statement):
+        elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sql_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select\s+.+?\s+into\s+\S+\s+from\s+\S+""", sql_statement):
+        elif re.search(r"""select\s+.+?\s+into\s+\S+\s+from\s+\S+""", sql_statement): # select into?
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""\bselect\b.+?\bfrom\s+\S+""", sql_statement):
+        elif re.search(r"""select.+?from\s+.+""", sql_statement):
             dangerous_level += VERY_LOW_RISK
-        revoke_grant_statement = re.search(r"""(?:grant|revoke)(?P<permission>.+?)on\s+\S+\s+(?:to|from)\s+.+?""", sql_statement)
+        revoke_grant_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sql_statement)
         if revoke_grant_statement:
-            permissions_statement = revoke_grant_statement.group("permission")
-            permission_lst = re.findall(r"""(P<permissions>select|insert|update|delete|references|alter|all){1,7}""", permissions_statement)
+            permissions_statement = revoke_grant_statement.group("permissions")
+            permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
             if len(permission_lst) > 0:
                 if "all" in permission_lst:
                     dangerous_level += VERY_DANGEROUS
                 else:
-                    if "insert" in permission_lst:
+                    if "select" in permission_lst:
                         dangerous_level += MEDIUM_RISK
                     if "delete" in permission_lst:
                         dangerous_level += MEDIUM_RISK
@@ -585,11 +588,6 @@ def check_common_sql_commands(request):
                         dangerous_level += LOW_RISK
                     if "alter" in permission_lst:
                         dangerous_level += HIGH_RISK
-
-
-
-
-
 
 
 check_common_sql_commands('')
