@@ -523,18 +523,20 @@ def check_common_sql_commands(request):
             finish_state = []
             for or_state in sql_statement.split("or")[1:]:
                 if "like" in or_state or '=' in or_state or "==" in or_state:
-                    or_state = or_state.replace('=', '==')
-                    or_state = or_state.replace('like', '==')
+                    or_state = or_state.replace('=', "==")
+                    or_state = or_state.replace("like", "==")
                     finish_state.append(or_state)
                 elif "<>" in or_state:
-                    or_state = or_state.replace('<>', '!=')
+                    or_state = or_state.replace("<>", "!=")
                     finish_state.append(or_state)
                 elif "between" in or_state and "and" in or_state:
                     middle_value = or_state[:or_state.find("between")]
-                    lower_value = or_state[or_state.find("between") + 6: or_state.find("and")]
+                    lower_value = or_state[or_state.find("between") + 7: or_state.find("and")]
                     higher_value = or_state[or_state.find("and") + 3:]
                     finish_state.append("(" + middle_value + ">" + lower_value + ") " + "and " + "(" + middle_value + "<" + higher_value + ")")
-                elif "in"
+                elif "in" in or_state:
+                    pass
+                    # finish_state.append(<>)
                 else:
                     finish_state.append(or_state)
             try:
@@ -568,9 +570,9 @@ def check_common_sql_commands(request):
             dangerous_level += MEDIUM_RISK
         elif re.search(r"""select.+?from\s+.+""", sql_statement):
             dangerous_level += VERY_LOW_RISK
-        revoke_grant_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sql_statement)
-        if revoke_grant_statement:
-            permissions_statement = revoke_grant_statement.group("permissions")
+        grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sql_statement)
+        if grant_revoke_statement:
+            permissions_statement = grant_revoke_statement.group("permissions")
             permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
             if len(permission_lst) > 0:
                 if "all" in permission_lst:
