@@ -53,61 +53,6 @@ def check_user_disclosure(request):
     return LITTLE_RISK if re.search(r"\bmysql.*?\..*?user\b", request) else NO_RISK
 
 
-"""check if the user try to run from the input Common SQL command “union select”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_union_select(request):
-    return LITTLE_RISK if re.search(r"\bunion\b.+?\bselect\b", request) else NO_RISK
-
-
-"""check if the user try to run from the input Common SQL command “update”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_update_command(request):
-    return LITTLE_RISK if re.search(r"\bupdate\b.+?\bset\b", request) else NO_RISK
-
-
-"""check if the user try to run from the input Common SQL command “drop”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_drop_command(request):
-    return LITTLE_RISK if re.search(r"\bdrop\b.+?\b(database|table)\b", request) else NO_RISK
-
-
-"""check if the user try to run from the input Common SQL command “delete”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_delete_command(request):
-    return LITTLE_RISK if re.search(r"\bdelete\b.+?\bfrom\b", request) else NO_RISK
-
-
-"""check if the user try to run from the input Common SQL comment syntax
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_comment_syntax(request):
-    return VERY_LITTLE_RISK if re.search(r"--.+?", request) else NO_RISK
-
-
 """check if the user try to run from the input Common mongoDB commands
 :param request: the request packet
 :type request: integer
@@ -361,17 +306,6 @@ def check_char_command(request):
     return VERY_LITTLE_RISK if re.search(r"\bcha?r\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL where command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_where_command(request):
-    return VERY_LITTLE_RISK if re.search(r"\bwhere\b.+?(\b(not_)?(like|regexp)\b|[=<>])", request) else NO_RISK
-
-
 """check if the user try to run from input the SQL if command
 :param request: the request packet
 :type request: integer
@@ -392,17 +326,6 @@ def check_if_command(request):
 
 def check_ifnull_command(request):
     return LITTLE_RISK if re.search(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)") else NO_RISK
-
-
-"""check if the user try to run from input the SQL where command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_where_condition_command(request):
-    return LITTLE_RISK if re.search(r"\bwhere\b.+?(\b(n?and|x?or|not)\b|(\&\&|\|\|))", request) else NO_RISK
 
 
 """check if the user try to run from input the SQL case command
@@ -436,28 +359,6 @@ def check_exec_command(request):
 
 def check_create_command(request):
     return VERY_LOW_RISK if re.search(r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", request) else NO_RISK
-
-
-"""check if the user try to run from input the SQL insert command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_insert_command(request):
-    return LOW_RISK if re.search(r"\binsert\b.+?\binto\b.*?\bvalues\b.*?\(.+?\)", request) else NO_RISK
-
-
-"""check if the user try to run from input the SQL insert command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
-def check_select_command(request):
-    return LITTLE_RISK if re.search(r"\bselect\b.+?\bfrom\b", request) else NO_RISK
 
 
 """check if the user try to run from input the PgSQL information disclosure “pg_user”
