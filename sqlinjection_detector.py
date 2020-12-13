@@ -12,7 +12,8 @@ LARGE_RISK = 7
 HIGH_RISK = 8
 VERY_DANGEROUS = 9
 
-
+BETWEEN_LEN = 7
+AND_LEN = 3
 
 def find_sql_injection(request):
     # need to call al the check function and calculate the risk level
@@ -504,73 +505,75 @@ def check_db_command(request):
 
 
 def check_common_sql_commands(request):
-    match_list = (re.findall(r"""('(''|[^'])*')|("(""|[^"])*")|(#$)|(--$)""", request))
     dangerous_level = 0
-    operators_list = ['>', '<', '=', 'LIKE', '>=', '<='] # why do we need this operators list?
-    dangerous_level += len([match for match in match_list if match != ''])
     statements_list = []
+    match_list = re.findall(r""";\s*(?:#|--)""", request)
+    dangerous_level += len([match for match in match_list if match != ''])
     if ';' in request:
         statements_list = request.split(';')
     else:
         statements_list.append(request)
     if statements_list[-1] == '':
         statements_list = statements_list[:-1]
-    for sql_statement in statements_list:
-        sql_statement = sql_statement.strip()
-        # check for every statement if its an or operator
-        if re.search(r"""or\s+(?:not\s+)*(?P<statement>\s*(?:.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(==|<=|>=|!=|<>).+?)\s*(?# operators
-            )|(?:not\s+)*(?:.+?\s+like\s+.+|.+?\s+between\s+.+?and\s+.+|.+?\s+in\s*\(.+\)))""", sql_statement):
-            finish_state = []
-            for or_state in sql_statement.split("or")[1:]:
-                if "like" in or_state or '=' in or_state or "==" in or_state:
-                    or_state = or_state.replace('=', "==")
-                    or_state = or_state.replace("like", "==")
-                    finish_state.append(or_state)
-                elif "<>" in or_state:
-                    or_state = or_state.replace("<>", "!=")
-                    finish_state.append(or_state)
-                elif "between" in or_state and "and" in or_state:
-                    middle_value = or_state[:or_state.find("between")]
-                    lower_value = or_state[or_state.find("between") + 7: or_state.find("and")]
-                    higher_value = or_state[or_state.find("and") + 3:]
-                    finish_state.append("(" + middle_value + ">" + lower_value + ") " + "and " + "(" + middle_value + "<" + higher_value + ")")
-                elif "in" in or_state:
-                    pass
-                    # finish_state.append(<>)
-                else:
-                    finish_state.append(or_state)
-            try:
-                if eval("or".join(finish_state)):  # check if the or operator returns true
-                    dangerous_level += 2
-            except:  # means that the or statement is incorrect
-                pass
+    for sub_statement in statements_list:
+        sub_statement = sub_statement.strip()
+        for or_statement in sub_statement.split("or")[1:]: # check for every statement if its an 'or' statement
+        logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
+            if logic_statement:
+                statement = logic_statement.group("statement")
+                not_count = statement.count("not")
+                statement = statement.replace("not", "")
+                is_positive = False
+                if not_count % 2 == 0:
+                    is_positive = True
+
+                if logic_statement.group("operators"):
+                    if '=' in statement:
+                        statement = statement.replace('=', "==")
+                    elif "<>" in statement:
+                        statement = statement.replace("<>", "!=")
+                elif logic_statement.group("like"):
+                    statement = statement.replace("like", "==")
+                elif logic_statement.group("betweenand"):
+                    middle_value = statement[:statement.find("between")]
+                    lower_value = statement[statement.find("between") + BETWEEN_LEN: statement.find("and")]
+                    higher_value = statement[statement.find("and") + AND_LEN:]
+                    statement = lower_value " <= " middle_value + " <= " higher_value
+                
+                try:
+                    result = eval(statement)
+                    if not is_positive: # eval's result should be the opposite (True -> False | False -> True)
+                        result = not result
+                    if result # check if the or statement returns true
+                        dangerous_level += LARGE_RISK
+                    else:
+                        dangerous_level += LOW_RISK
+                except:  # means that the or statement is incorrect
+                    dangerous_level += VERY_LOW_RISK
         #  check the alter table command if exists in the sql statement
-        elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sql_statement):
+        elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""delete\s+.+?\s+from\s+.+""", sql_statement):
+        elif re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement):
             dangerous_level += HIGH_RISK
-        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", sql_statement):
+        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sql_statement):
+        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sub_statement):
             dangerous_level += VERY_DANGEROUS
-        elif re.search(r"""where\s+exists\s+.+""", sql_statement):
+        elif re.search(r"""where\s+exists\s+.+""", sub_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""update\s+.+?\s+set\s+.+""", sql_statement):
+        elif re.search(r"""update\s+.+?\s+set\s+.+""", sub_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""truncate\s+table\s+.+""", sql_statement):
+        elif re.search(r"""truncate\s+table\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        # do we really need the following elif??
-        elif re.search(r"""grant\s+(select|insert|update|delete|references|alter|all).+?\bon\b\s+\S+\s+to\s+\S+""", sql_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""\binsert\s+into\b""", sql_statement):
+        elif re.search(r"""\binsert\s+into\b""", sub_statement):
             dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sql_statement):
+        elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select\s+.+?\s+into\s+\S+\s+from\s+\S+""", sql_statement): # select into?
+        elif re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement): # select into?
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select.+?from\s+.+""", sql_statement):
+        elif re.search(r"""select.+?from\s+.+""", sub_statement):
             dangerous_level += VERY_LOW_RISK
-        grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sql_statement)
+        grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sub_statement)
         if grant_revoke_statement:
             permissions_statement = grant_revoke_statement.group("permissions")
             permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
