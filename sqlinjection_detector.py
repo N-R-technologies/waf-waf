@@ -1,6 +1,5 @@
 import re
-"""this is the main function which will called from the proxy,
-here we will call to all the sub function"""
+
 NO_RISK = 0
 UNIMPORTANT_RISK = 1
 VERY_LITTLE_RISK = 2
@@ -20,388 +19,318 @@ def find_sql_injection(request):
     pass
 
 
-"""check if the user try to run from the input common MySQL function “find_in_set”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def find_in_set(request):
+    """check if the user try to run from the input common MySQL function “find_in_set”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return MEDIUM_RISK if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from the input SQLite information disclosure “sqlite_master”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def find_master_access(request):
+    """check if the user try to run from the input SQLite information disclosure “sqlite_master”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bsqlite_master\b", request) else NO_RISK
 
 
-"""check if the user try to run from the input MySQL information disclosure “mysql.user”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_user_disclosure(request):
+    """check if the user try to run from the input MySQL information disclosure “mysql.user”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LITTLE_RISK if re.search(r"\bmysql.*?\..*?user\b", request) else NO_RISK
 
 
-"""check if the user try to run from the input Common mongoDB commands
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_mongo_db_command(request):
+    """check if the user try to run from the input Common mongoDB commands
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return MEDIUM_RISK if re.search(r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]", request) else NO_RISK
 
 
-"""check if the user try to run from the input Common C-style comment
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_cstyle_comment(request):
+    """check if the user try to run from the input Common C-style comment
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LITTLE_RISK if re.search(r" \/\*.*?\*\/", request) else NO_RISK
 
 
-"""check if the user try to run from the input blind sql benchmark
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_blind_benchmark(request):
+    """check if the user try to run from the input blind sql benchmark
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return MEDIUM_RISK if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from the input blind sql sleep
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_blind_sql_sleep(request):
+    """check if the user try to run from the input blind sql sleep
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\bsleep\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from the input blind mysql disclosure "load_file"
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_load_file_disclosure(request):
+    """check if the user try to run from the input blind mysql disclosure "load_file"
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bload_file\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from the input blind mysql disclosure "load_data"
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_load_data_disclosure(request):
+    """check if the user try to run from the input blind mysql disclosure "load_data"
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", request) else NO_RISK
 
 
-"""check if the user try to run from the input MySQL file write "into outfile"
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_write_into_outfile(request):
+    """check if the user try to run from the input MySQL file write "into outfile"
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return HIGH_RISK if re.search(r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", request) else NO_RISK
 
 
-"""check if the user try to run from the input the command concat
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_concat_command(request):
+    """check if the user try to run from the input the command concat
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LITTLE_RISK if re.search(r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from the input mysql information disclosure
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_information_disclosure(request):
+    """check if the user try to run from the input mysql information disclosure
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\binformation_schema\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the pgsql sleep command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_sleep_pg_command(request):
+    """check if the user try to run from input the pgsql sleep command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return MEDIUM_RISK if re.search(request, r"\bpg_sleep\b.*?\(.+?\)") else NO_RISK
 
 
-"""check if the user try to run from input the blind tsql "waitfor"
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_blind_tsql(request):
+    """check if the user try to run from input the blind tsql "waitfor"
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LOW_RISK if re.search(r"\bwaitfor\b.*?\b(delay|time(out)?)\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the mysql length command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_length_command(request):
+    """check if the user try to run from input the mysql length command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(request, r"\b(char_|bit_)?length\b.*?\(.+?\)") else NO_RISK
 
 
-"""check if the user try to run from input the mysql hex/unhex command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_hex_command(request):
+    """check if the user try to run from input the mysql hex/unhex command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\b(un)?hex\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the mysql to base 64/ from base 64 command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_base64_command(request):
+    """check if the user try to run from input the mysql to base 64/ from base 64 command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LOW_RISK if re.search(r"\b(from|to)_base64\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL substr command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_substr_command(request):
+    """check if the user try to run from input the SQL substr command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LITTLE_RISK if re.search(r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL user command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_user_command(request):
+    """check if the user try to run from input the SQL user command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\b(current_)?user\b.*?\(.*?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL version command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_version_command(request):
+    """check if the user try to run from input the SQL version command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r" \bversion\b.*?\(.*?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL system variable command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_system_variable(request):
+    """check if the user try to run from input the SQL system variable command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return UNIMPORTANT_RISK if re.search(r"@@.+?", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL oct command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_oct_command(request):
+    """check if the user try to run from input the SQL oct command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\boct\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL ord command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_ord_command(request):
+    """check if the user try to run from input the SQL ord command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\bord\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL ascii command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_ascii_command(request):
+    """check if the user try to run from input the SQL ascii command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r" \bascii\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL bin command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_bin_command(request):
+    """check if the user try to run from input the SQL bin command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\bbin\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL char command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_char_command(request):
+    """check if the user try to run from input the SQL char command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\bcha?r\b.*?\(.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL if command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_if_command(request):
+    """check if the user try to run from input the SQL if command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\bif\b.*?\(.+?,.+?,.+?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL ifnull command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_ifnull_command(request):
+    """check if the user try to run from input the SQL ifnull command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LITTLE_RISK if re.search(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)") else NO_RISK
 
 
-"""check if the user try to run from input the SQL case command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_case_command(request):
+    """check if the user try to run from input the SQL case command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LOW_RISK if re.search(r"\bcase\b.+?\bwhen\b.+?\bend\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the MSSQL exec command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_exec_command(request):
+    """check if the user try to run from input the MSSQL exec command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_DANGEROUS if re.search(r"\bexec\b.+?\bxp_cmdshell\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the SQL create command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_create_command(request):
+    """check if the user try to run from input the SQL create command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LOW_RISK if re.search(r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", request) else NO_RISK
 
 
-"""check if the user try to run from input the PgSQL information disclosure “pg_user”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_user_info_disclosure(request):
+    """check if the user try to run from input the PgSQL information disclosure “pg_user”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bpg_user\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the PgSQL information disclosure “pg_database”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_db_info_disclosure(request):
+    """check if the user try to run from input the PgSQL information disclosure “pg_database”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bpg_database\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the PgSQL information disclosure “pg_shadow”
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_shadow_info_disclosure(request):
+    """check if the user try to run from input the PgSQL information disclosure “pg_shadow”
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return LARGE_RISK if re.search(r"\bpg_shadow\b", request) else NO_RISK
 
 
-"""check if the user try to run from input the DATABASE command
-:param request: the request packet
-:type request: integer
-:return: the risk level if found, zero if not
-:rtype integer"""
-
-
 def check_db_command(request):
+    """check if the user try to run from input the DATABASE command
+    :param request: the request packet
+    :type request: integer
+    :return: the risk level if found, zero if not
+    :rtype integer"""
     return VERY_LITTLE_RISK if re.search(r"\b(current_)?database\b.*?\(.*?\)", request) else NO_RISK
 
 
@@ -418,7 +347,7 @@ def check_common_sql_commands(request):
         statements_list = statements_list[:-1]
     for sub_statement in statements_list:
         sub_statement = sub_statement.strip()
-        for or_statement in sub_statement.split("or")[1:]: # check for every statement if its an 'or' statement
+        for or_statement in sub_statement.split("or")[1:]: # checks for every statement if its an 'or' statement
         logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
             if logic_statement:
                 statement = logic_statement.group("statement")
@@ -445,13 +374,12 @@ def check_common_sql_commands(request):
                     result = eval(statement)
                     if not is_positive: # eval's result should be the opposite (True -> False | False -> True)
                         result = not result
-                    if result # check if the or statement returns true
+                    if result # checks if the or statement returns true
                         dangerous_level += LARGE_RISK
                     else:
-                        dangerous_level += LOW_RISK
+                        dangerous_level += MEDIUM_RISK
                 except:  # means that the or statement is incorrect
-                    dangerous_level += VERY_LOW_RISK
-        #  check the alter table command if exists in the sql statement
+                    dangerous_level += MEDIUM_RISK
         elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
         elif re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement):
@@ -466,11 +394,11 @@ def check_common_sql_commands(request):
             dangerous_level += VERY_LOW_RISK
         elif re.search(r"""truncate\s+table\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""\binsert\s+into\b""", sub_statement):
-            dangerous_level += VERY_LOW_RISK
+        elif re.search(r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""", sub_statement):
+            dangerous_level += LOW_RISK
         elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement): # select into?
+        elif re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement):
             dangerous_level += MEDIUM_RISK
         elif re.search(r"""select.+?from\s+.+""", sub_statement):
             dangerous_level += VERY_LOW_RISK
