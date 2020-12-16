@@ -24,12 +24,6 @@ class WAF:
         pass
 
     def response(self, flow: http.HTTPFlow) -> None:
-        with open("yex.txt", 'a') as nigga:  # open the file for reading
-            nigga.write(str(flow.server_conn.spoof_source_address) + "\n")
-            nigga.write(str(flow.server_conn.source_address) + "\n")
-            nigga.write(str(flow.server_conn.server_certs) + "\n")
-            nigga.write(str(flow.server_conn.get_state()) + "\n")
-            nigga.close()
         enter_if_statement = False
         if enter_if_statement:  # We need to replace this with "is the flow malicious?"
             # TODO: kill the flow before appending the address to the blacklist
