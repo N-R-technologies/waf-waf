@@ -26,7 +26,8 @@ class WAF:
         else:
             enter_if_statement = False
             if enter_if_statement:  # we need to replace this with "is the flow malicious?"
-                # TODO: kill the flow before appending the address to the blacklist (after merging)
+                if flow.killable:
+                    flow.kill()
                 attacker_ip_address = flow.server_conn.ip_address[0]
                 self.blacklist.append(attacker_ip_address)
                 with open("blacklist.toml", 'w') as blacklist_file:  # saving the blacklist outside of the program
