@@ -1,0 +1,18 @@
+
+the information below is taking from the video: https://www.youtube.com/watch?v=gjm6VHZa_8s
+some info about the xxe attack:
+xxe attack also called xml external entities is attack that the attacket
+can corupt some xml code/parser in order to see files on the server side or 
+to make the server to download some specific files from remote source
+xxe attack have three types:
+1. inband - which the xml parser will be run and the output will be 
+shown directly on the screen. for example we can write entity which contain
+the passwd file, and we will mention it in the xml file, so the parser will show
+us the output of the passwd file.
+2. error based - kind of blind xxe where we cant see so usefull information
+except of some errors.
+3. out of band xxe - 100% blind xxe, we dont see the output.
+for example we can redirect the specific output to our website request as url.
+**important** as much as i understand this attack can occur while sending a
+website with an xml parser, just an xml file which he can parse - but still need to check when and how this attack can occur. 
+
