@@ -1,4 +1,4 @@
-from mitmproxy import proxy, options, http, ctx
+from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 import os
 import toml
