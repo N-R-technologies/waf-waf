@@ -1,0 +1,150 @@
+<HTTPFlow
+  request = Request(GET localhost:7777/)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/login.php)
+  response = Response(200, text/html;charset=utf-8, 699b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/login_logo.png)
+  response = Response(200, image/png, 8.88k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51388>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/css/login.css)
+  response = Response(200, text/css, 406b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/favicon.ico)
+  response = Response(200, image/vnd.microsoft.icon, 1.37k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(POST localhost:7777/login.php)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/setup.php)
+  response = Response(200, text/html;charset=utf-8, 1.65k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/css/main.css)
+  response = Response(200, text/css, 1.08k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/js/dvwaPage.js)
+  response = Response(200, application/javascript, 466b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51388>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/js/add_event_listeners.js)
+  response = Response(200, application/javascript, 276b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/logo.png)
+  response = Response(200, image/png, 4.93k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51388>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/spanner.png)
+  response = Response(200, image/png, 464b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51386>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/login.php)
+  response = Response(200, text/html;charset=utf-8, 698b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51614>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(POST localhost:7777/login.php)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51614>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/setup.php)
+  response = Response(200, text/html;charset=utf-8, 1.65k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51614>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51644>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/login.php)
+  response = Response(200, text/html;charset=utf-8, 699b)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51644>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(POST localhost:7777/login.php)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51644>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/setup.php)
+  response = Response(200, text/html;charset=utf-8, 1.65k)
+  client_conn = <ClientConnection: [TLSv1.3] [ALPN: http/1.1] [::1]:51644>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/login.php)
+  response = Response(200, text/html;charset=utf-8, 700b)
+  client_conn = <ClientConnection: 127.0.0.1:49380>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/css/login.css)
+  response = Response(200, text/css, 406b)
+  client_conn = <ClientConnection: 127.0.0.1:49380>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/login_logo.png)
+  response = Response(200, image/png, 8.88k)
+  client_conn = <ClientConnection: 127.0.0.1:49398>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/favicon.ico)
+  response = Response(200, image/vnd.microsoft.icon, 1.37k)
+  client_conn = <ClientConnection: 127.0.0.1:49398>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(POST localhost:7777/login.php)
+  response = Response(302, no content)
+  client_conn = <ClientConnection: 127.0.0.1:49420>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/setup.php)
+  response = Response(200, text/html;charset=utf-8, 1.65k)
+  client_conn = <ClientConnection: 127.0.0.1:49422>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/js/dvwaPage.js)
+  response = Response(200, application/javascript, 466b)
+  client_conn = <ClientConnection: 127.0.0.1:49420>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/css/main.css)
+  response = Response(200, text/css, 1.08k)
+  client_conn = <ClientConnection: 127.0.0.1:49422>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/js/add_event_listeners.js)
+  response = Response(200, application/javascript, 276b)
+  client_conn = <ClientConnection: 127.0.0.1:49432>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/logo.png)
+  response = Response(200, image/png, 4.93k)
+  client_conn = <ClientConnection: 127.0.0.1:49420>
+  server_conn = <ServerConnection: localhost:7777>>
+<HTTPFlow
+  request = Request(GET localhost:7777/dvwa/images/spanner.png)
+  response = Response(200, image/png, 464b)
+  client_conn = <ClientConnection: 127.0.0.1:49434>
+  server_conn = <ServerConnection: localhost:7777>>
