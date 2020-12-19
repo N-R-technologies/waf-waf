@@ -11,8 +11,16 @@ Things you should know about the proxy while it's running:
 * To exit the navigated packet, press 'Q'.
 * To exit the proxy, press 'Q' followed by 'Y', or press 'Ctrl+C' followed by 'Y'.
   ('Ctrl+C' can be used anytime, but 'Q' can only be used in the flow menu).
-* To run the django website just write python3 manage.py runserver_plus --cert-file certs/local.crt --key-file certs/local.key.pem --reloader-interval 2 0.0.0.0:8000
-* Enter on your browser: https://local.company.dev:8000/
 =======================================================================================
+docker file means like a little virtual machine on your computer. the docker just run the image file of
+the machine. you can run couple of dockers at once.
+you execute the docket with the key word: docker, and then run, and then -rm
+which means to remove if there is any docker with the same name which is currently running.
+following this -rm flag by -p and then the address you want your docker to run, and then the name of
+the docker. example:
+docker run --rm -d -p 7777(the port that our computer is listening) :80(the port that the container is listening on) my_docker. -d flag means to detach the docker. if you want to see the packages the docker
+gets you cant type --it
+=======================================================================================
+for running the proxy with the website just write: ./run.sh in the directory
 Errors we have:
 We don't have any errors right now! :)
