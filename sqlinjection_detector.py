@@ -348,7 +348,7 @@ def check_common_sql_commands(request):
     for sub_statement in statements_list:
         sub_statement = sub_statement.strip()
         for or_statement in sub_statement.split("or")[1:]: # checks for every statement if its an 'or' statement
-        logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
+            logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
             if logic_statement:
                 statement = logic_statement.group("statement")
                 not_count = statement.count("not")
@@ -368,60 +368,60 @@ def check_common_sql_commands(request):
                     middle_value = statement[:statement.find("between")]
                     lower_value = statement[statement.find("between") + BETWEEN_LEN: statement.find("and")]
                     higher_value = statement[statement.find("and") + AND_LEN:]
-                    statement = lower_value " <= " middle_value + " <= " higher_value
+                    statement = lower_value + " <= " + middle_value + " <= " + higher_value
                 
                 try:
                     result = eval(statement)
                     if not is_positive: # eval's result should be the opposite (True -> False | False -> True)
                         result = not result
-                    if result # checks if the or statement returns true
+                    if result: # checks if the or statement returns true
                         dangerous_level += LARGE_RISK
                     else:
                         dangerous_level += MEDIUM_RISK
                 except:  # means that the or statement is incorrect
                     dangerous_level += MEDIUM_RISK
-        elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sub_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement):
-            dangerous_level += HIGH_RISK
-        elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", sub_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sub_statement):
-            dangerous_level += VERY_DANGEROUS
-        elif re.search(r"""where\s+exists\s+.+""", sub_statement):
-            dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""update\s+.+?\s+set\s+.+""", sub_statement):
-            dangerous_level += VERY_LOW_RISK
-        elif re.search(r"""truncate\s+table\s+.+""", sub_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""", sub_statement):
-            dangerous_level += LOW_RISK
-        elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sub_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement):
-            dangerous_level += MEDIUM_RISK
-        elif re.search(r"""select.+?from\s+.+""", sub_statement):
-            dangerous_level += VERY_LOW_RISK
-        grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sub_statement)
-        if grant_revoke_statement:
-            permissions_statement = grant_revoke_statement.group("permissions")
-            permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
-            if len(permission_lst) > 0:
-                if "all" in permission_lst:
-                    dangerous_level += VERY_DANGEROUS
-                else:
-                    if "select" in permission_lst:
-                        dangerous_level += MEDIUM_RISK
-                    if "delete" in permission_lst:
-                        dangerous_level += MEDIUM_RISK
-                    if "insert" in permission_lst:
-                        dangerous_level += MEDIUM_RISK
-                    if "update" in permission_lst:
-                        dangerous_level += MEDIUM_RISK
-                    if "references" in permission_lst:
-                        dangerous_level += LOW_RISK
-                    if "alter" in permission_lst:
-                        dangerous_level += HIGH_RISK
+            elif re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sub_statement):
+                dangerous_level += MEDIUM_RISK
+            elif re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement):
+                dangerous_level += HIGH_RISK
+            elif re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", sub_statement):
+                dangerous_level += MEDIUM_RISK
+            elif re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sub_statement):
+                dangerous_level += VERY_DANGEROUS
+            elif re.search(r"""where\s+exists\s+.+""", sub_statement):
+                dangerous_level += VERY_LOW_RISK
+            elif re.search(r"""update\s+.+?\s+set\s+.+""", sub_statement):
+                dangerous_level += VERY_LOW_RISK
+            elif re.search(r"""truncate\s+table\s+.+""", sub_statement):
+                dangerous_level += MEDIUM_RISK
+            elif re.search(r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""", sub_statement):
+                dangerous_level += LOW_RISK
+            elif re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""", sub_statement):
+                dangerous_level += MEDIUM_RISK
+            elif re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement):
+                dangerous_level += MEDIUM_RISK
+            elif re.search(r"""select.+?from\s+.+""", sub_statement):
+                dangerous_level += VERY_LOW_RISK
+            grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sub_statement)
+            if grant_revoke_statement:
+                permissions_statement = grant_revoke_statement.group("permissions")
+                permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
+                if len(permission_lst) > 0:
+                    if "all" in permission_lst:
+                        dangerous_level += VERY_DANGEROUS
+                    else:
+                        if "select" in permission_lst:
+                            dangerous_level += MEDIUM_RISK
+                        if "delete" in permission_lst:
+                            dangerous_level += MEDIUM_RISK
+                        if "insert" in permission_lst:
+                            dangerous_level += MEDIUM_RISK
+                        if "update" in permission_lst:
+                            dangerous_level += MEDIUM_RISK
+                        if "references" in permission_lst:
+                            dangerous_level += LOW_RISK
+                        if "alter" in permission_lst:
+                            dangerous_level += HIGH_RISK
 
 
 check_common_sql_commands('')
