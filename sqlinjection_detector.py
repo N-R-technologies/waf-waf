@@ -16,7 +16,14 @@ AND_LEN = 3
 
 
 def find_sql_injection(request):
+    """this is the main function of the library, in the proxy server you just need to run it over every request
+    packet that reach the server
+    :param request: the request that goes into the server
+    :type request: string
+    :return the dangerous level of the packet, according the list we define above
+    :rtype: integer"""
     dangerous_level = 0
+    # the list of the premade function that detect sql injection we take from online
     list_of_detection_function = [find_in_set, find_master_access, check_user_disclosure, check_mongo_db_command,
                                   check_cstyle_comment, check_blind_benchmark, check_load_file_disclosure, check_load_data_disclosure,
                                   check_write_into_outfile, check_blind_sql_sleep, check_concat_command, check_information_disclosure,
@@ -28,7 +35,7 @@ def find_sql_injection(request):
                                   check_shadow_info_disclosure, check_db_command]
     for detect_sql_function in list_of_detection_function:
         dangerous_level += detect_sql_function(request)
-    dangerous_level += check_common_sql_commands(request)
+    dangerous_level += check_common_sql_commands(request)  # use the custom function and detection function we made
     print(dangerous_level)
 
 
@@ -362,7 +369,7 @@ def check_or_custom(logic_statement):
         if not_count % 2 == 0:
             is_positive = True
         if logic_statement.group("operators"):
-            if '=' in statement:
+            if re.search(r"""\b=\b""", statement):
                 statement = statement.replace('=', "==")
             elif "<>" in statement:
                 statement = statement.replace("<>", "!=")
@@ -375,6 +382,7 @@ def check_or_custom(logic_statement):
             statement = lower_value + " <= " + middle_value + " <= " + higher_value
         try:
             result = eval(statement)
+            print(statement)
             if not is_positive:  # eval's result should be the opposite (True -> False | False -> True)
                 result = not result
             if result:  # checks if the or statement returns true
@@ -423,8 +431,8 @@ def check_alter_custom(sub_statement):
     return MEDIUM_RISK if re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""", sub_statement) else NO_RISK
 
 
-def check_delete_custom(sub_statement):
-    """function check if the query is a delete sql statement
+def check_drop_custom(sub_statement):
+    """function check if the query is a drop sql statement
         :param sub_statement: the sub statement
         :type sub_statement: string
         :return: the dangerous level
@@ -432,13 +440,13 @@ def check_delete_custom(sub_statement):
     return VERY_DANGEROUS if re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""", sub_statement) else NO_RISK
 
 
-def check_where_custom(sub_statement):
+def check_exist_custom(sub_statement):
     """function check if the query is a where sql statement
         :param sub_statement: the sub statement
         :type sub_statement: string
         :return: the dangerous level
         :rtype: integer"""
-    return VERY_LOW_RISK if re.search(r"""where\s+exists\s+.+""", sub_statement) else NO_RISK
+    return VERY_LOW_RISK if re.search(r"""where\s+exists""", sub_statement) else NO_RISK
 
 
 def check_update_custom(sub_statement):
@@ -465,7 +473,7 @@ def check_insert_custom(sub_statement):
         :type sub_statement: string
         :return: the dangerous level
         :rtype: integer"""
-    return LOW_RISK if re.search(r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""", sub_statement) else NO_RISK
+    return MEDIUM_RISK if re.search(r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""", sub_statement) else NO_RISK
 
 
 def check_select_union_custom(sub_statement):
@@ -504,6 +512,7 @@ def check_grant_revoke_custom(sub_statement):
     grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", sub_statement)
     dangerous_level = 0
     if grant_revoke_statement:
+
         permissions_statement = grant_revoke_statement.group("permissions")
         permission_lst = re.findall(r"""(?:select|delete|insert|update|references|alter|all){1,7}""", permissions_statement)
         if len(permission_lst) > 0:
@@ -513,15 +522,17 @@ def check_grant_revoke_custom(sub_statement):
                 if "select" in permission_lst:
                     dangerous_level += MEDIUM_RISK
                 if "delete" in permission_lst:
-                    dangerous_level += MEDIUM_RISK
+                    dangerous_level += HIGH_RISK
                 if "insert" in permission_lst:
-                    dangerous_level += MEDIUM_RISK
+                    dangerous_level += HIGH_RISK
                 if "update" in permission_lst:
-                    dangerous_level += MEDIUM_RISK
+                    dangerous_level += HIGH_RISK
                 if "references" in permission_lst:
                     dangerous_level += LOW_RISK
                 if "alter" in permission_lst:
                     dangerous_level += HIGH_RISK
+        if not dangerous_level:  # if its still zero make it LOW_RISK
+            return VERY_LOW_RISK
     return dangerous_level
 
 
@@ -534,31 +545,36 @@ def check_common_sql_commands(request):
             :rtype: integer"""
     dangerous_level = 0
     statements_list = []
-    dangerous_level += check_comment_custom()
+    dangerous_level += check_comment_custom(request)
     if ';' in request:
         statements_list = request.split(';')
     else:
         statements_list.append(request)
     if statements_list[-1] == '':
         statements_list = statements_list[:-1]
-    for sub_statement in statements_list:
-        sub_statement = sub_statement.strip()
+    for sub_statement in statements_list:  # for example if the request contains couple of queries like:
+        #  or 1 = 1; drop table table_name
+        sub_statement = sub_statement.strip()  # remove spaces from begin and end of the sub_statement
+        # for every sub statement check if there is one of the queries of the list below
         for or_statement in sub_statement.split("or")[1:]:  # checks for every statement if its an 'or' statement
             logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
             dangerous_level += check_or_custom(logic_statement)
+
         dangerous_level += check_alter_custom(sub_statement)
         dangerous_level += check_delete_custom(sub_statement)
         dangerous_level += check_create_custom(sub_statement)
-        dangerous_level += check_delete_custom(sub_statement)
-        dangerous_level += check_where_custom(sub_statement)
+        dangerous_level += check_exist_custom(sub_statement)
         dangerous_level += check_update_custom(sub_statement)
         dangerous_level += check_truncate_custom(sub_statement)
         dangerous_level += check_insert_custom(sub_statement)
-        dangerous_level += check_select_union_custom(sub_statement)
-        dangerous_level += check_select_into_custom(sub_statement)
-        dangerous_level += check_select_from_custom(sub_statement)
+        # we don't want to multiply the dangerous level because select union statement is also simple select statement,
+        # so we add some if statements
+        if check_select_union_custom(sub_statement):
+            dangerous_level += MEDIUM_RISK
+        elif check_select_into_custom(sub_statement):
+            dangerous_level += MEDIUM_RISK
+        elif check_select_from_custom(sub_statement):
+            dangerous_level += VERY_LOW_RISK
         dangerous_level += check_grant_revoke_custom(sub_statement)
+        dangerous_level += check_drop_custom(sub_statement)
     return dangerous_level
-
-
-find_sql_injection("information_schema")
