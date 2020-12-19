@@ -10,6 +10,8 @@ MEDIUM_RISK = 6
 LARGE_RISK = 7
 HIGH_RISK = 8
 VERY_DANGEROUS = 9
+"""the xxe detector is now check a simple pattern of xxe injection, need to develop this pattern and 
+block other types of xxe injection"""
 
 
 def xxe_detector(request):
@@ -41,3 +43,12 @@ def check_blind_xxe(request):
             if parse_result.scheme != '' and parse_result.netloc != '':
                 return True
     return False
+
+
+def check_xxe_comments(request):
+    """function check if the request contains some xxe comment tags
+    :param request: the request from user
+    :type request: string
+    :return the dangerous level according the findings
+    :rtype: integer"""
+    return VERY_LOW_RISK if re.search(r"""<!(\[cdata\[|\-\-)""", request) else NO_RISK
