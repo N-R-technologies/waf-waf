@@ -1,21 +1,28 @@
 import re
 from urllib.parse import urlparse
-NO_RISK = 0
-UNIMPORTANT_RISK = 1
-VERY_LITTLE_RISK = 2
-LITTLE_RISK = 3
-VERY_LOW_RISK = 4
-LOW_RISK = 5
-MEDIUM_RISK = 6
-LARGE_RISK = 7
-HIGH_RISK = 8
-VERY_DANGEROUS = 9
+from risk_level import RiskLevel
+from xxe_info import XxeInfo
 """the xxe detector is now check a simple pattern of xxe injection, need to develop this pattern and 
 block other types of xxe injection"""
 
 
-def xxe_detector(request):
-    pass
+def detector(request):
+    attack_info = ""
+    information = XxeInfo()
+    dangerous_level = RiskLevel.NO_RISK
+    if check_xxe_information_disclosure(request):
+        if check_blind_xxe(request):
+            information.set_attack_info("blind_xxe")
+            attack_info = information.get_info()
+            dangerous_level += RiskLevel.VERY_DANGEROUS
+        else:
+            information.set_attack_info("xxe_information_disclosure")
+            attack_info = information.get_info()
+            dangerous_level += RiskLevel.HIGH_RISK
+    if check_xxe_comments(request):
+        information.set_attack_info("xxe_comment")
+        attack_info = information.get_info()
+    return dangerous_level, attack_info
 
 
 def check_xxe_information_disclosure(request):
@@ -24,10 +31,7 @@ def check_xxe_information_disclosure(request):
     :return: the dangerous level according the findings
     :rtype: integer"""
     search_xxe_result = re.search(r"""<!\s*(?P<component>element|entity\s+.*system\s+)""", request)
-    if search_xxe_result:
-        if search_xxe_result.group("component") != "element":
-            return VERY_DANGEROUS if check_blind_xxe(request) else HIGH_RISK
-        return MEDIUM_RISK
+    return True if search_xxe_result else False
 
 
 def check_blind_xxe(request):
@@ -51,4 +55,4 @@ def check_xxe_comments(request):
     :type request: string
     :return the dangerous level according the findings
     :rtype: integer"""
-    return VERY_LOW_RISK if re.search(r"""<!(\[cdata\[|\-\-)""", request) else NO_RISK
+    return True if re.search(r"""<!(\[cdata\[|\-\-)""", request) else False
