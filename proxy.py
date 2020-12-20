@@ -16,8 +16,7 @@ class WAF:
 
     def _load_blacklist_configuration(self, blacklist_file_path):
         if os.path.exists(blacklist_file_path):
-            # "None" can't be loaded into a set, so an empty string is being used instead
-            self._blacklist = set(toml.load(blacklist_file_path).get("blacklist", ""))
+            self._blacklist = set(toml.load(blacklist_file_path).get("blacklist", []))
         else:
             open(blacklist_file_path, 'w').close()
 
