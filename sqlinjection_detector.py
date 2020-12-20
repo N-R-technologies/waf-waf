@@ -1,5 +1,6 @@
 import re
 from risk_level import RiskLevel
+from sqlinjection_info import SqlInjectionInfo
 BETWEEN_LEN = 7
 AND_LEN = 3
 
@@ -12,38 +13,34 @@ def detector(request):
     :return the dangerous level of the packet, according the list we define and the information about the attack
     :rtype: integer, string"""
     dangerous_level = 0
-    counter_finds = 0
+    counter_finds = 0  # counter the number of function that detect the request
+    counter = 0  # counter for the serial number of the each detect function
     attack_info = ""
+    sqlInfo = SqlInjectionInfo()
     # the list of the premade function that detect sql injection we take from online
-    list_of_detection_function = [find_in_set, find_master_access, check_user_disclosure, check_mongo_db_command,
+    list_of_detection_function = [find_master_access, check_user_disclosure, check_mongo_db_command,
                                   check_cstyle_comment, check_blind_benchmark, check_load_file_disclosure, check_load_data_disclosure,
                                   check_write_into_outfile, check_blind_sql_sleep, check_concat_command, check_information_disclosure,
-                                  check_sleep_pg_command, check_blind_tsql, check_length_command, check_hex_command,
-                                  check_base64_command, check_substr_command, check_user_command, check_version_command,
-                                  check_system_variable, check_oct_command, check_ord_command, check_ascii_command, check_bin_command,
-                                  check_char_command, check_if_command, check_ifnull_command, check_case_command, check_exec_command,
+                                  check_sleep_pg_command, check_blind_tsql,
+                                  check_substr_command, check_user_command, check_version_command,
+                                  check_system_variable, check_if_command, check_ifnull_command, check_case_command, check_exec_command,
                                   check_create_command, check_user_info_disclosure, check_db_info_disclosure,
                                   check_shadow_info_disclosure, check_db_command]
     for detect_sql_function in list_of_detection_function:
         if detect_sql_function():
+            sqlInfo.set_attack_info(counter)
             counter_finds += 1
+        counter += 1
+    attack_info += sqlInfo.get_info()
     if counter_finds == 1:
         dangerous_level = RiskLevel.VERY_LOW_RISK
-    elif counter_finds > 1 and counter_finds < 4
+    elif counter_finds > 1 and counter_finds < 4:
         dangerous_level = RiskLevel.MEDIUM_RISK
     elif counter_finds >= 4:
         dangerous_level = RiskLevel.HIGH_RISK
-    dangerous_level += check_common_sql_commands(request)  # use the custom function and detection function we made
-    return dangerous_level, attack_info
-
-
-def find_in_set(request):
-    """check if the user try to run from the input common MySQL function “find_in_set”
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request) else False
+    dangerous_level_custom, attack_info_custom = check_common_sql_commands(request)  # use the custom function and detection function we made
+    if (dangerous_level + dangerous_level_custom) >= RiskLevel.LARGE_RISK:
+        return attack_info + '\n' + attack_info_custom
 
 
 def find_master_access(request):
@@ -163,33 +160,6 @@ def check_blind_tsql(request):
     return True if re.search(r"\bwaitfor\b.*?\b(delay|time(out)?)\b", request) else False
 
 
-def check_length_command(request):
-    """check if the user try to run from input the mysql length command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(request, r"\b(char_|bit_)?length\b.*?\(.+?\)") else False
-
-
-def check_hex_command(request):
-    """check if the user try to run from input the mysql hex/unhex command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\b(un)?hex\b.*?\(.+?\)", request) else False
-
-
-def check_base64_command(request):
-    """check if the user try to run from input the mysql to base 64/ from base 64 command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\b(from|to)_base64\b.*?\(.+?\)", request) else False
-
-
 def check_substr_command(request):
     """check if the user try to run from input the SQL substr command
     :param request: the request packet
@@ -224,51 +194,6 @@ def check_system_variable(request):
     :return: True if found, False if not
     :rtype boolean"""
     return True if re.search(r"@@.+?", request) else False
-
-
-def check_oct_command(request):
-    """check if the user try to run from input the SQL oct command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\boct\b.*?\(.+?\)", request) else False
-
-
-def check_ord_command(request):
-    """check if the user try to run from input the SQL ord command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\bord\b.*?\(.+?\)", request) else False
-
-
-def check_ascii_command(request):
-    """check if the user try to run from input the SQL ascii command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r" \bascii\b.*?\(.+?\)", request) else False
-
-
-def check_bin_command(request):
-    """check if the user try to run from input the SQL bin command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\bbin\b.*?\(.+?\)", request) else False
-
-
-def check_char_command(request):
-    """check if the user try to run from input the SQL char command
-    :param request: the request packet
-    :type request: string
-    :return: True if found, False if not
-    :rtype boolean"""
-    return True if re.search(r"\bcha?r\b.*?\(.+?\)", request) else False
 
 
 def check_if_command(request):
@@ -357,7 +282,7 @@ def check_or_custom(logic_statement):
     :param logic_statement: the logical statement in the or
     :type logic_statement: string
     :return: the dangerous level
-    :rtype: boolean"""
+    :rtype: integer"""
     dangerous_level = 0
     if logic_statement:
         statement = logic_statement.group("statement")
@@ -384,11 +309,11 @@ def check_or_custom(logic_statement):
             if not is_positive:  # eval's result should be the opposite (True -> False | False -> True)
                 result = not result
             if result:  # checks if the or statement returns true
-                dangerous_level += True
+                dangerous_level += RiskLevel.VERY_DANGEROUS
             else:
-                dangerous_level += True
+                dangerous_level = RiskLevel.HIGH_RISK
         except:  # means that the or statement is incorrect
-            dangerous_level += True
+            dangerous_level = RiskLevel.LOW_RISK
     return dangerous_level
 
 
@@ -540,9 +465,13 @@ def check_common_sql_commands(request):
             :param request: the request
             :type request: string
             :return: the dangerous level
-            :rtype: boolean"""
+            :return: info about the findings
+            :rtype: boolean
+            :rtype: sqlInjectionInfo"""
     dangerous_level = 0
+    add_to_dangerous = 0
     statements_list = []
+    custom_detect_info = SqlInjectionInfo()
     dangerous_level += check_comment_custom(request)
     if ';' in request:
         statements_list = request.split(';')
@@ -556,31 +485,44 @@ def check_common_sql_commands(request):
         # for every sub statement check if there is one of the queries of the list below
         for or_statement in sub_statement.split("or")[1:]:  # checks for every statement if its an 'or' statement
             logic_statement = re.search(r"""(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", or_statement)
-            dangerous_level += check_or_custom(logic_statement)
-
+            add_to_dangerous += check_or_custom(logic_statement)
+        if add_to_dangerous:  # the check or custom find some threat
+            dangerous_level += add_to_dangerous
+            custom_detect_info.set_attack_info_custom("or_custom")
         if check_alter_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("alter_custom")
         if check_delete_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("delete_custom")
         if check_create_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("create_custom")
         if check_exist_custom(sub_statement):
             dangerous_level += RiskLevel.LOW_RISK
+            custom_detect_info.set_attack_info_custom("exist_custom")
         if check_update_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("update_custom")
         if check_truncate_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("truncate_custom")
         if check_insert_custom(sub_statement):
             dangerous_level += RiskLevel.MEDIUM_RISK
+            custom_detect_info.set_attack_info_custom("insert_custom")
         # we don't want to multiply the dangerous level because select union statement is also simple select statement,
         # so we add some if statements
         if check_select_union_custom(sub_statement):
             dangerous_level += RiskLevel.LARGE_RISK
+            custom_detect_info.set_attack_info_custom("select_union_custom")
         elif check_select_into_custom(sub_statement):
             dangerous_level += RiskLevel.LARGE_RISK
+            custom_detect_info.set_attack_info_custom("select_into_custom")
         elif check_select_from_custom(sub_statement):
             dangerous_level += RiskLevel.VERY_LOW_RISK
+            custom_detect_info.set_attack_info_custom("select_from_custom")
         dangerous_level += check_grant_revoke_custom(sub_statement)
         if check_drop_custom(sub_statement):
             dangerous_level += RiskLevel.HIGH_RISK
-    return dangerous_level
+            custom_detect_info.set_attack_info_custom("drop_custom")
+    return dangerous_level, custom_detect_info.get_info()
