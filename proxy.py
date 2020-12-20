@@ -5,7 +5,7 @@ from mitmproxy.tools.dump import DumpMaster
 
 BLACKLIST_FILE_PATH = "blacklist.toml"
 PROXY_LISTEN_HOST = "127.0.0.1"
-PROXY_LISTEN_PORT = 80800
+PROXY_LISTEN_PORT = 8080
 
 
 class WAF:
@@ -56,11 +56,11 @@ options.add_option("intercept_active", bool, False, "")
 options.add_option("keep_host_header", bool, True, "")
 proxy_config = proxy.config.ProxyConfig(options)
 
-proxy = DumpMaster(options)
-proxy.server = proxy.server.ProxyServer(proxy_config)
-proxy.addons.add(addons)
+proxy_server = DumpMaster(options)
+proxy_server.server = proxy.server.ProxyServer(proxy_config)
+proxy_server.addons.add(addons)
 
 try:
-    proxy.run()
+    proxy_server.run()
 except KeyboardInterrupt:
-    proxy.shutdown()
+    proxy_server.shutdown()
