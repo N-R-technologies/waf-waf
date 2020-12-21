@@ -3,7 +3,6 @@ from risk_level import RiskLevel
 
 
 class SqlIAdvancedCheck:
-
     @staticmethod
     def check_delete(sub_statement):
         """
@@ -15,7 +14,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""delete\s+.+?\s+from\s+.+""", sub_statement)\
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_create(sub_statement):
@@ -28,8 +28,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""create\s+(?P<createinfo>database|table|index|
-        (?:or\s+replace\s+)?view)\s+.+""", sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""create\s+(?P<createinfo>database|table|index|
+        (?:or\s+replace\s+)?view)\s+.+""", sub_statement) else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_alter(sub_statement):
@@ -42,8 +42,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""",
-                                                        sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""",
+                                                        sub_statement) else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_drop(sub_statement):
@@ -56,8 +56,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
             """
-        return True, RiskLevel.LARGE_RISK if re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""",
-                                                       sub_statement) else False
+        return (True, RiskLevel.LARGE_RISK) if re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""",
+                                                       sub_statement) else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_exist(sub_statement):
@@ -70,7 +70,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.VERY_LITTLE_RISK if re.search(r"""where\s+exists""", sub_statement) else False
+        return (True, RiskLevel.VERY_LITTLE_RISK) if re.search(r"""where\s+exists""", sub_statement) \
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_update(sub_statement):
@@ -83,7 +84,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""update\s+.+?\s+set\s+.+""", sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""update\s+.+?\s+set\s+.+""", sub_statement) \
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_truncate(sub_statement):
@@ -96,7 +98,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""truncate\s+table\s+.+""", sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""truncate\s+table\s+.+""", sub_statement) \
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_insert(sub_statement):
@@ -109,9 +112,9 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(
             r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""",
-            sub_statement) else False
+            sub_statement) else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_select_union(sub_statement):
@@ -123,9 +126,9 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if \
+        return (True, RiskLevel.MEDIUM_RISK) if \
             re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""",
-                      sub_statement) else False
+                      sub_statement) else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_select_into(sub_statement):
@@ -138,8 +141,8 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement) \
-            else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", sub_statement) \
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_select_from(sub_statement):
@@ -152,11 +155,13 @@ class SqlIAdvancedCheck:
         :rtype: boolean
         :rtype: integer
         """
-        return True, RiskLevel.MEDIUM_RISK if re.search(r"""select.+?from\s+.+""", sub_statement) else False
+        return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""select.+?from\s+.+""", sub_statement) \
+            else (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_grant_revoke(sub_statement):
-        """function check if the query is a grant or revoke sql statement
+        """
+        function check if the query is a grant or revoke sql statement
         :param sub_statement: the sub statement
         :type sub_statement: string
         :return: if its find
@@ -189,8 +194,9 @@ class SqlIAdvancedCheck:
                     elif "select" in permission_lst:
                         risk_level = RiskLevel.LOW_RISK
             if not risk_level:  # if its still zero make it LOW_RISK
-                return RiskLevel.VERY_LITTLE_RISK
-        return risk_level
+                return (True, RiskLevel.VERY_LITTLE_RISK)
+            return (True, risk_level)
+        return (False, RiskLevel.NO_RISK)
 
     @staticmethod
     def check_or(or_statement):
@@ -237,4 +243,5 @@ class SqlIAdvancedCheck:
                     risk_level = RiskLevel.MEDIUM_RISK
             except:  # means that the or statement is incorrect
                 risk_level = RiskLevel.VERY_LITTLE_RISK
-        return risk_level
+            return (True, risk_level)
+        return (False, RiskLevel.NO_RISK)

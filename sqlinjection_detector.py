@@ -1,12 +1,13 @@
-import re
 import inspect
 from risk_level import RiskLevel
 import sqlinjection_info
-from sqlI_basic_checks import SqlIBasicCheck
+from sqli_basic_checks import SqlIBasicCheck
 from sqli_advanced_checks import SqlIAdvancedCheck
 
+
 def detector(request):
-    """this is the main function of the library, in the proxy server you just need to run it over every request
+    """
+    this is the main function of the library, in the proxy server you just need to run it over every request
     packet that reach the server
     :param request: the request that goes into the server
     :type request: string
@@ -15,7 +16,8 @@ def detector(request):
     :return: the information about the attack that occurred
     :rtype: boolean
     :rtype: integer
-    :rtype: string"""
+    :rtype: string
+    """
     counter_finds_basic_checks = 0
     counter_finds_advanced_checks = 0
     est_basic_risk_level = 0
@@ -24,7 +26,7 @@ def detector(request):
     statements_list = []
     attack_info = ""
     for function in inspect.getmembers(SqlIBasicCheck, predicate=inspect.isfunction):
-        if function[1]():
+        if function[1](request):
             counter_finds_basic_checks += 1
             attack_info += sqlinjection_info.deep_info[function[0]]
     if counter_finds_basic_checks == 1:
@@ -32,7 +34,8 @@ def detector(request):
     elif (counter_finds_basic_checks > 1) and (counter_finds_basic_checks < 3):
         est_basic_risk_level = RiskLevel.VERY_LOW_RISK
     elif counter_finds_basic_checks >= 3:
-        est_basic_risk_level = RiskLevel.MEDIUM_RISK
+        est_basic_risk_level = RiskLevel.LOW_RISK
+    #  finish all the basic checks, now the advanced check take part
     if ';' in request:
         statements_list = request.split(';')
     else:
@@ -48,16 +51,20 @@ def detector(request):
             if find:
                 est_advanced_risk_level += risk_to_add
                 counter_finds_advanced_checks += 1
-        for function in inspect.getmembers(SqlIBasicCheck, predicate=inspect.isfunction):
+                attack_info += sqlinjection_info.deep_info["risk_to_add"]
+        for function in inspect.getmembers(SqlIAdvancedCheck, predicate=inspect.isfunction):
             if function[0] != "check_or":
-                find, risk_to_add = function[1]()
+                find, risk_to_add = function[1](sub_statement)
                 if find:
                     est_advanced_risk_level += risk_to_add
                     counter_finds_advanced_checks += 1
                     attack_info += sqlinjection_info.deep_info[function[0]]
-    est_advanced_risk_level = est_advanced_risk_level / counter_finds_advanced_checks
+    try:
+        est_advanced_risk_level /= counter_finds_advanced_checks
+    except ZeroDivisionError:
+        return (False, None, None)
     if est_advanced_risk_level >= RiskLevel.MEDIUM_RISK or est_basic_risk_level >= RiskLevel.VERY_LOW_RISK:
         est_risk_level = (est_basic_risk_level + est_advanced_risk_level) / 2
         info = sqlinjection_info.general_info + attack_info + sqlinjection_info.links_for_info
-        return True, est_risk_level, info
-    return False, None, None
+        return (True, est_risk_level, info)
+    return (False, None, None)
