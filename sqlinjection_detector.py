@@ -24,7 +24,6 @@ def detector(request):
     for basic_check_name, basic_check in basic_checks:
         est_risk_from_basic = basic_check(request)
         if est_risk_from_basic != RiskLevel.NO_RISK:
-            print(basic_check_name)
             risk_conclusion[int(est_risk_from_basic)-1] += 1
             all_risks_info += sqlinjection_info.deep_info[basic_check_name]
 
