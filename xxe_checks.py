@@ -14,7 +14,8 @@ class XxeCheck:
         :return: the dangerous level according the findings
         :rtype: int
         """
-        return RiskLevel.MEDIUM_RISK if re.search(r"""<\s*!\s*(element|entity)\s+.+?\s+system\s+.+?""", statement) \
+        return RiskLevel.MEDIUM_RISK \
+            if re.search(r"""<\s*!\s*(?:element|entity)\s+.+?\s+system\s+(?:'|\")(?P<file>file:///etc.*?|)(?:'|\")""", statement) \
             else RiskLevel.NO_RISK
 
     @staticmethod
@@ -25,8 +26,8 @@ class XxeCheck:
         :return the dangerous level according the findings
         :rtype: int
         """
-        result = re.search(r""".*?(?:'|\")(?P<url>.*?)(?:'|\")""", statement)
-        if result:
+        result = re.search(r"""<\s*!\s*(?:element|entity)\s+.+?\s+system\s+(?:'|\")(?P<url>.+?|)(?:'|\")""", statement)
+        if result is not None:
             url = result.group("url")
             if url:
                 parse_result = urlparse(url)
@@ -37,7 +38,7 @@ class XxeCheck:
     @staticmethod
     def xxe_comments(statement):
         """
-        This function will check if the request contains some xxe comment tags
+        This function will check if the request contains xxe comment tags
         :param statement: the user's request
         :type statement: string
         :return the dangerous level according the findings
