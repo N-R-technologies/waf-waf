@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class RiskLevel(Enum):
+class RiskLevel(IntEnum):
     NO_RISK = 0
     UNIMPORTANT_RISK = 1
     VERY_LITTLE_RISK = 2
@@ -12,3 +12,5 @@ class RiskLevel(Enum):
     LARGE_RISK = 7
     HIGH_RISK = 8
     VERY_DANGEROUS = 9
+
+    NUM_OF_RISKS = 9

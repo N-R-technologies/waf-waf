@@ -14,7 +14,7 @@ class XxeCheck:
         :return: the dangerous level according the findings
         :rtype: int
         """
-        return RiskLevel.MEDIUM_RISK if re.search(r"""<!\s*(?P<component>element|entity\s+.*system\s+)""", statement) \
+        return RiskLevel.MEDIUM_RISK if re.search(r"""<\s*!\s*(element|entity)\s+.+?\s+system\s+.+?""", statement) \
             else RiskLevel.NO_RISK
 
     @staticmethod
@@ -43,7 +43,7 @@ class XxeCheck:
         :return the dangerous level according the findings
         :rtype: int
         """
-        return RiskLevel.LOW_RISK if re.search(r"""<!(\[cdata\[|\-\-)""", statement) else RiskLevel.NO_RISK
+        return RiskLevel.LOW_RISK if re.search(r"""<\s*!(\[cdata\[|\-\-)""", statement) else RiskLevel.NO_RISK
 
     @staticmethod
     def billion_laughs(statement):
@@ -56,5 +56,5 @@ class XxeCheck:
         :rtype: int
         """
         return RiskLevel.LARGE_RISK if \
-            re.search(r"""<\s*!\s*entity\s+(?P<variable>.+?)\s+.+\s*>.+?\s*(?:&(?P=variable);\s*){3,}?""", statement) \
+            re.search(r"""<\s*!\s*entity\s+(?P<variable>.+?)\s+.+?\s*>.+?\s*(?:&(?P=variable);\s*){3,}?""", statement) \
             else RiskLevel.NO_RISK

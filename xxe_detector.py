@@ -4,6 +4,17 @@ from xxe_checks import XxeCheck
 from risk_level import RiskLevel
 
 
+def concat_info(risks_info):
+    """
+    This function will concat all the information about the attack
+    :param risks_info: all the information about the detected risks
+    :type risks_info: string
+    :return: the concat information about the attack
+    :rtype: string
+    """
+    return xxe_info.general_info + "\n\n" + risks_info + "\n\n" + xxe_info.links_for_info
+
+
 def xxe_detector(request):
     """
     This is the main function of the library. the detective will
@@ -15,15 +26,14 @@ def xxe_detector(request):
     :rtype: integer
     :rtype: string
     """
-    finds_checks_counter = 0
-    est_risk_level = 0
-    statements_list = []
-    attack_info = ""
+    risk_conclusion = [0] * RiskLevel.NUM_OF_RISKS
+    all_risks_info = ""
+
     xxe_checks = inspect.getmembers(XxeCheck, predicate=inspect.isfunction)
     for xxe_check_name, xxe_check_function in xxe_checks:
-        risk_level = xxe_check_function(request)
-        if risk_level != RiskLevel.NO_RISK:
-            finds_checks_counter += 1
-            est_risk_level += risk_level
-            attack_info += xxe_info.deep_info[xxe_check_name]
-    return est_risk_level, attack_info
+        est_risk_level = xxe_check_function(request)
+        if est_risk_level != RiskLevel.NO_RISK:
+            risk_conclusion[est_risk_level - 1] += 1
+            all_risks_info += xxe_info.deep_info[xxe_check_name]
+    print(risk_conclusion)
+    return concat_info(all_risks_info), risk_conclusion
