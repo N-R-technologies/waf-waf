@@ -5,7 +5,7 @@ from sqli_basic_checks import SqlIBasicChecks
 from sqli_advanced_checks import SqlIAdvancedChecks
 
 
-NUM_OF_RISKS = 10
+NUM_OF_RISKS = len(RiskLevel)
 
 
 class Detector:
