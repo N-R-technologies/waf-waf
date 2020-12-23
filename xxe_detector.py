@@ -14,8 +14,8 @@ class XxeDetector:
         :rtype: string
         """
         if not risks_info:
-            risks_info = "No risks found"
-        return xxe_info.general_info + "\n\n" + risks_info + "\n\n" + xxe_info.links_for_info
+            risks_info = "* No risks detected\n"
+        return xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + "\n" + xxe_info.links_for_info
 
     def detect(self, request):
         """
