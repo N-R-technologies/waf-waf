@@ -12,10 +12,8 @@ class XxeDetector:
         call it over every time a request from a user to the server is received
         :param request: the request that goes into the server
         :type request: string
-        :return: the estimated risk level of the packet
-        :return: the information about the attack that occurred
-        :rtype: integer
-        :rtype: string
+        :return: tuple of risk levels list and the information about the attack
+        :rtype: tuple
         """
         findings_graph = [0 for risk in range(RiskLevel.NUM_OF_RISKS)]
         all_risks_info = ""
