@@ -10,7 +10,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request)\
             else RiskLevel.NO_RISK
@@ -22,7 +22,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bsqlite_master\b", request) else RiskLevel.NO_RISK
 
@@ -33,7 +33,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(r"\bmysql.*?\..*?user\b", request) else RiskLevel.NO_RISK
 
@@ -44,7 +44,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if \
             re.search(r"\[\$(ne|eq|lte?|gte?|n?in|mod|all|size|exists|type|slice|or)\]",request)\
@@ -57,7 +57,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(r" \/\*.*?\*\/", request) else RiskLevel.NO_RISK
 
@@ -68,7 +68,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request) else RiskLevel.NO_RISK
 
@@ -79,7 +79,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if re.search(r"\bsleep\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -90,7 +90,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bload_file\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -101,7 +101,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", request) \
             else RiskLevel.NO_RISK
@@ -113,7 +113,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", request) \
             else RiskLevel.NO_RISK
@@ -125,7 +125,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -136,7 +136,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\binformation_schema\b", request) else RiskLevel.NO_RISK
 
@@ -147,7 +147,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if re.search(request, r"\bpg_sleep\b.*?\(.+?\)") else RiskLevel.NO_RISK
 
@@ -158,7 +158,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if re.search(r"\bwaitfor\b.*?\b(delay|time(out)?)\b", request) \
             else RiskLevel.NO_RISK
@@ -170,7 +170,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         r"""
         return RiskLevel.UNIMPORTANT_RISK if re.search(request, r"\b(char_|bit_)?length\b.*?\(.+?\)")\
             else RiskLevel.NO_RISK
@@ -182,7 +182,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\b(un)?hex\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -193,7 +193,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\b(from|to)_base64\b.*?\(.+?\)", request) \
             else RiskLevel.NO_RISK
@@ -205,7 +205,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", request) \
             else RiskLevel.NO_RISK
@@ -217,7 +217,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LARGE_RISK if re.search(r"\b(current_)?user\b.*?\(.*?\)", request) else RiskLevel.NO_RISK
 
@@ -228,7 +228,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if re.search(r" \bversion\b.*?\(.*?\)", request) else RiskLevel.NO_RISK
 
@@ -239,7 +239,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if re.search(r"@@.+?", request) else RiskLevel.NO_RISK
 
@@ -250,7 +250,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\boct\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -261,7 +261,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\bord\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -272,7 +272,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\bascii\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -283,7 +283,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\bbin\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -294,7 +294,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\bcha?r\b.*?\(.+?\)", request) else RiskLevel.NO_RISK
 
@@ -305,7 +305,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer"""
+        :rtype: enum risk level"""
         return RiskLevel.VERY_LITTLE_RISK if re.search(r"\bif\b.*?\(.+?,.+?,.+?\)", request) else \
             RiskLevel.NO_RISK
 
@@ -315,7 +315,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)") else \
             RiskLevel.NO_RISK
@@ -327,7 +327,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(r"\bcase\b.+?\bwhen\b.+?\bend\b", request) \
             else RiskLevel.NO_RISK
@@ -339,7 +339,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.HIGH_RISK if re.search(r"\bexec\b.+?\bxp_cmdshell\b", request) else RiskLevel.NO_RISK
 
@@ -350,7 +350,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", request)\
             else RiskLevel.NO_RISK
@@ -362,7 +362,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bpg_user\b", request) else RiskLevel.NO_RISK
 
@@ -373,7 +373,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bpg_database\b", request) else RiskLevel.NO_RISK
 
@@ -384,7 +384,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"\bpg_shadow\b", request) else RiskLevel.NO_RISK
 
@@ -395,7 +395,7 @@ class SqlIBasicChecks:
         :param request: the request packet
         :type request: integer
         :return: the risk level if found, zero if not
-        :rtype integer
+        :rtype: enum risk level
         """
         return RiskLevel.UNIMPORTANT_RISK if re.search(r"\b(current_)?database\b.*?\(.*?\)", request) \
             else RiskLevel.NO_RISK
@@ -407,7 +407,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"""delete\s+.+?\s+from\s+.+""", request) \
             else RiskLevel.NO_RISK
@@ -419,7 +419,7 @@ class SqlIBasicChecks:
         :param request: the sub statement
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if \
             re.search(r"""create\s+(?P<createinfo>database|table|index|(?:or\s+replace\s+)?view)\s+.+""", request) \
@@ -432,7 +432,7 @@ class SqlIBasicChecks:
         :param request: the sub statement
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"""alter\s+table\s+.+?\s+(?:add|drop\s+column)\s+.+""",
                                                           request) else RiskLevel.NO_RISK
@@ -444,7 +444,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.LARGE_RISK if re.search(r"""drop\s+(?P<deleteinfo>database|index|table|view)\s+.+""",
                                                          request) else RiskLevel.NO_RISK
@@ -456,7 +456,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.VERY_LITTLE_RISK if re.search(r"""where\s+exists""", request) \
             else RiskLevel.NO_RISK
@@ -468,7 +468,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"""update\s+.+?\s+set\s+.+""", request) \
             else RiskLevel.NO_RISK
@@ -480,7 +480,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"""truncate\s+table\s+.+""", request) \
             else RiskLevel.NO_RISK
@@ -492,7 +492,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(
             r"""insert\s+into\s+(?:'[^']+?'|\"[^\"]+?\"|\[[^\]]+?\]|\w+)(?:\s*\(.+?\)\s*|\s+)values\s*\(.+\)""",
@@ -505,7 +505,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if \
             re.search(r"""select\s+.+?\s+from\s+.+?\s+union(?:\s+all)?\s+select\s+.+?\s+from\s+.+""",
@@ -518,7 +518,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return (True, RiskLevel.MEDIUM_RISK) if re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", request) \
             else RiskLevel.NO_RISK
@@ -530,7 +530,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.MEDIUM_RISK if re.search(r"""select.+?from\s+.+""", request) \
             else RiskLevel.NO_RISK
@@ -542,7 +542,7 @@ class SqlIBasicChecks:
         :param request: the request
         :type request: string
         :return: the risk level
-        :rtype: integer
+        :rtype: enum risk level
         """
         return RiskLevel.LOW_RISK if \
             re.search(r"""or(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", request) \
