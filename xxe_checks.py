@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from risk_level import RiskLevel
 
 
-class XxeCheck:
+class XxeChecks:
     @staticmethod
     def data_disclosure(statement):
         """
