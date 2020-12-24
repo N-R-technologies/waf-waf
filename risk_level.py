@@ -12,5 +12,3 @@ class RiskLevel(IntEnum):
     LARGE_RISK = 7
     HIGH_RISK = 8
     VERY_DANGEROUS = 9
-
-    NUM_OF_RISKS = 10
