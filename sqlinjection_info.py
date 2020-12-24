@@ -58,19 +58,36 @@ deep_info = {
     "user_command": "* User Command: The user function allows the attacker to manipulate the users\n  "
                     "permissions and also see all the existing users in the database and more information about the users.\n",
 
-    "length_command"
-    "hex_command"
-    "base64_command"
+    "length_command": "* Length Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                      "user enter any kind of function as input.\n  This fucntion returns the length of a string.\n",
+
+    "hex_command": "* Hex Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                   "user enter any kind of function as input.\n  This fucntion decodes a decimal-encoded hexadecimal field.\n",
+
+    "base64_command": "* Base64 Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                      "user enter any kind of function as input.\n  This fucntion returns a base64 encoded string based "
+                      " on a given string.\n",
 
     "version_command": "* Version Command: The version function seems very nice and harmless but you should be careful.\n  "
                        "The attacker can see the version of the database and this info\n  "
                        "can be very useful for the next steps of the attack.\n",
 
-    "oct_command"
-    "ord_command"
-    "ascii_command"
-    "bin_command"
-    "char_command"
+    "oct_command": "* Oct Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                   "user enter any kind of function as input.\n  This fucntion returns the octal value of a decimal number.\n",
+
+    "ord_command": "* Ord Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                   "user enter any kind of function as input.\n  This fucntion returns the numeric value of the left "
+                   "most character of a given string.\n",
+    
+    "ascii_command": "* Ascii Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                     "user enter any kind of function as input.\n  This fucntion returns the ASCII value "
+                     "of the first character in given string.\n",
+    
+    "bin_command": "* Bin Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                   "user enter any kind of function as input.\n  This fucntion returns a binary representation of a number.\n",
+    
+    "char_command": "* Char Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
+                    "user enter any kind of function as input.\n  This fucntion returns a character based on a given ASCII code.\n",
 
     "system_variable": "* System Variable: System variables that store information about the running package "
                        "and its objects\n  This information can be very useful for future attacker.",
