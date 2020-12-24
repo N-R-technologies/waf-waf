@@ -18,12 +18,12 @@ class XxeDetector:
         findings_graph = [0 for risk in range(len(RiskLevel))]
         all_risks_info = ""
 
-        checks = inspect.getmembers(XxeChecks, predicate=inspect.isfunction)
-        for check_name, check in checks:
-            check_result = check(request)
+        xxe_checks = inspect.getmembers(XxeChecks, predicate=inspect.isfunction)
+        for xxe_check_name, xxe_check in xxe_checks:
+            check_result = xxe_check(request)
             findings_graph[check_result] += 1
             if check_result > RiskLevel.NO_RISK:
-                all_risks_info += xxe_info.deep_info[check_name]
+                all_risks_info += xxe_info.deep_info[xxe_check_name]
         return XxeDetector.summarize_info(all_risks_info), findings_graph
 
     @staticmethod
@@ -37,4 +37,4 @@ class XxeDetector:
         """
         if not risks_info:
             risks_info = "* No risks detected\n"
-        return xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + "\n" + xxe_info.links_for_info
+        return xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + xxe_info.links_for_info

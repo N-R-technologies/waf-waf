@@ -17,9 +17,13 @@ deep_info = {
     "blind_xxe": "* Blind XXE: Just like a simple XXE attack, but unlike the regular attack it results with "
                  "the server sending\n  the data to the hacker's machine instead of displaying it on the screen.\n",
 
-    "denial_of_service": "* Denial-Of-Service (DOS): It seems like some attacker tries to allocate potentially endless "
-                         "variables into your system memory.\n  The purpose of this action is to overtake your "
-                         "system memory and to shutdown your local machine.\n",
+    "billion_laughs": "* Billion Laughs: It seems like some attacker tries to allocate potentially endless "
+                      "variables into your system memory.\n  The purpose of this action is to overtake your "
+                      "system memory and to shutdown your local machine.\n",
+
+    "endless_file": "* Endless File: It seems like some attacker tries to allocate potentially endless "
+                      "file into your system memory.\n  The purpose of this action is to overtake your "
+                      "system memory and to shutdown your local machine.\n",
 
     "xinclude": "* XInclude: A part of the XML specification that allows you to create an XML document from nested "
                 "documents.\n  Unfortunately, if you see this, you should know that someone tried to specify a "
@@ -32,5 +36,9 @@ deep_info = {
 
     "xxe_comment": "* XXE Comment: For themselves, comments are not dangerous in any kind of attack.\n  But if you see "
                    "this message, probably there are not the only thing the user put on his malicious packet. "
-                   "This is another sign that the packet is dangerous.\n"
+                   "This is another sign that the packet is dangerous.\n",
+    "utf7": "* UTF-7 is kind of encryption that can help the attacker to hide is attack.\n"
+            "luckily our waf can detect this kind of encryption and block the request\n",
+    "inject_file": "* The user can inject the server side code with an malicious file or program\n"
+                   "in the xml request."
 }
