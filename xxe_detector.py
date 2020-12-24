@@ -15,7 +15,7 @@ class XxeDetector:
         :return: tuple of risk levels list and the information about the attack
         :rtype: tuple
         """
-        findings_graph = [0 for risk in range(RiskLevel.NUM_OF_RISKS)]
+        findings_graph = [0 for risk in range(len(RiskLevel))]
         all_risks_info = ""
 
         checks = inspect.getmembers(XxeChecks, predicate=inspect.isfunction)
