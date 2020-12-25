@@ -37,8 +37,10 @@ deep_info = {
     "xxe_comment": "* XXE Comment: For themselves, comments are not dangerous in any kind of attack.\n  But if you see "
                    "this message, probably there are not the only thing the user put on his malicious packet. "
                    "This is another sign that the packet is dangerous.\n",
-    "utf7": "* UTF-7 is kind of encryption that can help the attacker to hide is attack.\n"
-            "luckily our waf can detect this kind of encryption and block the request\n",
-    "inject_file": "* The user can inject the server side code with an malicious file or program\n"
-                   "in the xml request."
+
+    "utf7": "* UTF-7: UTF-7 is an encryption type that can help the attacker to hide is attack.\n  "
+            "Luckily, our WAF can detect this kind of encryption and block the request.\n",
+
+    "inject_file": "* Inject File: The user can inject the server side a code containing malicious file or program\n  "
+                   "in the xml request.\n"
 }
