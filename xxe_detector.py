@@ -4,7 +4,7 @@ from xxe_checks import XxeChecks
 from risk_level import RiskLevel
 
 
-class XxeDetector:
+class Detector:
     @staticmethod
     def detect(request):
         """
