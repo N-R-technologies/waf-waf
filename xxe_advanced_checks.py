@@ -4,7 +4,6 @@ from risk_level import RiskLevel
 
 
 class XxeAdvancedChecks:
-    
     @staticmethod
     def blind_xxe(request):
         """
@@ -19,8 +18,9 @@ class XxeAdvancedChecks:
         if urls_found is not None:
             for url in urls_found:
                 parse_result = urlparse(url)
-                return RiskLevel.LARGE_RISK if parse_result.scheme is not None and parse_result.netloc is not None \
-                    else RiskLevel.NO_RISK
+                if parse_result.scheme is not None and parse_result.netloc is not None:
+                    return RiskLevel.LARGE_RISK
+        return RiskLevel.NO_RISK
     
     @staticmethod
     def inject_file(request):
