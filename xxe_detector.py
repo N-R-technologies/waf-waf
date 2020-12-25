@@ -1,6 +1,7 @@
 import inspect
 import xxe_info
-from xxe_checks import XxeChecks
+from xxe_basic_checks import XxeBasicChecks
+from xxe_advanced_checks import XxeAdvancedChecks
 from risk_level import RiskLevel
 
 
@@ -18,13 +19,19 @@ class Detector:
         findings_graph = [0 for risk in range(len(RiskLevel))]
         all_risks_info = ""
 
-        xxe_checks = inspect.getmembers(XxeChecks, predicate=inspect.isfunction)
-        for xxe_check_name, xxe_check in xxe_checks:
-            check_result = xxe_check(request)
+        basic_checks = inspect.getmembers(XxeBasicChecks, predicate=inspect.isfunction)
+        for basic_check_name, basic_check in basic_checks:
+            check_result = basic_check(request)
             findings_graph[check_result] += 1
             if check_result > RiskLevel.NO_RISK:
-                all_risks_info += xxe_info.deep_info[xxe_check_name]
-        return XxeDetector.summarize_info(all_risks_info), findings_graph
+                all_risks_info += xxe_info.deep_info[basic_check_name]
+        advanced_checks = inspect.getmembers(XxeAdvancedChecks, predicate=inspect.isfunction)
+        for advanced_check_name, advanced_check in advanced_checks:
+            check_result = advanced_check(request)
+            findings_graph[check_result] += 1
+            if check_result > RiskLevel.NO_RISK:
+                all_risks_info += xxe_info.deep_info[advanced_check_name]
+        return Detector.summarize_info(all_risks_info), findings_graph
 
     @staticmethod
     def summarize_info(risks_info):
@@ -37,4 +44,5 @@ class Detector:
         """
         if not risks_info:
             risks_info = "* No risks detected\n"
-        return xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + xxe_info.links_for_info
+        return "General Information: " + xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + xxe_info.links_for_info
+
