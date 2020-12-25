@@ -14,7 +14,7 @@ VERY_DANGEROUS = 9
 
 
 
-def sql_injection_detector(request):
+def find_sql_injection(request):
     # need to call al the check function and calculate the risk level
     pass
 
