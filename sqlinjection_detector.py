@@ -46,4 +46,4 @@ class Detector:
         """
         if not risks_info:
             risks_info = "* No risks detected\n"
-        return sqlinjection_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + sqlinjection_info.links_for_info
+        return "General Information:\n" + sqlinjection_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + sqlinjection_info.links_for_info
