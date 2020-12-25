@@ -33,6 +33,7 @@ class Detector:
             if advanced_check_result > RiskLevel.NO_RISK:
                 findings_graph[advanced_check_result] += 1
                 all_risks_info += sqlinjection_info.deep_info[advanced_check_name]
+
         return Detector.summarize_info(all_risks_info), findings_graph
 
     @staticmethod
