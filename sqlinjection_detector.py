@@ -509,4 +509,3 @@ def check_common_sql_commands(request):
 
 if re.search(r"(lol?:lool)", "abcde lollool"):
     print("hello")
-#print(check_common_sql_commands()
