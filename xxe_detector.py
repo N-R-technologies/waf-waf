@@ -47,4 +47,8 @@ class Detector:
         """
         if not risks_info:
             risks_info = "* No risks detected\n"
-        return "General Information XXE attack:\n" + xxe_info.general_info + "\n\nDetected risks:\n" + risks_info + '\n' + xxe_info.links_for_info
+        risks_list = []
+        risks_list.append("General Information XXE attack:\n" + xxe_info.general_info + "\n\nDetected risks:\n")
+        risks_list.append(risks_info + '\n')
+        risks_list.append(xxe_info.links_for_info)
+        return risks_list
