@@ -48,7 +48,7 @@ class Detector:
         if not risks_info:
             risks_info = "* No risks detected\n"
         risks_list = []
-        risks_list.append("General Information SQL Injection:\n" + sqlinjection_info.general_info + \n\nDetected risks:\n)
+        risks_list.append("General Information SQL Injection:\n" + sqlinjection_info.general_info + "\n\nDetected risks:\n")
         risks_list.append(risks_info + '\n')
-        risks_list.append(links_for_info)
-        return  risks_list
+        risks_list.append(sqlinjection_info.links_for_info)
+        return risks_list
