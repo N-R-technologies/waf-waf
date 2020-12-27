@@ -18,15 +18,12 @@ program will call to the makeLog + sendEmail functions that will create the dail
 
 class Detective:
     _detectors_list = []
+    _risks_found = [0] * len(RiskLevel)
     _general_attack_info = []
     _deep_attack_info = []
     _links_attack = []
-    _risks_found = [0] * len(RiskLevel)
 
     def __int__(self):
-        """
-        function initialize the variables in the detective class
-        """
         plt.rcdefaults()
         self._detectors_list.append(sqlinjection_detector.Detector)
         self._detectors_list.append(xxe_detector.Detector)
@@ -34,24 +31,48 @@ class Detective:
     def detect(self, request):
         """
         This function will be called for every packet sent to the server.
-        It will search for any kind of attack the WAF can protect from
+        It will identify if the packet contains any kind of attack the WAF can protect from
         :param request: the user's request
         :type request: string
-        :return: the information detected by the detector, empty string if no attack was detected
-        :rtype: string
+        :return: True if an attack was detected, otherwise, False
+        :rtype: boolean
         """
         for detector in self._detectors_list:
-            attack_info, add_to_risk_graph = detector.detect(request)
-            if not all(risk == 0 for risk in add_to_risk_graph[1:]):
-                if attack_info[0] not in self._general_attack_info:
-                    self._general_attack_info.append(attack_info[0])
-                    self._deep_attack_info.append(attack_info[1])
-                    self._links_attack.append(attack_info[2])
-                else:
-                    self._deep_attack_info[self._general_attack_info.index(attack_info[0])] += attack_info[1]
-                for risk_found_request, risk_found_day in add_to_risk_graph[1:], self._risks_found[1:]:
-                    risk_found_day += risk_found_request
-                # need to add the functionality for checking if we should block the packet or not
+            attack_info, attack_risks_findings = detector.detect(request)
+            if any(risk > RiskLevel.NO_RISK for risk in attack_risks_findings[1:]):
+                total_risk_level = 0
+                for i in range(1, len(attack_risks_findings[1:])):
+                    total_risk_level += i * attack_risks_findings[i]
+                amount_of_risks = sum(attack_risks_findings[1:])
+                avg_risk_level = total_risk_level / amount_of_risks
+                if avg_risk_level > RiskLevel.LARGE_RISK:
+                    self._set_info(attack_info)
+                    self._set_graph(attack_risks_findings)
+                    return True
+        return False
+
+    def _set_info(self, attack_info):
+        """
+        This function will gather all the information from the packet
+        :param attack_info: the information about the identified attack
+        :type attack_info: list
+        """
+        if attack_info[0] not in self._general_attack_info:
+            self._general_attack_info.append(attack_info[0])
+            self._deep_attack_info.append(attack_info[1])
+            self._links_attack.append(attack_info[2])
+        else:
+            self._deep_attack_info[self._general_attack_info.index(attack_info[0])] += attack_info[1]
+
+    def _set_graph(self, attack_risks_findings):
+        """
+        This function will add the current attack risks findings values to the
+        total detective's risks findings
+        :param attack_risks_findings: the risk levels of the identified attack
+        :type attack_risks_findings: list
+        """
+        for risk_found_day, risk_found_request in self._risks_found[1:], attack_risks_findings[1:]:
+            risk_found_day += risk_found_request
 
     def get_info(self):
         """
@@ -75,7 +96,7 @@ class Detective:
         """
         This function will create an image graph based on the detectors findings
         """
-        objects = tuple([riskLevel for riskLevel in RiskLevel])
+        objects = tuple([risk_level for risk_level in RiskLevel])
         y_pos = np.arange(len(objects))
         plt.bar(y_pos, self._risks_found, align='center', alpha=0.5)
         plt.xticks(y_pos, objects)
