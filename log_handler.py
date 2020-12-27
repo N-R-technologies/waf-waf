@@ -23,7 +23,7 @@ class LogHandler:
         :return: None
         """
         attack_list = attack_info.split('\n')
-        for row in attack_lsit:
+        for row in attack_list:
             self._daily_log.cell(200, 10, txt=row, ln=2, align='L')
         self._daily_log.image("icon.jpeg", x=80, w=70, h=80)
 
