@@ -1,8 +1,9 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import sqlinjection_detector
 import xxe_detector
 from risk_level import RiskLevel
-import matplotlib.pyplot as plt
-import numpy as np
+
 """
 flow of the program - every packet will pass throw the detect function
 then the detect function will return True if it detect any risks in the packet, if so, the proxy
@@ -14,8 +15,6 @@ gather all the information found together, and then reset the information. at th
 program will call to the makeLog + sendEmail functions that will create the daily log file and send it to the user 
 """
 
-plt.rcdefaults()
-
 
 class Detective:
     _detectors_list = []
@@ -23,21 +22,22 @@ class Detective:
     _deep_attack_info = []
     _links_attack = []
     _risks_found = [0] * len(RiskLevel)
-    
+
     def __int__(self):
         """
         function initialize the variables in the detective class
         """
+        plt.rcdefaults()
         self._detectors_list.append(sqlinjection_detector.Detector)
         self._detectors_list.append(xxe_detector.Detector)
 
     def detect(self, request):
         """
-        function called for every packet sent to the server, and then
-        search for any kind of attack the waf can detect
+        This function will be called for every packet sent to the server.
+        It will search for any kind of attack the WAF can protect from
         :param request: the user's request
         :type request: string
-        :return: the info detected by the detector, empty string if no attack was detected
+        :return: the information detected by the detector, empty string if no attack was detected
         :rtype: string
         """
         for detector in self._detectors_list:
@@ -55,30 +55,31 @@ class Detective:
 
     def get_info(self):
         """
-        function gathering all the info from the packet and return the conclusion of it
-        :return: all the info together
+        This function will gather all the information from the packet
+        and will return the conclusions of it
+        :return: the conclusions of the given information
         :rtype: string
         """
-        summarize_info = ""
+        summarized_info = ""
         for general_info, deep_info, links in self._general_attack_info, self._deep_attack_info, self._links_attack:
-            summarize_info += general_info + '\n' + deep_info + '\n' + links + '\n'
-        self._detectors_list = []
+            summarized_info += general_info + '\n' + deep_info + '\n' + links + '\n'
+        self._reset_info()
+        return summarized_info
+
+    def _reset_info(self):
         self._general_attack_info = []
         self._deep_attack_info = []
         self._links_attack = []
-        self._risks_found = [0] * len(RiskLevel)
-        return summarize_info
 
     def create_graph(self):
         """
-        function create graph image based on the findings
+        This function will create an image graph based on the detectors findings
         """
-        objects = tuple([int(riskLevel) for riskLevel in RiskLevel])
+        objects = tuple([riskLevel for riskLevel in RiskLevel])
         y_pos = np.arange(len(objects))
         plt.bar(y_pos, self._risks_found, align='center', alpha=0.5)
         plt.xticks(y_pos, objects)
         plt.ylabel('Risks Found')
-        plt.xlabel('Risk Level')
-        plt.title('Risk Founds In The Last Day')
+        plt.xlabel('Risks Levels')
+        plt.title('Risks Found In The Last Day')
         plt.savefig('risks_graph.png')
-
