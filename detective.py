@@ -1,5 +1,4 @@
-import numpy as np
-import matplotlib.pyplot as plt
+from graph_handler import GraphHandler
 import sqlinjection_detector
 import xxe_detector
 from risk_level import RiskLevel
@@ -18,13 +17,11 @@ program will call to the makeLog + sendEmail functions that will create the dail
 
 class Detective:
     _detectors_list = []
-    _risks_found = [0] * len(RiskLevel)
     _general_attack_info = []
     _deep_attack_info = []
     _links_attack = []
 
     def __int__(self):
-        plt.rcdefaults()
         self._detectors_list.append(sqlinjection_detector.Detector)
         self._detectors_list.append(xxe_detector.Detector)
 
@@ -46,12 +43,12 @@ class Detective:
                 amount_of_risks = sum(attack_risks_findings[1:])
                 avg_risk_level = total_risk_level / amount_of_risks
                 if avg_risk_level > RiskLevel.LARGE_RISK:
-                    self._set_info(attack_info)
-                    self._set_graph(attack_risks_findings)
+                    self.set_info(attack_info)
+                    GraphHandler.set_graph(attack_risks_findings)
                     return True
         return False
 
-    def _set_info(self, attack_info):
+    def set_info(self, attack_info):
         """
         This function will gather all the information from the packet
         :param attack_info: the information about the identified attack
@@ -63,16 +60,6 @@ class Detective:
             self._links_attack.append(attack_info[2])
         else:
             self._deep_attack_info[self._general_attack_info.index(attack_info[0])] += attack_info[1]
-
-    def _set_graph(self, attack_risks_findings):
-        """
-        This function will add the current attack risks findings values to the
-        total detective's risks findings
-        :param attack_risks_findings: the risk levels of the identified attack
-        :type attack_risks_findings: list
-        """
-        for risk_found_day, risk_found_request in self._risks_found[1:], attack_risks_findings[1:]:
-            risk_found_day += risk_found_request
 
     def get_info(self):
         """
@@ -88,19 +75,8 @@ class Detective:
         return summarized_info
 
     def _reset_info(self):
+        GraphHandler.reset_findings()
         self._general_attack_info = []
         self._deep_attack_info = []
         self._links_attack = []
 
-    def create_graph(self):
-        """
-        This function will create an image graph based on the detectors findings
-        """
-        objects = tuple([risk_level for risk_level in RiskLevel])
-        y_pos = np.arange(len(objects))
-        plt.bar(y_pos, self._risks_found, align='center', alpha=0.5)
-        plt.xticks(y_pos, objects)
-        plt.ylabel('Risks Found')
-        plt.xlabel('Risks Levels')
-        plt.title('Risks Found In The Last Day')
-        plt.savefig('risks_graph.png')
