@@ -42,7 +42,7 @@ class Detective:
                     total_risk_level += i * attack_risks_findings[i]
                 amount_of_risks = sum(attack_risks_findings[1:])
                 avg_risk_level = total_risk_level / amount_of_risks
-                if avg_risk_level > RiskLevel.LARGE_RISK:
+                if avg_risk_level >= RiskLevel.MEDIUM_RISK:
                     self.set_info(attack_info)
                     GraphHandler.set_graph(attack_risks_findings)
                     return True
