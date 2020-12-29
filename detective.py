@@ -1,7 +1,7 @@
-from graph_handler import GraphHandler
 import sqlinjection_detector
 import xxe_detector
 from risk_level import RiskLevel
+from graph_handler import GraphHandler
 
 """
 flow of the program - every packet will pass throw the detect function
@@ -21,7 +21,7 @@ class Detective:
     _deep_attack_info = []
     _links_attack = []
 
-    def __int__(self):
+    def __init__(self):
         self._detectors_list.append(sqlinjection_detector.Detector)
         self._detectors_list.append(xxe_detector.Detector)
 
@@ -30,27 +30,45 @@ class Detective:
         This function will be called for every packet sent to the server.
         It will identify if the packet contains any kind of attack the WAF can protect from
         :param request: the user's request
-        :type request: string
+        :type request: mitmproxy.http.HTTPFlow.request
         :return: True if an attack was detected, otherwise, False
         :rtype: boolean
         """
-        for detector in self._detectors_list:
-            attack_info, attack_risks_findings = detector.detect(request)
-            if any(risk > RiskLevel.NO_RISK for risk in attack_risks_findings[1:]):
-                total_risk_level = 0
-                for i in range(1, len(attack_risks_findings[1:])):
-                    total_risk_level += i * attack_risks_findings[i]
-                amount_of_risks = sum(attack_risks_findings[1:])
-                avg_risk_level = total_risk_level / amount_of_risks
-                if avg_risk_level >= RiskLevel.MEDIUM_RISK:
-                    self.set_info(attack_info)
-                    GraphHandler.set_graph(attack_risks_findings)
-                    return True
+        request_content = self._analyze_request(request)
+        if request_content != "":
+            for detector in self._detectors_list:
+                attack_info, attack_risks_findings = detector.detect(request_content)
+                if any(risk > RiskLevel.NO_RISK for risk in attack_risks_findings[1:]):
+                    total_risk_level = 0
+                    for i in range(1, len(attack_risks_findings[1:])):
+                        total_risk_level += i * attack_risks_findings[i]
+                    amount_of_risks = sum(attack_risks_findings[1:])
+                    avg_risk_level = total_risk_level / amount_of_risks
+                    if avg_risk_level >= RiskLevel.MEDIUM_RISK:
+                        self._set_info(attack_info)
+                        GraphHandler.set_graph(attack_risks_findings)
+                        return True
         return False
 
-    def set_info(self, attack_info):
+    def _analyze_request(self, request):
         """
-        This function will gather all the information from the packet
+        This function will check which type of request is
+        the given request and it will return its content
+        :param request: the user's request
+        :type request: mitmproxy.http.HTTPFlow.request
+        :return: the content of the request
+        :rtype: string
+        """
+        content = ""
+        if request.method == "GET":
+            content = request.data.path.decode()
+        elif request.method == "POST":
+            content = request.content.decode()
+        return content.replace('\n', "").lower()
+
+    def _set_info(self, attack_info):
+        """
+        This function will gather all the information from the malicious request
         :param attack_info: the information about the identified attack
         :type attack_info: list
         """
@@ -79,4 +97,3 @@ class Detective:
         self._general_attack_info = []
         self._deep_attack_info = []
         self._links_attack = []
-
