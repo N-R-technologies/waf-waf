@@ -12,7 +12,7 @@ class Detector:
         It will return the risk levels of XXE attack and information about it
         :param request: the request that goes into the server
         :type request: string
-        :return: tuple of risk levels list and the information about the attack
+        :return: risk levels of XXE and information about the attack
         :rtype: tuple
         """
         risk_findings = [0] * len(RiskLevel)
