@@ -53,7 +53,6 @@ class EmailSender:
                 server_ssl.login(self._bot_address, self._bot_pass)
                 server_ssl.sendmail(daily_log_mail["From"], daily_log_mail["To"], daily_log_mail.as_string())
                 server_ssl.close()
-                return True
             except Exception:
                 return False
         return True
