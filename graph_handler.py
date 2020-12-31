@@ -1,41 +1,26 @@
+from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
 from risk_level import RiskLevel
 
 
 class GraphHandler:
-    plt.rcdefaults()
-    risks_found = [0] * len(RiskLevel)
 
-    @staticmethod
-    def set_graph(attack_risks_findings):
-        """
-        This function will add the current attack risks findings values to the
-        total detective's risks findings
-        :param attack_risks_findings: the risk levels of the identified attack
-        :type attack_risks_findings: list
-        """
-        for risk_found_day, risk_found_request in GraphHandler.risks_found[1:], attack_risks_findings[1:]:
-            risk_found_day += risk_found_request
+    def __init__(self):
+        plt.rcdefaults()
 
-    @staticmethod
-    def create_graph():
+    def create_graph(self, risks_found_day):
         """
         This function will create an image graph based on the detectors findings
         """
         objects = tuple([risk_level for risk_level in RiskLevel])
         y_pos = np.arange(len(objects))
-        plt.bar(y_pos, GraphHandler.risks_found, align='center', alpha=0.5)
+        plt.bar(y_pos, risks_found_day, align='center', alpha=0.5)
         plt.xticks(y_pos, objects)
         plt.locator_params(axis="y", nbins=max(objects) * 2)
         plt.ylabel('Risks Found')
         plt.xlabel('Risks Levels')
         plt.title('Risks Found In The Last Day')
-        plt.savefig('risks_graph.png')
+        graph_name = "risks_graph-" + date.today().strftime("%d/%m/%Y").replace('/', '_')
+        plt.savefig(graph_name + '.png')
 
-    @staticmethod
-    def reset_findings():
-        """
-        function reset the findings of the detection for the graph
-        """
-        GraphHandler.risks_found = [0] * len(RiskLevel)
