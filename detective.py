@@ -2,7 +2,6 @@ import os
 from importlib import import_module
 from secretary import Secretary
 from risk_level import RiskLevel
-from graph_handler import GraphHandler
 
 
 class Detective:
@@ -27,16 +26,10 @@ class Detective:
         if request_content is not None:
             for detector in self._detectors:
                 attack_info, attack_risks_findings = detector.detect(request_content)
-                found_risk = any(risk_level_amount > 0 for risk_level_amount in attack_risks_findings[1:])
+                found_risk = any(risk_level_amount > 0 for risk_level_amount in attack_risks_findings[RiskLevel.Negligble:])
                 if found_risk:
-                    total_risk_level = 0
-                    for i in range(1, len(RiskLevel)):
-                        total_risk_level += i * attack_risks_findings[i]
-                    amount_of_risks = sum(attack_risks_findings[1:])
-                    avg_risk_level = total_risk_level / amount_of_risks
-                    if avg_risk_level >= RiskLevel.MEDIUM_RISK:
+                    if self._is_dangerous_request(attack_risks_findings):
                         self._set_info(attack_info)
-                        GraphHandler.set_graph(attack_risks_findings)
                         return True
         return False
 
@@ -54,6 +47,23 @@ class Detective:
         elif request.method == "POST":
             return request.content.decode()
         return None
+
+    def _is_dangerous_request(self, risks_findings):
+        """
+        This function will decide if the request is dangerous according to its impact
+        :param risks_findings: the risk levels the detector have found
+        :type risks_findings: list
+        :return: True if the request is dangerous, otherwise, False
+        :rtype: boolean
+        """
+        amount_of_risks = len(RiskLevel) - 1
+        total_impact_level = 0
+        for risk_occurrences, i in zip(risks_findings[RiskLevel.Negligble:],
+                                       range(RiskLevel.Negligble, RiskLevel.Critical)):
+            multiplying_factor = i / amount_of_risks
+            total_impact_level += multiplying_factor * risk_occurrences
+        is_impact_high = any(risk_occurrences > 0 for risk_occurrences in risks_findings[RiskLevel.Critical:])
+        return is_impact_high or total_impact_level >= 1
 
     def _set_info(self, attack_info):
         """
@@ -82,7 +92,6 @@ class Detective:
         return summarized_info
 
     def _reset_info(self):
-        GraphHandler.reset_findings()
         self._general_attack_info = []
         self._deep_attack_info = []
         self._links_attack = []
