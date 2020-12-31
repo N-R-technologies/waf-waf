@@ -24,7 +24,7 @@ class Detective:
         request_content = self._analyze_request(request)
         if request_content is not None:
             for detector in self._detectors:
-                attack_info, attack_risks_findings = detector.detect(request_content)
+                attack_risks_findings, attack_info = detector.detect(request_content)
                 found_risk = any(risk_level_amount > 0 for risk_level_amount in attack_risks_findings[RiskLevel.Negligble:])
                 if found_risk:
                     if self._is_dangerous_request(attack_risks_findings):
