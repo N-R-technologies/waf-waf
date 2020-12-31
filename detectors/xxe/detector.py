@@ -16,23 +16,23 @@ class Detector:
         :rtype: tuple
         """
         risk_findings = [0] * len(RiskLevel)
-        all_risks_info = ""
+        all_risks_info = []
 
         basic_checks = inspect.getmembers(BasicChecks, predicate=inspect.isfunction)
         for basic_check_name, basic_check in basic_checks:
             basic_check_result = basic_check(request)
             risk_findings[basic_check_result] += 1
             if basic_check_result > RiskLevel.NO_RISK:
-                all_risks_info += info.deep_info[basic_check_name]
+                all_risks_info.append(info.deep_info[basic_check_name])
 
         advanced_checks = inspect.getmembers(AdvancedChecks, predicate=inspect.isfunction)
         for advanced_check_name, advanced_check in advanced_checks:
             advanced_check_result = advanced_check(request)
             risk_findings[advanced_check_result] += 1
             if advanced_check_result > RiskLevel.NO_RISK:
-                all_risks_info += info.deep_info[advanced_check_name]
+                all_risks_info.append(info.deep_info[advanced_check_name])
 
-        return all_risks_info, risk_findings
+        return risk_findings, all_risks_info
 
     @property
     def category(self):
