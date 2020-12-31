@@ -12,7 +12,7 @@ class Detective:
     def __init__(self):
         for detector_type in os.listdir("detectors"):
             self._detectors.append(import_module("detectors." + detector_type + ".detector").Detector)
-
+    
     def detect(self, request):
         """
         This function will be called for every packet sent to the server.
@@ -22,18 +22,15 @@ class Detective:
         :return: True if an attack was detected, otherwise, False
         :rtype: boolean
         """
-        request_content = self._analyze_request(request)
+        request_content = self.analyze_request(request)
         if request_content is not None:
             for detector in self._detectors:
                 attack_info, attack_risks_findings = detector.detect(request_content)
                 found_risk = any(risk_level_amount > 0 for risk_level_amount in attack_risks_findings[1:])
                 if found_risk:
-                    amount_of_risks = sum(attack_risks_findings[1:])
-                    avg_risk_level = total_risk_level / amount_of_risks
-                    if avg_risk_level >= RiskLevel.MEDIUM_RISK:
-                        self._set_info(attack_info)
-                        GraphHandler.set_graph(attack_risks_findings)
-                        return True
+                    self._assistant.set_info(detector.category, attack_info)
+                    GraphHandler.set_graph(attack_risks_findings)
+                    return True
         return False
 
     def analyze_request(self, request):
@@ -50,3 +47,4 @@ class Detective:
         elif request.method == "POST":
             return request.content.decode()
         return None
+

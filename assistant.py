@@ -11,17 +11,22 @@ class Assistant:
         self._general_info = {"SQL Injection": sqlinjection_info.general_info, "XXE": xxe_info.general_info}
         self._links = {"SQL Injection": sqlinjection_info.links_for_info, "XXE": xxe_info.links_for_info}
 
-    def summarize_info(self, attack_info):
-        pass
-
     def set_info(self, category, attack_info):
         """
         This function will gather all the information from the malicious request
         :param attack_info: the information about the identified attack
+        :param category: the detector type
         :type attack_info: list
+        :type category: string
         """
         if category not in self._info:
-            self._info[category]["General_info"] = self._general_info[category]
+            self._info[category]["general"] = self._general_info[category]
+            self._info[category]["attacks"] = list()
+            self[category]["links"] = self._links[category]
+        else:
+            for attack_detected in attack_info:
+                self._info[category]["attacks"].append(attack_detected)
+
 
     def pop_info(self):
         """
@@ -31,10 +36,9 @@ class Assistant:
         :rtype: string
         """
         summarized_info = ""
-        for general_info, deep_info, links in self._general_attack_info, self._deep_attack_info, self._links_attack:
-            summarized_info += general_info + '\n' + deep_info + '\n' + links + '\n'
-        self._reset_info()
+        for attack_detected in self._info:
+            summarized_info += attack_detected["general"] + "\n" + \
+                               "\n".join(attack_detected["attacks"]) + attack_detected["links"]
+        GraphHandler.reset_findings()
         return summarized_info
 
-    def reset_info(self):
-        GraphHandler.reset_findings()
