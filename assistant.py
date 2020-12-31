@@ -8,8 +8,8 @@ class Assistant:
     _links = {}
 
     def __init__(self):
-        self._general_info = {"SQL Injection": sqlinjection_info.general_info, "XXE": xxe_info.general_info}
-        self._links = {"SQL Injection": sqlinjection_info.links_for_info, "XXE": xxe_info.links_for_info}
+        self._general_info = {"SQL Injection": info.general_info, "XXE": info.general_info}
+        self._links = {"SQL Injection": info.links_for_info, "XXE": info.links_for_info}
 
     def set_info(self, category, attack_info):
         """
