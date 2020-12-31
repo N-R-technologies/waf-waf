@@ -6,6 +6,7 @@ from risk_level import RiskLevel
 
 
 class Detector:
+
     def detect(self, request):
         """
         This function will be called by the detective for every request that should reach the server
@@ -32,24 +33,7 @@ class Detector:
                 risk_findings[advanced_check_result] += 1
                 all_risks_info += info.deep_info[advanced_check_name]
 
-        return Detector.summarize_info(all_risks_info), risk_findings
-
-    @staticmethod
-    def summarize_info(risks_info):
-        """
-        This function will summarize all the information about the attack
-        :param risks_info: all the information about the detected risks
-        :type risks_info: string
-        :return: the summarized information about the attack
-        :rtype: string
-        """
-        if not risks_info:
-            risks_info = "* No risks detected\n"
-        risks_list = []
-        risks_list.append("General Information SQL Injection:\n" + info.general_info + "\n\nDetected risks:\n")
-        risks_list.append(risks_info + '\n')
-        risks_list.append(info.links_for_info)
-        return risks_list
+        return all_risks_info, risk_findings
 
     @property
     def category(self):
