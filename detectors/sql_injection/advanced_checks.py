@@ -2,8 +2,7 @@ import re
 from risk_level import RiskLevel
 
 
-class SqlIAdvancedChecks:
-
+class AdvancedChecks:
     @staticmethod
     def grant_revoke(request):
         """
@@ -16,7 +15,6 @@ class SqlIAdvancedChecks:
         grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", request)
         risk_level = 0
         if grant_revoke_statement is not None:
-
             permissions_statement = grant_revoke_statement.group("permissions")
             permission_lst = re.findall(r"""\b(?:select|delete|insert|update|references|alter|all)\b""",
                                         permissions_statement)
@@ -36,9 +34,7 @@ class SqlIAdvancedChecks:
                         risk_level = RiskLevel.LOW_RISK
                     elif "select" in permission_lst:
                         risk_level = RiskLevel.LOW_RISK
-            if not risk_level:  # if its still zero make it LOW_RISK
+            if not risk_level:
                 return RiskLevel.VERY_LITTLE_RISK
             return risk_level
         return RiskLevel.NO_RISK
-
-

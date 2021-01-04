@@ -2,7 +2,7 @@ import re
 from risk_level import RiskLevel
 
 
-class SqlIBasicChecks:
+class BasicChecks:
     @staticmethod
     def find_in_set(request):
         """
@@ -547,4 +547,3 @@ class SqlIBasicChecks:
         return RiskLevel.LOW_RISK if \
             re.search(r"""or(?P<statement>(?:not\s+)*\s*(?P<operators>.+?<[^=>]+|[^=!<>]+=[^=]+|[^<]+?>[^=]+|.+?(?:==|<=|>=|!=|<>).+?)\s*|(?:not\s+)*.+?\s+(?:(?P<like>like\s+.+)|(?P<betweenand>between\s+.+?and\s+.+)|(?P<in>in\s*\(.+\))))""", request) \
             else RiskLevel.NO_RISK
-
