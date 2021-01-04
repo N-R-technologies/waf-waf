@@ -2,7 +2,7 @@ import re
 from risk_level import RiskLevel
 
 
-class XxeBasicChecks:
+class BasicChecks:
     @staticmethod
     def data_disclosure(request):
         """

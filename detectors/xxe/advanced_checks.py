@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from risk_level import RiskLevel
 
 
-class XxeAdvancedChecks:
+class AdvancedChecks:
     @staticmethod
     def blind_xxe(request):
         """
