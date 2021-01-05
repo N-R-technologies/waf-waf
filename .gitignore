@@ -337,4 +337,7 @@ ASALocalRun/
 # Local History for Visual Studio
 .localhistory/
 
+# our WAF project files
 citysearch_project/
+bot_address.toml
+user_addresses.toml
