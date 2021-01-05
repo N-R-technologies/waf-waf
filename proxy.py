@@ -28,7 +28,7 @@ class WAF:
             toml.dump({"blacklist": self._blacklist}, blacklist_file)
             blacklist_file.close()
 
-    def request(self, flow: http.HTTPFlow) -> None:  # TODO: change the function to "request" after CR
+    def request(self, flow: http.HTTPFlow) -> None:
         """
         This function will check and handle received malicious requests
         :param flow: The user's request
