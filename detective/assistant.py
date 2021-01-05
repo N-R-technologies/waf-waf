@@ -8,10 +8,10 @@ class Assistant:
     _links = {}
 
     def __init__(self):
-        for detector_type in os.listdir("detector_types"):
-            detector_info = import_module("detector_types." + detector_type + ".info")
-            self._general_info[detector_info.category] = detector_info.general_info
-            self._links[detector_info.category] = detector_info.links_for_info
+        for lens in os.listdir("lenses"):
+            lens_info = import_module(f"lenses.{lens}.info")
+            self._general_info[lens_info.category] = lens_info.general_info
+            self._links[lens_info.category] = lens_info.links_for_info
 
     def set_info(self, category, attack_info):
         """

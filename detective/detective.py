@@ -1,25 +1,24 @@
 import os
 from importlib import import_module
-from universal_detector import UniversalDetector
+from magnifying_glass import MagnifyingGlass
 from assistant import Assistant
 from risk_levels import RiskLevels
 
-BASIC_CHECKS = 0
-ADVANCED_CHECKS = 1
-INFO = 2
+INFO_INDEX = 2
 
 
 class Detective:
-    _detector_types = []
-    _universal_detector = UniversalDetector()
+    _lenses = []
+    _magnifying_glass = MagnifyingGlass()
     _assistant = Assistant()
 
     def __init__(self):
-        for detector_type in os.listdir("detector_types"):
-            detector_basic_checks = import_module("detector_types." + detector_type + ".basic_checks").BasicChecks
-            detector_advanced_checks = import_module("detector_types." + detector_type + ".advanced_checks").AdvancedChecks
-            detector_info = import_module("detector_types." + detector_type + ".info")
-            self._detector_types.append((detector_basic_checks, detector_advanced_checks, detector_info))
+        for lens in os.listdir("lenses"):
+            lens_package = f"lenses.{lens}"
+            basic_checks = import_module(".basic_checks", lens_package).BasicChecks
+            advanced_checks = import_module(".advanced_checks", lens_package).AdvancedChecks
+            info = import_module(".info", lens_package)
+            self._lenses.append((basic_checks, advanced_checks, info))
 
     def detect(self, request):
         """
@@ -30,20 +29,18 @@ class Detective:
         :return: True if an attack was detected, otherwise, False
         :rtype: boolean
         """
-        request_content = self._analyze_request(request)
+        request_content = self._parse_request_content(request)
         if request_content is not None:
-            for detector_type in self._detector_types:
-                attack_risks_findings, attack_info = self._universal_detector.detect(
-                                                     request_content, detector_type[BASIC_CHECKS],
-                                                     detector_type[ADVANCED_CHECKS], detector_type[INFO])
+            for lens in self._lenses:
+                attack_risks_findings, attack_info = self._magnifying_glass.detect(request_content, lens)
                 found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[RiskLevels.NEGLIGIBLE:])
                 if found_risk:
                     if self._is_malicious_request(attack_risks_findings):
-                        self._assistant.set_info(detector_type[INFO].category, attack_info)
+                        self._assistant.set_info(lens[INFO_INDEX].category, attack_info)
                         return True
         return False
 
-    def _analyze_request(self, request):
+    def _parse_request_content(self, request):
         """
         This function will check which type of request is
         the given request and it will return its content

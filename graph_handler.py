@@ -1,7 +1,7 @@
 from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
-from risk_levels import RiskLevels
+from detective.risk_levels import RiskLevels
 
 GRAPH_FILE_PATH = "log_related/graphs/risks_graph_"
 GRAPH_TITLE = "Risks Found In The Last Day"
@@ -24,7 +24,7 @@ class GraphHandler:
     @staticmethod
     def create_graph(risks_found_today):
         """
-        This function will create an image graph based on the detector_types findings
+        This function will create an image graph based on the lenses findings
         :param risks_found_today: all the risk levels which were found today
         :type risks_found_today: list
         """
