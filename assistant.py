@@ -1,5 +1,5 @@
-import sqlinjection_info as sqli_info
-import xxe_info as xxe_info
+import detectors.sql_injection.info as sqli_info
+import detectors.xxe.info as xxe_info
 
 
 class Assistant:
