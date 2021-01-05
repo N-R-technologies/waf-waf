@@ -1,6 +1,6 @@
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
-from detective import Detective
+from detective.detective import Detective
 
 HOST = "127.0.0.1"
 PORT = 8080
