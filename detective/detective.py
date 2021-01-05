@@ -29,7 +29,8 @@ class Detective:
         :return: True if an attack was detected, otherwise, False
         :rtype: boolean
         """
-        request_content = self._parse_request_content(request)
+#        request_content = self._parse_request_content(request)
+        request_content = request
         if request_content is not None:
             for lens in self._lenses:
                 attack_risks_findings, attack_info = self._magnifying_glass.detect(request_content, lens)

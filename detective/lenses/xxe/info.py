@@ -1,10 +1,10 @@
 category = "XXE"
 
 general_info = "XXE (XML External Entities) attack can occur when your application " \
-               "accepts any kind of xml parsing and input from the user.\nXXE may lead to:\n" \
+               "accepts any\nkind of xml parsing and input from the user.\nXXE may lead to:\n" \
                "* Disclosure of confidential data.\n* Denial of service (DOS).\n" \
                "* Server-side request forgery (SSRF).\n* Port scanning from the perspective " \
-               "of the machine where the parser is located.\n* Other system impacts."
+               "of the machine where the parser is located.\n* Other system impacts.\n"
 
 deep_info = {
     "data_disclosure": "* Data Disclosure: It seems like some attacker tries to retrieve some data "
@@ -39,8 +39,8 @@ deep_info = {
     "blind_xxe": "* Blind XXE: Just like a simple XXE attack, but unlike the regular attack it results with "
                  "the server sending\n  the data to the hacker's machine instead of displaying it on the screen.\n",
 
-    "inject_file": "* Inject File: The user can inject the server side a code containing malicious file or program\n  "
-                   "in the xml request.\n"
+    "inject_file": "* Inject File: The user tries to inject the server side a code containing malicious file "
+                   "or program in the request.\n"
 }
 
 links_for_info = "For more information about XXE, check the following links:\n" \

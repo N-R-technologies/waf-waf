@@ -34,12 +34,12 @@ class Assistant:
         """
         This function will gather all the information from the packet
         and will return the conclusions of it. then it will reset it
-        :return: the conclusions of the given information
-        :rtype: string
+        :return: the conclusions of the detected attack's information
+        :rtype: dict
         """
-        summarized_info = ""
-        for attack_detected in self._info:
-            summarized_info += attack_detected["general"] + '\n' + \
-                               '\n'.join(attack_detected["attacks"]) + attack_detected["links"]
+        summarized_info = {}
+        for attack_name, attack_info in self._info.items():
+            detected_risks = "Detected risks:\n" + "".join(attack_info["attacks"])
+            summarized_info[attack_name] = f'{attack_info["general"]}\n{detected_risks}\n{attack_info["links"]}'
         self._info = {}
         return summarized_info

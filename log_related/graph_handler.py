@@ -3,8 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from detective.risk_levels import RiskLevels
 
-GRAPH_FILE_PATH = "log_related/graphs/risks_graph_"
-GRAPH_TITLE = "Risks Found In The Last Day"
+GRAPH_FILE_PATH = "log_related/data/graphs/risks_graph_"
 GRAPH_Y_TITLE = "Risks Found"
 GRAPH_X_TITLE = "Risk Levels"
 GREEN_IMPACT = 0.2
@@ -41,7 +40,6 @@ class GraphHandler:
         plt.xticks(y_pos, objects)
         plt.xlabel(GRAPH_X_TITLE)
         plt.ylabel(GRAPH_Y_TITLE)
-        plt.title(GRAPH_TITLE)
         plt.bar(y_pos, risks_found_today, align="center", alpha=1, color=graph_colors)
         plt.savefig(GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
 
@@ -74,3 +72,6 @@ class GraphHandler:
         graph_colors.append(RED if risks_found_today[RiskLevels.CRITICAL] > 0 else BLANK)
         graph_colors.append(RED if risks_found_today[RiskLevels.CATASTROPHIC] > 0 else BLANK)
         return graph_colors
+
+
+GraphHandler.create_graph([0, 1, 2, 1, 3, 1])
