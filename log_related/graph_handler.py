@@ -72,6 +72,3 @@ class GraphHandler:
         graph_colors.append(RED if risks_found_today[RiskLevels.CRITICAL] > 0 else BLANK)
         graph_colors.append(RED if risks_found_today[RiskLevels.CATASTROPHIC] > 0 else BLANK)
         return graph_colors
-
-
-GraphHandler.create_graph([0, 1, 2, 1, 3, 1])
