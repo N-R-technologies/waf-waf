@@ -23,20 +23,18 @@ class LogComposer:
         self._set_main_page(LOG_TITLE)
 
     def _load_calibri_font(self, calibri_bold_file_path, calibri_light_file_path):
-        self._remove_calibri_font_configuration(calibri_bold_file_path, calibri_light_file_path)
         if os.path.exists(calibri_bold_file_path) and os.path.exists(calibri_light_file_path):
             self._daily_log.add_font("Calibri", 'B', calibri_bold_file_path, uni=True)
             self._daily_log.add_font("Calibri Light", "", calibri_light_file_path, uni=True)
         else:
             raise FileNotFoundError
+        self._remove_calibri_font_configuration(calibri_bold_file_path, calibri_light_file_path)
 
     def _remove_calibri_font_configuration(self, calibri_bold_file_path, calibri_light_file_path):
-        calibri_bold_file_path = calibri_bold_file_path.replace(".ttf", ".pkl")
-        calibri_light_file_path = calibri_light_file_path.replace(".ttf", ".pkl")
-        if os.path.exists(calibri_bold_file_path):
-            os.remove(calibri_bold_file_path)
-        if os.path.exists(calibri_light_file_path):
-            os.remove(calibri_light_file_path)
+        calibri_bold_configuration = calibri_bold_file_path.replace(".ttf", ".pkl")
+        calibri_light_configuration = calibri_light_file_path.replace(".ttf", ".pkl")
+        os.remove(calibri_bold_configuration)
+        os.remove(calibri_light_configuration)
 
     def _set_main_page(self, log_title):
         """
