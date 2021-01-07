@@ -7,9 +7,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-BOT_ADDRESS_FILE_PATH = "bot_address.toml"
-USER_ADDRESSES_FILE_PATH = "user_addresses.toml"
-LOG_SUBJECT = "Daily log - "
+LOG_FILE_PATH = "data/logs/daily_log_"
+BOT_ADDRESS_FILE_PATH = "data/bot_address.toml"
+USER_ADDRESSES_FILE_PATH = "data/user_addresses.toml"
+LOG_SUBJECT = "Daily Log - "
 LOG_DESCRIPTION = "Hello there, this is your daily log from the WAF.\nIf you have any problems you can " \
                   "contact us anytime.\nIn addition, if you recognize that you have been attacked and we " \
                   "were unable to identify it, we would like you to send a full report of the case.\n\n" \
@@ -24,11 +25,9 @@ class EmailSender:
     def __init__(self):
         self._load_bot_address_configuration(BOT_ADDRESS_FILE_PATH)
 
-    def send_log(self, daily_log):
+    def send_log(self):
         """
         This function will send the daily log to the users email addresses
-        :param daily_log: the daily log's file path
-        :type daily_log: string
         :return: if the function succeeded sending the emails
         :rtype: boolean
         """
@@ -40,11 +39,12 @@ class EmailSender:
             daily_log_mail["Date"] = formatdate(localtime=True)
             daily_log_mail["Subject"] = LOG_SUBJECT + date.today().strftime("%d/%m/%Y")
             daily_log_description = LOG_DESCRIPTION
-
             daily_log_mail.attach(MIMEText(daily_log_description))
-            with open(daily_log, "rb") as log_to_send:
-                part = MIMEApplication(log_to_send.read(), Name=os.path.basename(daily_log))
-            part["Content-Disposition"] = 'attachment; filename="%s"' % os.path.basename(daily_log)
+
+            daily_log_path = LOG_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".pdf"
+            with open(daily_log_path, "rb") as daily_log:
+                part = MIMEApplication(daily_log.read(), Name=os.path.basename(daily_log_path))
+            part["Content-Disposition"] = 'attachment; filename="%s"' % os.path.basename(daily_log_path)
             daily_log_mail.attach(part)
 
             try:

@@ -1,5 +1,5 @@
 import re
-from risk_level import RiskLevel
+from risk_levels import RiskLevels
 
 
 class AdvancedChecks:
@@ -9,8 +9,8 @@ class AdvancedChecks:
         function check if the query is a grant or revoke sql statement
         :param request: the sub statement
         :type request: string
-        :return: the risk level
-        :rtype: enum risk level
+        :return: the dangerous level according the findings
+        :rtype: enum RiskLevels
         """
         grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", request)
         risk_level = 0
@@ -20,21 +20,21 @@ class AdvancedChecks:
                                         permissions_statement)
             if len(permission_lst) > 0:
                 if "all" in permission_lst:
-                    risk_level = RiskLevel.HIGH_RISK
+                    risk_level = RiskLevels.CATASTROPHIC
                 else:
                     if "alter" in permission_lst:
-                        risk_level = RiskLevel.LARGE_RISK
+                        risk_level = RiskLevels.CRITICAL
                     elif "delete" in permission_lst:
-                        risk_level = RiskLevel.LARGE_RISK
+                        risk_level = RiskLevels.CRITICAL
                     elif "insert" in permission_lst:
-                        risk_level = RiskLevel.LARGE_RISK
+                        risk_level = RiskLevels.CRITICAL
                     elif "update" in permission_lst:
-                        risk_level = RiskLevel.LARGE_RISK
+                        risk_level = RiskLevels.CRITICAL
                     elif "references" in permission_lst:
-                        risk_level = RiskLevel.LOW_RISK
+                        risk_level = RiskLevels.SLIGHT
                     elif "select" in permission_lst:
-                        risk_level = RiskLevel.LOW_RISK
-            if not risk_level:
-                return RiskLevel.VERY_LITTLE_RISK
+                        risk_level = RiskLevels.SLIGHT
+            if risk_level == RiskLevels.NO_RISK:
+                return RiskLevels.NEGLIGIBLE
             return risk_level
-        return RiskLevel.NO_RISK
+        return RiskLevels.NO_RISK

@@ -2,6 +2,7 @@ import toml
 import os
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
+from detective.detective import Detective
 
 BLACKLIST_FILE_PATH = "blacklist.toml"
 PROXY_LISTEN_HOST = "127.0.0.1"
@@ -9,6 +10,7 @@ PROXY_LISTEN_PORT = 8080
 
 
 class WAF:
+    _detective = Detective()
     _blacklist = set()
 
     def __init__(self):
@@ -26,20 +28,19 @@ class WAF:
             toml.dump({"blacklist": self._blacklist}, blacklist_file)
             blacklist_file.close()
 
-    def response(self, flow: http.HTTPFlow) -> None:  # TODO: change the function to "request" after CR
+    def request(self, flow: http.HTTPFlow) -> None:
         """
         This function will check and handle received malicious requests
         :param flow: The user's request
         :type flow: http.HTTPFlow
         :return: None
         """
-        client_ip_address = flow.server_conn.ip_address[0]  # TODO: probably change "server_conn" to "client_conn" after changing to "request"
+        client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
         if is_client_blocked and flow.killable:
             flow.kill()
         else:
-            enter_if_statement = False
-            if enter_if_statement:  # TODO: replace this with "is the flow malicious?"
+            if self._detective.investigate(flow.request):
                 if flow.killable:
                     flow.kill()
                 self._add_client_to_blacklist(client_ip_address)
