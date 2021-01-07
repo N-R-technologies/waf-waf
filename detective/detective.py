@@ -1,5 +1,5 @@
-import os
 from importlib import import_module
+import lenses
 from magnifying_glass import MagnifyingGlass
 from assistant import Assistant
 from risk_levels import RiskLevels
@@ -13,14 +13,14 @@ class Detective:
     _assistant = Assistant()
 
     def __init__(self):
-        for lens in os.listdir("lenses"):
+        for lens in lenses.__all__:
             lens_package = f"lenses.{lens}"
             basic_checks = import_module(".basic_checks", lens_package).BasicChecks
             advanced_checks = import_module(".advanced_checks", lens_package).AdvancedChecks
             info = import_module(".info", lens_package)
             self._lenses.append((basic_checks, advanced_checks, info))
 
-    def detect(self, request):
+    def investigate(self, request):
         """
         This function will be called for every packet sent to the server.
         It will identify if the packet contains any kind of attack the WAF can protect from
@@ -50,9 +50,9 @@ class Detective:
         :rtype: string or None
         """
         if request.method == "GET":
-            return request.data.path.decode()
+            return request.data.path.decode().lower().replace('\n', "")
         elif request.method == "POST":
-            return request.content.decode()
+            return request.content.decode().lower().replace('\n', "")
         return None
 
     def _is_malicious_request(self, risks_findings):
@@ -63,11 +63,11 @@ class Detective:
         :return: True if the request is dangerous, otherwise, False
         :rtype: boolean
         """
-        amount_of_risks = len(RiskLevels) - 1
+        total_risk_levels = len(RiskLevels) - 1
         impact_level = 0
-        for risk_occurrences, i in zip(risks_findings[RiskLevels.NEGLIGIBLE:],
-                                       range(RiskLevels.NEGLIGIBLE, RiskLevels.CRITICAL)):
-            multiplying_factor = i / amount_of_risks
+        for risk_occurrences, risk_level in zip(risks_findings[RiskLevels.NEGLIGIBLE:],
+                                                range(RiskLevels.NEGLIGIBLE, RiskLevels.CRITICAL)):
+            multiplying_factor = risk_level / total_risk_levels
             impact_level += multiplying_factor * risk_occurrences
         is_impact_high = any(risk_occurrences > 0 for risk_occurrences in risks_findings[RiskLevels.CRITICAL:])
         return is_impact_high or impact_level >= 1

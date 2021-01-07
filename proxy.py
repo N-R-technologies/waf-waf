@@ -40,7 +40,7 @@ class WAF:
         if is_client_blocked and flow.killable:
             flow.kill()
         else:
-            if self._detective.detect(flow.request):
+            if self._detective.investigate(flow.request):
                 if flow.killable:
                     flow.kill()
                 self._add_client_to_blacklist(client_ip_address)

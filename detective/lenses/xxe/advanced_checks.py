@@ -1,6 +1,6 @@
 import re
 from urllib.parse import urlparse
-from detective.risk_levels import RiskLevels
+from risk_levels import RiskLevels
 
 
 class AdvancedChecks:
@@ -18,7 +18,7 @@ class AdvancedChecks:
         if urls_found is not None:
             for url in urls_found:
                 parse_result = urlparse(url)
-                if parse_result.scheme is not None and parse_result.netloc is not None:
+                if parse_result.scheme != '' and parse_result.netloc != '':
                     return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
     

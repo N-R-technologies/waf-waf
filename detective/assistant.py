@@ -1,4 +1,4 @@
-import os
+import lenses
 from importlib import import_module
 
 
@@ -8,7 +8,7 @@ class Assistant:
     _links = {}
 
     def __init__(self):
-        for lens in os.listdir("lenses"):
+        for lens in lenses.__all__:
             lens_info = import_module(f"lenses.{lens}.info")
             self._general_info[lens_info.category] = lens_info.general_info
             self._links[lens_info.category] = lens_info.links_for_info
@@ -22,10 +22,11 @@ class Assistant:
         :type category: string
         """
         if category not in self._info:
-            self._info[category] = {}
-            self._info[category]["general"] = self._general_info[category]
-            self._info[category]["attacks"] = set(attack_info)
-            self._info[category]["links"] = self._links[category]
+            self._info[category] = {
+                "general": self._general_info[category],
+                "attacks": set(attack_info),
+                "links": self._links[category]
+            }
         else:
             for attack_detected in attack_info:
                 self._info[category]["attacks"].add(attack_detected)
