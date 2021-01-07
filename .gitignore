@@ -339,5 +339,5 @@ ASALocalRun/
 
 # Our WAF project's files
 citysearch_project/
-bot_address.toml
-user_addresses.toml
+log_related/data/bot_address.toml
+log_related/data/user_addresses.toml
