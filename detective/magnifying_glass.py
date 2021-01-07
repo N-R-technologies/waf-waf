@@ -1,5 +1,5 @@
 import inspect
-from risk_levels import RiskLevels
+from detective.risk_levels import RiskLevels
 
 BASIC_CHECKS = 0
 ADVANCED_CHECKS = 1

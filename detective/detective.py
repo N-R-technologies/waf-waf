@@ -1,8 +1,8 @@
 from importlib import import_module
-import lenses
-from magnifying_glass import MagnifyingGlass
-from assistant import Assistant
-from risk_levels import RiskLevels
+import detective.lenses as lenses
+from detective.magnifying_glass import MagnifyingGlass
+from detective.assistant import Assistant
+from detective.risk_levels import RiskLevels
 
 INFO_INDEX = 2
 
@@ -14,7 +14,7 @@ class Detective:
 
     def __init__(self):
         for lens in lenses.__all__:
-            lens_package = f"lenses.{lens}"
+            lens_package = f"detective.lenses.{lens}"
             basic_checks = import_module(".basic_checks", lens_package).BasicChecks
             advanced_checks = import_module(".advanced_checks", lens_package).AdvancedChecks
             info = import_module(".info", lens_package)

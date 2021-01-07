@@ -1,5 +1,5 @@
-import lenses
 from importlib import import_module
+import detective.lenses as lenses
 
 
 class Assistant:
@@ -9,7 +9,7 @@ class Assistant:
 
     def __init__(self):
         for lens in lenses.__all__:
-            lens_info = import_module(f"lenses.{lens}.info")
+            lens_info = import_module(f"detective.lenses.{lens}.info")
             self._general_info[lens_info.category] = lens_info.general_info
             self._links[lens_info.category] = lens_info.links_for_info
 

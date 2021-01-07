@@ -35,6 +35,12 @@ class WAF:
         :type flow: http.HTTPFlow
         :return: None
         """
+        with open("f.txt", 'w') as f:
+            if flow.request.method == "GET":
+                f.write(flow.request.data.path.decode().lower().replace('\n', ""))
+            elif flow.request.method == "POST":
+                f.write(flow.request.content.decode().lower().replace('\n', ""))
+            f.close()
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
         if is_client_blocked and flow.killable:
