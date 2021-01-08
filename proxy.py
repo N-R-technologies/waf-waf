@@ -20,7 +20,7 @@ class WAF:
         if os.path.exists(blacklist_file_path):
             self._blacklist = set(toml.load(blacklist_file_path).get("blacklist", []))
         else:
-            open(blacklist_file_path, 'a').close()
+            open(blacklist_file_path, 'w').close()
 
     def _add_client_to_blacklist(self, attacker_ip_address):
         self._blacklist.add(attacker_ip_address)
@@ -57,13 +57,11 @@ options.add_option("intercept_active", bool, False, "")
 options.add_option("keep_host_header", bool, True, "")
 proxy_config = proxy.config.ProxyConfig(options)
 
-proxy = DumpMaster(options)
-proxy.server = proxy.server.ProxyServer(proxy_config)
-proxy.addons.add(addons)
+proxy_server = DumpMaster(options)
+proxy_server.server = proxy.server.ProxyServer(proxy_config)
+proxy_server.addons.add(addons)
 
 try:
-    proxy.run()
+    proxy_server.run()
 except KeyboardInterrupt:
-    proxy.shutdown()
-
-
+    proxy_server.shutdown()
