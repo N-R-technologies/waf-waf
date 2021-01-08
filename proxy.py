@@ -4,17 +4,18 @@ from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective.detective import Detective
 
-BLACKLIST_FILE_PATH = "blacklist.toml"
 PROXY_LISTEN_HOST = "127.0.0.1"
 PROXY_LISTEN_PORT = 8080
 
 
 class WAF:
+    BLACKLIST_FILE_PATH = "blacklist.toml"
+
     _detective = Detective()
     _blacklist = set()
 
     def __init__(self):
-        self._load_blacklist_configuration(BLACKLIST_FILE_PATH)
+        self._load_blacklist_configuration(self.BLACKLIST_FILE_PATH)
 
     def _load_blacklist_configuration(self, blacklist_file_path):
         if os.path.exists(blacklist_file_path):
@@ -50,20 +51,17 @@ addons = [
     WAF()
 ]
 
-
 options = options.Options(listen_host=PROXY_LISTEN_HOST, listen_port=PROXY_LISTEN_PORT)
 options.add_option("body_size_limit", int, 0, "")
 options.add_option("intercept_active", bool, False, "")
 options.add_option("keep_host_header", bool, True, "")
 proxy_config = proxy.config.ProxyConfig(options)
 
-proxy = DumpMaster(options)
-proxy.server = proxy.server.ProxyServer(proxy_config)
-proxy.addons.add(addons)
+proxy_server = DumpMaster(options)
+proxy_server.server = proxy.server.ProxyServer(proxy_config)
+proxy_server.addons.add(addons)
 
 try:
-    proxy.run()
+    proxy_server.run()
 except KeyboardInterrupt:
-    proxy.shutdown()
-
-
+    proxy_server.shutdown()

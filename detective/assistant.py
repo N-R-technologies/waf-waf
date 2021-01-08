@@ -8,15 +8,15 @@ from log_related.email_sender import EmailSender
 from log_related.log_composer import LogComposer
 from log_related.graph_handler import GraphHandler
 
-SECONDS_IN_DAY = 86400
-TIME_TO_SEND_LOG = 5
-
 
 class Assistant:
-    _risks_findings = [0] * len(RiskLevels)
     _info = {}
     _general_info = {}
     _links = {}
+    _risks_findings = [0] * len(RiskLevels)
+    email_sender = EmailSender()
+    log_composer = LogComposer()
+    graph_handler = GraphHandler()
 
     def __init__(self):
         thread = Thread(target=self._report_log)
@@ -73,12 +73,11 @@ class Assistant:
         This function will report the log to the user every day
         """
         while True:
-            now = datetime.now()
-            time_to_sleep = SECONDS_IN_DAY - round((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()) - TIME_TO_SEND_LOG
-            sleep(time_to_sleep)
-            email_sender = EmailSender()
-            log_composer = LogComposer()
-            graph_handler = GraphHandler()
-            graph_handler.create_graph(self._risks_findings)
-            log_composer.write_log(self._pop_info())
-            email_sender.send_log()
+            current_time = datetime.now()
+            report_time = current_time.replace(hour=23, minute=59, second=55)
+            seconds_until_tomorrow = abs(round((report_time - current_time).total_seconds()))
+            sleep(seconds_until_tomorrow)
+            self.graph_handler.create_graph(self._risks_findings)
+            self.log_composer.write_log(self._pop_info())
+            self.email_sender.send_log()
+            sleep(5)
