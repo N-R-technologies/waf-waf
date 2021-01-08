@@ -21,7 +21,7 @@ class WAF:
         if os.path.exists(blacklist_file_path):
             self._blacklist = set(toml.load(blacklist_file_path).get("blacklist", []))
         else:
-            open(blacklist_file_path, 'a').close()
+            open(blacklist_file_path, 'w').close()
 
     def _add_client_to_blacklist(self, attacker_ip_address):
         self._blacklist.add(attacker_ip_address)
