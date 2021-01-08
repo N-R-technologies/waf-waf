@@ -7,9 +7,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
-LOG_FILE_PATH = "data/logs/daily_log_"
-BOT_ADDRESS_FILE_PATH = "data/bot_address.toml"
-USER_ADDRESSES_FILE_PATH = "data/user_addresses.toml"
+LOG_FILE_PATH = "log_related/data/logs/daily_log_"
+BOT_ADDRESS_FILE_PATH = "log_related/data/bot_address.toml"
+USER_ADDRESSES_FILE_PATH = "log_related/data/user_addresses.toml"
 LOG_SUBJECT = "Daily Log - "
 LOG_DESCRIPTION = "Hello there, this is your daily log from the WAF.\nIf you have any problems you can " \
                   "contact us anytime.\nIn addition, if you recognize that you have been attacked and we " \

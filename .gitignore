@@ -341,3 +341,4 @@ ASALocalRun/
 citysearch_project/
 log_related/data/bot_address.toml
 log_related/data/user_addresses.toml
+blacklist.toml

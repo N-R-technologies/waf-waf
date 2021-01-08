@@ -34,7 +34,7 @@ class Assistant:
         :param attack_risks_findings: the risk findings about the identified attack
         :type attack_risks_findings: list
         """
-        self._risk_findings = list(map(lambda new_finding, existing_finding: new_finding + existing_finding, attack_risks_findings, self._risk_findings))
+        self._risks_findings = list(map(lambda new_finding, existing_finding: new_finding + existing_finding, attack_risks_findings, self._risks_findings))
 
     def set_info(self, category, attack_info):
         """
@@ -75,11 +75,7 @@ class Assistant:
         while True:
             now = datetime.now()
             time_to_sleep = SECONDS_IN_DAY - round((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()) - TIME_TO_SEND_LOG
-            with open("f.txt", 'a') as f:
-                f.write(str(time_to_sleep))
-                sleep(time_to_sleep)
-                f.write("yes")
-                f.close()
+            sleep(time_to_sleep)
             email_sender = EmailSender()
             log_composer = LogComposer()
             graph_handler = GraphHandler()
