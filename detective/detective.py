@@ -5,7 +5,6 @@ from detective.assistant import Assistant
 from detective.risk_levels import RiskLevels
 import urllib.parse
 
-
 INFO_INDEX = 2
 
 
@@ -32,12 +31,14 @@ class Detective:
         :rtype: boolean
         """
         request_content = self._parse_request_content(request)
+        print(request_content)
         if request_content is not None:
             for lens in self._lenses:
                 attack_risks_findings, attack_info = self._magnifying_glass.detect(request_content, lens)
                 found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[RiskLevels.NEGLIGIBLE:])
                 if found_risk:
                     if self._is_malicious_request(attack_risks_findings):
+                        self._assistant.set_findings(attack_risks_findings)
                         self._assistant.set_info(lens[INFO_INDEX].category, attack_info)
                         return True
         return False

@@ -18,10 +18,10 @@ BLANK = "#FFFFFF"
 
 
 class GraphHandler:
-    plt.rcdefaults()
+    def __init__(self):
+        plt.rcdefaults()
 
-    @staticmethod
-    def create_graph(risks_found_today):
+    def create_graph(self, risks_found_today):
         """
         This function will create an image graph based on the lenses findings
         :param risks_found_today: all the risk levels which were found today
@@ -29,7 +29,7 @@ class GraphHandler:
         """
         objects = tuple([risk_level for risk_level in range(len(RiskLevels))])
         y_pos = np.arange(len(objects))
-        graph_colors = GraphHandler._calculate_risk_colors(risks_found_today)
+        graph_colors = self._calculate_risk_colors(risks_found_today)
         y_limit = 5
         if y_limit < max(risks_found_today[RiskLevels.NEGLIGIBLE:]) < 10:
             y_limit = 10
@@ -43,8 +43,7 @@ class GraphHandler:
         plt.bar(y_pos, risks_found_today, align="center", alpha=1, color=graph_colors)
         plt.savefig(GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
 
-    @staticmethod
-    def _calculate_risk_colors(risks_found_today):
+    def _calculate_risk_colors(self, risks_found_today):
         """
         This function will calculate the color the graph
         will show for each risk level according to its impact
