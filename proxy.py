@@ -20,11 +20,11 @@ class WAF:
         if os.path.exists(blacklist_file_path):
             self._blacklist = set(toml.load(blacklist_file_path).get("blacklist", []))
         else:
-            open(blacklist_file_path, 'w').close()
+            open(blacklist_file_path, 'a').close()
 
     def _add_client_to_blacklist(self, attacker_ip_address):
         self._blacklist.add(attacker_ip_address)
-        with open(BLACKLIST_FILE_PATH, 'w') as blacklist_file:
+        with open(BLACKLIST_FILE_PATH, 'a') as blacklist_file:
             toml.dump({"blacklist": self._blacklist}, blacklist_file)
             blacklist_file.close()
 
@@ -35,12 +35,6 @@ class WAF:
         :type flow: http.HTTPFlow
         :return: None
         """
-        with open("f.txt", 'w') as f:
-            if flow.request.method == "GET":
-                f.write(flow.request.data.path.decode().lower().replace('\n', ""))
-            elif flow.request.method == "POST":
-                f.write(flow.request.content.decode().lower().replace('\n', ""))
-            f.close()
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
         if is_client_blocked and flow.killable:
@@ -56,17 +50,20 @@ addons = [
     WAF()
 ]
 
+
 options = options.Options(listen_host=PROXY_LISTEN_HOST, listen_port=PROXY_LISTEN_PORT)
 options.add_option("body_size_limit", int, 0, "")
 options.add_option("intercept_active", bool, False, "")
 options.add_option("keep_host_header", bool, True, "")
 proxy_config = proxy.config.ProxyConfig(options)
 
-proxy_server = DumpMaster(options)
-proxy_server.server = proxy.server.ProxyServer(proxy_config)
-proxy_server.addons.add(addons)
+proxy = DumpMaster(options)
+proxy.server = proxy.server.ProxyServer(proxy_config)
+proxy.addons.add(addons)
 
 try:
-    proxy_server.run()
+    proxy.run()
 except KeyboardInterrupt:
-    proxy_server.shutdown()
+    proxy.shutdown()
+
+

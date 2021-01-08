@@ -3,6 +3,8 @@ import detective.lenses as lenses
 from detective.magnifying_glass import MagnifyingGlass
 from detective.assistant import Assistant
 from detective.risk_levels import RiskLevels
+import urllib.parse
+
 
 INFO_INDEX = 2
 
@@ -50,7 +52,8 @@ class Detective:
         :rtype: string or None
         """
         if request.method == "GET":
-            return request.data.path.decode().lower().replace('\n', "")
+            request = request.data.path.decode().lower().replace('\n', "")
+            return urllib.parse.unquote_plus(request)
         elif request.method == "POST":
             return request.content.decode().lower().replace('\n', "")
         return None
