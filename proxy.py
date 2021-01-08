@@ -25,7 +25,7 @@ class WAF:
 
     def _add_client_to_blacklist(self, attacker_ip_address):
         self._blacklist.add(attacker_ip_address)
-        with open(BLACKLIST_FILE_PATH, 'a') as blacklist_file:
+        with open(BLACKLIST_FILE_PATH, 'w') as blacklist_file:
             toml.dump({"blacklist": self._blacklist}, blacklist_file)
             blacklist_file.close()
 
