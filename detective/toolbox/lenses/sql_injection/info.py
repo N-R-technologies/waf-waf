@@ -24,8 +24,8 @@ deep_info = {
                             " information about all the\n  users in a specific database, In the wrong "
                             "hands, this information about the users can be dangerous.\n",
 
-    "db_info_disclosure": "* DB Information Disclosure: pg_database stores information about the available databases.\n  "
-                          "this information should not reach the attacker.\n",
+    "db_info_disclosure": "* DB Information Disclosure: pg_database stores information about the available "
+                          "databases.\n  this information should not reach the attacker.\n",
 
     "shadow_info_disclosure": "* Shadow Information Disclosure: The view pg_shadow exists for backwards "
                               "compatibility:\n  It emulates a catalog that existed in PostgreSQL.\n  "
@@ -35,15 +35,17 @@ deep_info = {
                             "file's content\n  as string. It can be harmful when the user loads some\n  "
                             "important file and then select it with a regular query.\n",
 
-    "load_data_disclosure": "* Load Data Disclosure: The LOAD DATA statement reads rows from a text file into a table.\n  "
-                            "An attacker can use this function in order to inject some malicious script into the database.\n",
+    "load_data_disclosure": "* Load Data Disclosure: The LOAD DATA statement reads rows from a text file into "
+                            "a table.\n  An attacker can use this function in order to inject some malicious "
+                            "script into the database.\n",
 
-    "write_into_outfile": "* Write Into Outfile: This function writes the selected rows to a file, so the attacker can write\n  some"
-                          "parts of the database to a specific file and then some how take it.\n",
+    "write_into_outfile": "* Write Into Outfile: This function writes the selected rows to a file, so the attacker "
+                          "can write\n  some parts of the database to a specific file and then some how take it.\n",
 
     "information_disclosure": "* Information Disclosure: INFORMATION_SCHEMA provides access to database metadata.\n  "
                               "With this function the attacker can see all the information about the MySQL server,\n  "
-                              "such as the name of a database or a table, the data type of a column, or access privileges.\n",
+                              "such as the name of a database or a table, the data type of a column, "
+                              "or access privileges.\n",
 
     "concat_command": "* Concat Command: The concat command is another way for the attacker to check if his injection "
                       "can\n  work. This command is basically concat couple of strings together into one string.\n",
@@ -61,42 +63,47 @@ deep_info = {
     "blind_tsql": "* Blind TSQL: With this function the attacker can delay the server's response\n  "
                   "and see if his injections can work.\n",
 
-    "length_command": "* Length Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                      "user enter any kind of function as input.\n  This fucntion returns the length of a string.\n",
+    "length_command": "* Length Command: For themselves, this function is not dangerous at all, but you "
+                      "shouldn't let\n  a user enter any kind of function as input.\n  This function returns "
+                      "the length of a string.\n",
 
-    "hex_command": "* Hex Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                   "user enter any kind of function as input.\n  This fucntion decodes a decimal-encoded hexadecimal field.\n",
+    "hex_command": "* Hex Command: For themselves, this function is not dangerous at all, but you "
+                   "shouldn't let\n  a user enter any kind of function as input.\n  This function decodes "
+                   "a decimal-encoded hexadecimal field.\n",
 
-    "base64_command": "* Base64 Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                      "user enter any kind of function as input.\n  This fucntion returns a base64 encoded string based "
-                      " on a given string.\n",
+    "base64_command": "* Base64 Command: For themselves, this function is not dangerous at all, but you "
+                      "shouldn't let\n  a user enter any kind of function as input.\n  This function returns "
+                      "a base64 encoded string based on a given string.\n",
 
-    "oct_command": "* Oct Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                   "user enter any kind of function as input.\n  This fucntion returns the octal value of a decimal number.\n",
+    "oct_command": "* Oct Command: For themselves, this function is not dangerous at all, but you shouldn't let\n  "
+                   "a user enter any kind of function as input.\n  "
+                   "This function returns the octal value of a decimal number.\n",
 
     "ord_command": "* Ord Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                   "user enter any kind of function as input.\n  This fucntion returns the numeric value of the left "
+                   "user enter any kind of function as input.\n  This function returns the numeric value of the left "
                    "most character of a given string.\n",
 
-    "ascii_command": "* Ascii Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                     "user enter any kind of function as input.\n  This fucntion returns the ASCII value "
-                     "of the first character in given string.\n",
+    "ascii_command": "* Ascii Command: For themselves, this function is not dangerous at all, "
+                     "but you shouldn't let\n  a user enter any kind of function as input.\n  "
+                     "This function returns the ASCII value of the first character in given string.\n",
 
-    "bin_command": "* Bin Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                   "user enter any kind of function as input.\n  This fucntion returns a binary representation of a number.\n",
+    "bin_command": "* Bin Command: For themselves, this function is not dangerous at all, "
+                   "but you shouldn't let\n  a user enter any kind of function as input.\n  "
+                   "This function returns a binary representation of a number.\n",
 
-    "char_command": "* Char Command: For themselves, this function is not dangerous at all, but you shouldn't let a\n  "
-                    "user enter any kind of function as input.\n  This fucntion returns a character based on a given ASCII code.\n",
+    "char_command": "* Char Command: For themselves, this function is not dangerous at all, but you "
+                    "shouldn't let\n  a user enter any kind of function as input.\n  "
+                    "This function returns a character based on a given ASCII code.\n",
 
     "substr_command": "* Substr Command: The substr function is not so dangerous for its self,\n  "
                       "but generally it parses the string that returns from the database.\n  "
                       "The attacker can use it for manipulate the output from the database.\n",
 
     "user_command": "* User Command: The user function allows the attacker to manipulate the users\n  permissions and "
-                    "also see all the existing users in the database and\n  more information about the users.\n",
+                    "also see all the existing users in the database\n  and more information about the users.\n",
 
-    "version_command": "* Version Command: The version function seems very nice and harmless but you should be careful"
-                       ".\n  The attacker can see the version of the database and this info\n  "
+    "version_command": "* Version Command: The version function seems very nice and harmless but you should"
+                       "be careful.\n  The attacker can see the version of the database and this info\n  "
                        "can be very useful for the next steps of the attack.\n",
 
     "system_variable": "* System Variable: System variables that store information about the running package "
@@ -112,11 +119,11 @@ deep_info = {
                     "the case can show the attacker if the injection works as he expected to.\n",
 
     "exec_command": "* Execute Command: The exec function is a very dangerous one, you should be careful.\n  "
-                    "With this function the user can execute wide range of functions and scripts\n  "
+                    "With this function the user can execute wide range of functions\n  and scripts "
                     "on your server side.\n",
 
-    "create_procedure_command": "* Create Procedure Command: With the create function the attacker can create procedure "
-                                "or function\n  that could run on your database.\n",
+    "create_procedure_command": "* Create Procedure Command: With the create function the attacker can " 
+                                "create procedure\n  or function that could run on your database.\n",
 
     "mongo_db_command": "* Mongo DB Command: The attacker may use some of the common commands in mongoDB, that "
                         "are not so\n  frequent, so it is suspicious he use this characters.\n",
@@ -153,7 +160,7 @@ deep_info = {
     "select_union": "* Select Union: Function that gets and returns values or raw from a database.\n  "
                     "A user can use it to see secret information, that he shouldn't see "
                     "like credit cards numbers.\n  That function can be very dangerous and it is very "
-                    "common among SQL Injection hackers",
+                    "common among SQL Injection hackers.\n",
 
     "select_into": "* Select Into: Function that gets and returns values or raw from a database.\n  "
                    "A user can use it to see secret information, that he shouldn't see "
