@@ -1,5 +1,5 @@
 import re
-from risk_levels import RiskLevels
+from detective.toolbox.risk_levels import RiskLevels
 
 
 class AdvancedChecks:
