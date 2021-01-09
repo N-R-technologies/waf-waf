@@ -1,9 +1,6 @@
 from importlib import import_module
 from urllib.parse import unquote_plus
-import detective.lenses as lenses
-from detective.magnifying_glass import MagnifyingGlass
-from detective.assistant import Assistant
-from detective.risk_levels import RiskLevels
+import detective.toolbox as toolbox
 
 
 class Detective:
@@ -16,15 +13,15 @@ class Detective:
 
     _multiplying_factors = []
     _lenses = []
-    _magnifying_glass = MagnifyingGlass()
-    _assistant = Assistant()
+    _magnifying_glass = toolbox.MagnifyingGlass()
+    _assistant = toolbox.Assistant()
 
     def __init__(self):
         self._multiplying_factors = [self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC]
-        for lens in lenses.__all__:
-            lens_package = f"detective.lenses.{lens}"
-            basic_checks = import_module(".basic_checks", lens_package).BasicChecks
-            advanced_checks = import_module(".advanced_checks", lens_package).AdvancedChecks
+        for lens in toolbox.lenses.__all__:
+            lens_package = f"detective.toolbox.lenses.{lens}"
+            basic_checks = getattr(import_module(".basic_checks", lens_package), "BasicChecks")
+            advanced_checks = getattr(import_module(".advanced_checks", lens_package), "AdvancedChecks")
             info = import_module(".info", lens_package)
             self._lenses.append((basic_checks, advanced_checks, info))
 
@@ -41,11 +38,11 @@ class Detective:
         if content is not None:
             for lens in self._lenses:
                 attack_risks_findings, attack_info = self._magnifying_glass.detect(content, lens)
-                found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[RiskLevels.NEGLIGIBLE:])
+                found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[toolbox.RiskLevels.NEGLIGIBLE:])
                 if found_risk:
                     if self._is_malicious_request(attack_risks_findings):
                         self._assistant.set_findings(attack_risks_findings)
-                        self._assistant.set_info(lens[INFO_INDEX].category, attack_info)
+                        self._assistant.set_info(lens[self.INFO_INDEX].category, attack_info)
                         return True
         return False
 
@@ -73,6 +70,6 @@ class Detective:
         :rtype: boolean
         """
         impact_level = 0
-        for risk_occurrences, multiplying_factor in zip(findings[RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
+        for risk_occurrences, multiplying_factor in zip(findings[toolbox.RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
             impact_level += risk_occurrences * multiplying_factor
         return impact_level >= 1

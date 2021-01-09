@@ -44,9 +44,9 @@ class LogComposer:
         """
         self._daily_log.image(self.BACKGROUND_FILE_PATH, x=0, y=0, w=200, h=300)
         self._daily_log.set_font("Calibri Light", size=12)
-        self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align="Right")
+        self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align='R')
         self._daily_log.set_font("Calibri", 'B', size=72)
-        self._daily_log.cell(w=200, h=250, txt=log_title, ln=1, align="Center")
+        self._daily_log.cell(w=200, h=250, txt=log_title, ln=1, align='C')
 
     def write_log(self, info):
         """
@@ -60,7 +60,7 @@ class LogComposer:
             self._set_page_header(attack_name)
             self._daily_log.set_font("Calibri Light", size=14)
             for detail in attack_info.split('\n'):
-                self._daily_log.cell(w=200, h=12, txt=detail, ln=2, align="Left")
+                self._daily_log.cell(w=200, h=12, txt=detail, ln=2, align='L')
         self._add_graph(self.GRAPH_TITLE, self.GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
         self._daily_log.output(self.LOG_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".pdf")
 
@@ -72,9 +72,9 @@ class LogComposer:
         """
         self._daily_log.image(self.BACKGROUND_FILE_PATH, x=0, y=0, w=200, h=300)
         self._daily_log.set_font("Calibri Light", size=12)
-        self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align="Right")
+        self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align='R')
         self._daily_log.set_font("Calibri", "BU", size=32)
-        self._daily_log.cell(w=200, h=20, txt=title, ln=1, align="Center")
+        self._daily_log.cell(w=200, h=20, txt=title, ln=1, align='C')
 
     def _add_graph(self, graph_title, graph_file_path):
         """

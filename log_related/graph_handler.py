@@ -1,7 +1,7 @@
 from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
-from detective.risk_levels import RiskLevels
+from detective.toolbox.risk_levels import RiskLevels
 
 
 class GraphHandler:
@@ -45,10 +45,10 @@ class GraphHandler:
             y_limit = max(risks_found_today[RiskLevels.NEGLIGIBLE:])
         plt.ylim([0, y_limit])
         plt.locator_params(axis='y', nbins=y_limit)
-        plt.xticks(y_pos, objects)
+        plt.xticks(y_pos, objects, fontsize=8)
         plt.ylabel(self.GRAPH_Y_TITLE)
         plt.xlabel(self.GRAPH_X_TITLE)
-        plt.bar(y_pos, risks_found_today, align="Center", alpha=1, color=graph_colors)
+        plt.bar(y_pos, risks_found_today, align="center", alpha=1, color=graph_colors)
         plt.savefig(self.GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
 
     def _calculate_risk_colors(self, risks_found_today):
