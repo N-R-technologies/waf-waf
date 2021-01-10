@@ -24,10 +24,9 @@ containing information about all the attempted attacks on the server.
 ```mermaid
 graph LR
 
-Client--Request-->WAF
-WAF-->D{Detective}
-D--Secured and Harmless Request-->Server
-D--Malicious Request-->D&B(Drop Request and Block Connection)
+Client--Request-->WAF{WAF}
+WAF--Secured and Harmless Request-->Server
+WAF--Malicious Request-->D&B(Drop Request and Block Connection)
 ```
 
 ## Future Expectations
