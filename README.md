@@ -18,7 +18,7 @@ WAF Version 1.0 protects a server from couple of web attacks:
 - XXE (XML External Entities)
 
 In addition, at the end of each day an email attached with a detailed log will be sent,<br>
-containing information about all the attempted attacks on the server.
+containing information about all attempted attacks on the server.
 
 ## Project's Flow
 ```mermaid
