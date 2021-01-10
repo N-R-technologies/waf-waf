@@ -38,6 +38,6 @@ The next versions will include:
 
 # Contact
 We would like to hear reviews about the WAF!<br>
-Contact our developers at [noammiz918@gmail.com](mailto:noammiz918@gmail.com), or at [ronkonis1@gmail.com](mailto:ronkonis1@gmail.com).
+Contact us at [wafdetectivebot@gmail.com](mailto:wafdetectivebot@gmail.com).
 
 ### All rights reserved to our developers, Noam Mizrahi & Ron Konis
