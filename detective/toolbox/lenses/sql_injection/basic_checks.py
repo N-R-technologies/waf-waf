@@ -8,18 +8,18 @@ class BasicChecks:
         """
         check if the user try to run from the input Common C-style comment
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
-        return RiskLevels.NEGLIGIBLE if re.search(r" \/\*.*?\*\/", request) else RiskLevels.NO_RISK
+        return RiskLevels.NEGLIGIBLE if re.search(r"\/\*.*?\*\/", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def find_in_set(request):
         """
         check if the user try to run from the input common MySQL function “find_in_set”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -31,7 +31,7 @@ class BasicChecks:
         """
         check if the user try to run from the input SQLite information disclosure “sqlite_master”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -42,7 +42,7 @@ class BasicChecks:
         """
         check if the user try to run from the input MySQL information disclosure “mysql.user”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -53,7 +53,7 @@ class BasicChecks:
         """
         check if the user try to run from input the PgSQL information disclosure “pg_user”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -64,7 +64,7 @@ class BasicChecks:
         """
         check if the user try to run from input the PgSQL information disclosure “pg_database”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -75,7 +75,7 @@ class BasicChecks:
         """
         check if the user try to run from input the PgSQL information disclosure “pg_shadow”
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -86,7 +86,7 @@ class BasicChecks:
         """
         check if the user try to run from the input blind mysql disclosure "load_file"
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -97,7 +97,7 @@ class BasicChecks:
         """
         check if the user try to run from the input blind mysql disclosure "load_data"
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -109,7 +109,7 @@ class BasicChecks:
         """
         check if the user try to run from the input MySQL file write "into outfile"
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -121,7 +121,7 @@ class BasicChecks:
         """
         check if the user try to run from the input mysql information disclosure
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -132,7 +132,7 @@ class BasicChecks:
         """
         check if the user try to run from the input the command concat
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -143,7 +143,7 @@ class BasicChecks:
         """
         check if the user try to run from the input blind sql benchmark
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -154,7 +154,7 @@ class BasicChecks:
         """
         check if the user try to run from the input blind sql sleep
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -165,7 +165,7 @@ class BasicChecks:
         """
         check if the user try to run from input the pgsql sleep command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -176,7 +176,7 @@ class BasicChecks:
         """
         check if the user try to run from input the blind tsql "waitfor"
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -188,7 +188,7 @@ class BasicChecks:
         """
         check if the user try to run from input the mysql length command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         r"""
@@ -200,7 +200,7 @@ class BasicChecks:
         """
         check if the user try to run from input the mysql hex/unhex command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -211,7 +211,7 @@ class BasicChecks:
         """
         check if the user try to run from input the mysql to base 64/ from base 64 command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -223,7 +223,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL oct command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -234,7 +234,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL ord command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -245,7 +245,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL ascii command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -256,7 +256,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL bin command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -267,7 +267,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL char command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -278,7 +278,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL substr command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -290,7 +290,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL user command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -301,7 +301,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL version command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -312,7 +312,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL system variable command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -323,7 +323,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL if command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels"""
         return RiskLevels.SLIGHT if re.search(r"\bif\b.*?\(.+?,.+?,.+?\)", request) else \
@@ -333,7 +333,7 @@ class BasicChecks:
     def ifnull_command(request):
         """check if the user try to run from input the SQL ifnull command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -345,7 +345,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL case command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -357,7 +357,7 @@ class BasicChecks:
         """
         check if the user try to run from input the MSSQL exec command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -368,7 +368,7 @@ class BasicChecks:
         """
         check if the user try to run from input the SQL create command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -380,7 +380,7 @@ class BasicChecks:
         """
         check if the user try to run from the input Common mongoDB commands
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
@@ -393,7 +393,7 @@ class BasicChecks:
         """
         check if the user try to run from input the DATABASE command
         :param request: the request packet
-        :type request: integer
+        :type request: str
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
