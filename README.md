@@ -1,40 +1,44 @@
-# WAF Project V1.0
-
+# WAF V1.0
+<div align="center">
 ![waf logo](logo.png)
-
-
-
+</div>
 
 ![RN|INDUSTRIES](https://cldup.com/dTxpPi9lDf.thumb.png)
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf/-/tree/master)
 
 # Summary
-The waf is a proxy based waf, that is mean that all the pakcet that are go into
-your server are passing through the waf. 
-Version 1.0 of the waf project, can protect your server from couple of web attacks:
+Our WAF is a regex based proxy. This means that all the requests that should go into a server will <br>
+first pass through the WAF, and detection operations will be applied on them using regex queries.<br>
+
+## Features & Technology
+Our WAF works with smart and new detection technology, that achieves 99% of precise answers!<br>
+WAF Version 1.0 protects servers from couple of web attacks:
 - SQL Injection
-- XXE - XML External Entities
-    Our project works with a smart and new detection technology, that achieves 99% of precise answers
-    
-```mermaid  
-graph LR  
-A[Client] -- Packet --> B{WAF}
-B--A Secure And Harmless Packet-->C[Server]
-B--Detect Dangerous Packer--Block The Client-->D(Black List)
+- XXE (XML External Entities)
+
+In addition, at the end of each day an email attached with a detailed log will be sent,<br>
+containing information about all the attempted attacks on the server.
+
+## Project's Flow
+```mermaid
+graph LR
+
+Client--Request-->WAF
+WAF-->D{Detective}
+D--Secured and Harmless Request-->Server
+D--Malicious Request-->D&B(Drop Request and Block Connection)
 ```
 
-
-> There are more versions of the WAF that are 
-> gonna publish very soon, wait for it!
-> The next versions are going to contain
->- Interactive GUI
->- Internet scanner
->- advanced detection of more web attacks
-
+## Future Expectations
+More WAF versions will come out very soon. Wait for them!<br>
+The next versions will include:
+- Advanced detections of more web attacks
+- Local network scanner
+- Interactive CLI (Command Line Interface)
 
 # Contact
-We would love to hear your review about our project!
-Contact us in our official mail: [wafdetectivebot@gmail.com](mailto:wafdetectivebot@gmail.com)
+We would like to hear reviews about the WAF!<br>
+Contact our developers at [noammiz918@gmail.com](mailto:noammiz918@gmail.com), or at [ronkonis1@gmail.com](mailto:ronkonis1@gmail.com).
 
-### all the rights belong to Noam Mizrahi & Ron Konis
+### All rights reserved to our developers, Noam Mizrahi & Ron Konis
