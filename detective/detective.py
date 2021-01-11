@@ -10,7 +10,6 @@ class Detective:
     CRITICAL = 1
     CATASTROPHIC = 1
     INFO_INDEX = 2
-    FIRST_REQUEST = True
 
     _multiplying_factors = []
     _lenses = []
