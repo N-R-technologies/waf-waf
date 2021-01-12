@@ -1,13 +1,16 @@
 from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
+from .reporter import Reporter
 from .network_scanner_data.network_vulnerabilities_info import info
 import subprocess
+import time
 
 
 class NetworkScanner:
     SSID_HEADER_LEN = 4
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
+    _reporter = Reporter()
 
     def print_conclusion(self, conclusion):
         """
@@ -51,9 +54,9 @@ class NetworkScanner:
                       "cracked instantly, try to change it to more complex and strong password")
             else:
                 if conclusion[5][0] != '!':
-                    print(f"first result of engine calculate estimated time: {conclusion[5][0]}")
+                    print(conclusion[5][0])
                 if conclusion[5][1] != '!':
-                    print(f"second result of engine calculate estimated time: {conclusion[5][1]}")
+                    print(conclusion[5][1])
                 print("remember good and strong password must contain at least 8 characters, including\n"
                       "numbers, both upper and lower letters, and special symbols like: * or &")
 
@@ -69,24 +72,44 @@ class NetworkScanner:
     def scan(self):
         ssid = self._get_ssid()
         conclusion = list()
+        router_username = input("enter your username for the router, if you don't know, press n:\n")
+        router_password = input("enter your password for the router, if you don't know, press n:\n")
+        self._reporter.start_loading("checking evil twin")
         conclusion.append(self._scan_functions.check_evil_twin(ssid))
+        time.sleep(2)
+        self._reporter.stop_loading()
+        time.sleep(1)
         if ssid != "":
             conclusion.append(ssid != "--")  # need to check if it means the ssid is hidden
+            self._reporter.start_loading("checking ssid name")
             conclusion.append(ScanFunctions.find_in_file(ssid, "network_scanner/network_scanner_data/commonssids.txt"))
-            router_username = input("enter your username for the router, if you don't know, press n:\n")
+            time.sleep(2)
+            self._reporter.stop_loading()
+            time.sleep(1)
             if router_username.lower() != 'n':
+                self._reporter.start_loading("checking router username")
                 conclusion.append(ScanFunctions.find_in_file(router_username, "network_scanner/network_scanner_data/users_router.txt"))
+                time.sleep(2)
+                self._reporter.stop_loading()
+                time.sleep(1)
             else:
                 conclusion.append("No-Username")
-            router_password = input("enter your password for the router, if you don't know, press n:\n")
             if router_password.lower() != 'n':
+                self._reporter.start_loading("checking router password")
                 conclusion.append(ScanFunctions.find_in_file(router_password, "network_scanner/network_scanner_data/passwords_router.txt"))
+                time.sleep(2)
+                self._reporter.stop_loading()
+                time.sleep(1)
             else:
                 conclusion.append("No-Password")
             details = self._scan_functions.get_details(ssid)
             password = details["password"]
             encryption_type = details["encryption_type"]
+            self._reporter.start_loading("checking network password")
             conclusion.append(self._engines.password_engines(password))
+            time.sleep(2)
+            self._reporter.stop_loading()
+            time.sleep(1)
         self.print_conclusion(conclusion)
 
 
