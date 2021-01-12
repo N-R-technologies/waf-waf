@@ -14,7 +14,8 @@ class AdvancedChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        urls_found = re.findall(r"""<\s*iframe\s+src\s*=\s*(?:(?:\"|'|`)\s*)?(?P<url>[^\"' ]+)(?:\"|')?""", request)
+        urls_found = re.findall(r"""<\s*iframe(?:/|\s).*?src\s*=\s*(?:(?:\"|'|`)\s*)?(?P<url>[^\"'` ]+)(?:(?:\"|'|`)\s*)?""", request)
+        urls_found.append(re.findall(r"""<\s*a(?:/|\s).*?href\s*=\s*(?:(?:\"|'|`)\s*)?(javascript\s*:\s*document\.location\s*=\s*(?:(?:\"|'|`)\s*)?)?(?P<url>|[^\"'` ]+)(?:(?:\"|'|`)\s*)""", request))
         if urls_found is not None:
             for url in urls_found:
                 parse_result = urlparse(url)
