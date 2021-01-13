@@ -79,7 +79,7 @@ class Assistant:
         while True:
             current_time = datetime.now()
             report_time = current_time.replace(hour=23, minute=59, second=55)
-            seconds_until_tomorrow = abs(round((report_time - current_time).total_seconds()))
+            seconds_until_tomorrow = abs((report_time - current_time).total_seconds())
             sleep(seconds_until_tomorrow)
             self.graph_handler.create_graph(self._risks_findings)
             self.log_composer.write_log(self._get_info())
