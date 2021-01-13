@@ -3,7 +3,7 @@ from datetime import datetime
 from threading import Thread
 from importlib import import_module
 from detective.toolbox import lenses
-from detective.toolbox import RiskLevels
+from detective.toolbox.risk_levels import RiskLevels
 import log_related
 
 

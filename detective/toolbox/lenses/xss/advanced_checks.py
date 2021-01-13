@@ -1,6 +1,6 @@
 import re
 from urllib.parse import urlparse
-from detective.toolbox import RiskLevels
+from detective.toolbox.risk_levels import RiskLevels
 
 
 class AdvancedChecks:
