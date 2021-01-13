@@ -14,19 +14,18 @@ class AdvancedChecks:
         :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
-        ip_redirect_result = re.search(r"(ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", request)
+        ip_redirect_result = re.search(r"(:?ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", request)
         if ip_redirect_result:
             ip_address = ip_redirect_result.group("ip").split(".")
             for num in ip_address:
                 if not '0' <= num <= '255':
                     return RiskLevels.NO_RISK
             return RiskLevels.CATASTROPHIC
-        detect_url_result = re.search(r"(ht|f)tps?://(?P<url>.*)", request)
+        detect_url_result = re.search(r"(?:ht|f)tps?://(?P<url>.*)", request)
         if detect_url_result:
-            url = detect_url_result.group("url")
-            parse_result = urlparse(url)
+            parse_result = urlparse(detect_url_result.group("url"))
             server_url = toml.load("server_info.toml")["host"]
-            if parse_result.scheme != '' and parse_result.netloc != '' and server_url not in url:
+            if parse_result.netloc != '' and server_url not in detect_url_result:
                 # check if the user try to connect to real url, that is not suburl of the current url
                 return RiskLevels.CRITICAL
             return RiskLevels.NO_RISK
@@ -65,8 +64,9 @@ class AdvancedChecks:
                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora"]
         detect_url_result = re.search(r"(ht|f)tps?://(?P<url>.*)", request)
         if detect_url_result:
+            url = detect_url_result.group("url")
             for extension in malicious_extensions:
-                if extension in detect_url_result:
+                if extension in url:
                     return RiskLevels.CRITICAL
         return RiskLevels.NO_RISK
 

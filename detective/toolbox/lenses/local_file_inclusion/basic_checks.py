@@ -81,6 +81,7 @@ class BasicChecks:
         return RiskLevels.CATASTROPHIC if re.search(r"(\b\.htaccess\b)|(\bconfig\.php\b)|(\bauthorized_keys\b)|(\bid_rsa\b)|(\bid_rsa\.keystore\b)|(\bid_rsa\.pub\b)|(\bknown_hosts\b)|(\busr\b.*\blocal\b.*\bapache\b.*\blogs\b.*\baccess_log\b)", request)\
             else RiskLevels.NO_RISK
 
+    #  start windows section
     @staticmethod
     def windows_files(request):
         """
