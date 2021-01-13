@@ -2,8 +2,8 @@ from time import sleep
 from datetime import datetime
 from threading import Thread
 from importlib import import_module
-import detective.toolbox.lenses as lenses
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import lenses
+from detective.toolbox import RiskLevels
 import log_related
 
 

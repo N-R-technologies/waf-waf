@@ -1,5 +1,5 @@
 import inspect
-from .risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class MagnifyingGlass:

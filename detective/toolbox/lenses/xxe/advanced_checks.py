@@ -1,6 +1,6 @@
 import re
 from urllib.parse import urlparse
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class AdvancedChecks:
@@ -16,12 +16,13 @@ class AdvancedChecks:
         """
         urls_found = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<url>.+?|)(?:\"|')""", request)
         if urls_found is not None:
+            white_spaces = re.compile(r"\s+")
             for url in urls_found:
-                parse_result = urlparse(url)
-                if parse_result.scheme != '' and parse_result.netloc != '':
+                parse_result = urlparse(re.sub(white_spaces, '', url))
+                if parse_result.netloc != '':
                     return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
-    
+
     @staticmethod
     def inject_file(request):
         """

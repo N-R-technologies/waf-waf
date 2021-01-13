@@ -1,5 +1,5 @@
 import re
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class BasicChecks:
@@ -58,7 +58,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.CATASTROPHIC if re.search(r"""<\s*script(?:/|\s|\()(?:.+?>|>.+?)(?:<\s*/\s*script\s*>)?""", request) \
+        return RiskLevels.CATASTROPHIC if re.search(r"""<\s*script(?:/|\s|\()(?:.+?>|>.+?)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
