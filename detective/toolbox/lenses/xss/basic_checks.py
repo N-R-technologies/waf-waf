@@ -13,7 +13,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.CATASTROPHIC if re.search(r"""\bdocument\.cookie\b""", request) else RiskLevels.NO_RISK
+        return RiskLevels.CATASTROPHIC if re.search(r"""\bdocument\.cookie\b""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def alert(request):
@@ -24,7 +25,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""\balert\b\s*(?:>\s*)?\([^\)]+?\)""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""\balert\b\s*(?:>\s*)?\([^\)]+?\)""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def eval(request):
@@ -35,7 +37,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.SLIGHT if re.search(r"""\beval\b\s*\([^\)]+?\)""", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"""\beval\b\s*\([^\)]+?\)""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def utf7(request):
@@ -46,7 +49,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""\bcharset\b\s*=\s*utf-7""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""\bcharset\b\s*=\s*utf-7""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def script(request):
@@ -72,7 +76,8 @@ class BasicChecks:
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL \
-            if re.search(r"""<\s*embed(?:/|\s).*?allowscriptaccess\s*=(?:(?:\"|'|`)\s*)?always""", request) else RiskLevels.NO_RISK
+            if re.search(r"""<\s*embed(?:/|\s).*?allowscriptaccess\s*=(?:(?:\"|'|`)\s*)?always""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def tag_attributes(request):
@@ -97,7 +102,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""<\s*img(?:/|\s).*?(?:src|dnysrc|lowsrc)\s*=""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""<\s*img(?:/|\s).*?(?:src|dnysrc|lowsrc)\s*=""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def old_img_src(request):
@@ -164,7 +170,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""<\s*(?:table|td)(?:/|\s).*?background\s*=""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""<\s*(?:table|td)(?:/|\s).*?background\s*=""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def link_base_href(request):
@@ -176,7 +183,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""<\s*(?:link|base)(?:/|\s).*?href\s*=""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""<\s*(?:link|base)(?:/|\s).*?href\s*=""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def br_size(request):
@@ -188,7 +196,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""<\s*br(?:/|\s).*?size\s*=""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""<\s*br(?:/|\s).*?size\s*=""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def meta_content(request):
@@ -200,7 +209,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""<\s*meta(?:/|\s).*?(?:content|url)\s*=""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""<\s*meta(?:/|\s).*?(?:content|url)\s*=""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def html_body_xml(request):
@@ -226,7 +236,8 @@ class BasicChecks:
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE \
-            if re.search(r"""<\s*object(?:/|\s).*?type\s*=(?:(?:\"|'|`)\s*)?text\s*/\s*x-scriptlet""", request) else RiskLevels.NO_RISK
+            if re.search(r"""<\s*object(?:/|\s).*?type\s*=(?:(?:\"|'|`)\s*)?text\s*/\s*x-scriptlet""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def style_type(request):
@@ -239,7 +250,8 @@ class BasicChecks:
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE \
-            if re.search(r"""<\s*style(?:/|\s).*?type\s*=(?:(?:\"|'|`)\s*)?text\s*/\s*(?:javascript|css)""", request) else RiskLevels.NO_RISK
+            if re.search(r"""<\s*style(?:/|\s).*?type\s*=(?:(?:\"|'|`)\s*)?text\s*/\s*(?:javascript|css)""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def list_style_image(request):
@@ -263,7 +275,8 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.SLIGHT if re.search(r"""style\s*=\s*.*?(/\*.*?\*/)""", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"""style\s*=\s*.*?(/\*.*?\*/)""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def xss_html_comments(request):
@@ -274,4 +287,5 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.NEGLIGIBLE if re.search(r"""<!--.*-->""", request) else RiskLevels.NO_RISK
+        return RiskLevels.NEGLIGIBLE if re.search(r"""<!--.*-->""", request) \
+            else RiskLevels.NO_RISK
