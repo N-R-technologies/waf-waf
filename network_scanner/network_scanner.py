@@ -25,30 +25,17 @@ class NetworkScanner:
         else:
             if conclusion[0]:
                 print(info["evil twin"])
-            else:
-                print("No evil twin detected !")
             if conclusion[1]:
                 print(info["open ssid"])
-            else:
-                print("Your network is hidden so it is more secure !")
             if conclusion[2]:
                 print(info["common ssid"])
-            else:
-                print("Your network name is not in the common names of our database\n"
-                      " means your network is more safety !")
             if conclusion[3] != "No-Username":
                 if conclusion[3]:
                     print(info["common router username"])
-                else:
-                    print("Your router username is not in the common usernames in our database,\n"
-                          "means your network is more safety !")
 
             if conclusion[4] != "No-Password":
                 if conclusion[4]:
                     print(info["common router password"])
-                else:
-                    print("Your router password is not in the common passwords in our database,\n"
-                          "means your network is more safety !")
             if conclusion[5][0] == -1:
                 print("Your password for the network is in the common passwords database, means it will be\n"
                       "cracked instantly, try to change it to more complex and strong password")

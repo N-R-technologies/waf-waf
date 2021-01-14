@@ -1,7 +1,6 @@
 import itertools
 import threading
 import time
-import sys
 
 
 class Reporter:
@@ -14,6 +13,8 @@ class Reporter:
                 break
             print(f"*{loading_str} {sign}", end="\r")
             time.sleep(0.1)
+        print(f"*{loading_str}  DONE", end="\r")
+        print()
 
     def start_loading(self, loading_str):
         self._done = False
@@ -21,5 +22,6 @@ class Reporter:
         self._current_thread.start()
 
     def stop_loading(self):
+
         self._done = True
 
