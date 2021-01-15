@@ -47,6 +47,9 @@ class Menu:
             if self.controller.index(1) != 0:
                 self.controller.append(0)
                 self.controller.pop(0)
+        elif event == "'q'":
+            self.exit = True
+            return
         for menu_item in range(len(self.menu)):
             if self.controller[menu_item] == 1:
                 print(self.WARNING + self.menu[menu_item])
@@ -57,3 +60,4 @@ class Menu:
                 self.exit = True
                 return
             self.functions[self.controller.index(1)]()
+            print("**press any button for return to the menu**")

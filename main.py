@@ -1,8 +1,9 @@
 import os
 import network_scanner
 from curtsies import Input
+import mail_manager
 from menu import Menu
-
+import keyboard
 
 def start_scanning():
     """
@@ -17,7 +18,7 @@ def manage_mails():
     """
     function start the manage emails menu
     """
-    print('Manage mail option')
+    mail_manager.start_manage_mails()
 
 
 def clear():
@@ -56,6 +57,7 @@ def start_menu(menu):
             print(menu.WARNING + menu.menu[menu_item])
         else:
             print(menu.OKBLUE + menu.menu[menu_item])
+    print("You can press q for quit also if you want")
 
 
 def main():

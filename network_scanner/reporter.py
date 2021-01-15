@@ -13,8 +13,8 @@ class Reporter:
                 break
             print(f"*{loading_str} {sign}", end="\r")
             time.sleep(0.1)
-        print(f"*{loading_str}  DONE", end="\r")
-        print()
+        print(f"*{loading_str}  \033[92m DONE", end="\r")
+        print('\033[94m')
 
     def start_loading(self, loading_str):
         self._done = False

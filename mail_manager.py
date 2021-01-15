@@ -5,6 +5,13 @@ import toml
 import re
 
 
+def clear():
+    """
+    function clear the screen
+    """
+    os.system("clear")
+
+
 def add_mail():
     """
     function add one mail to the mails file
@@ -96,6 +103,7 @@ def start_manage_mails():
             print(manage_mails.OKBLUE + manage_mails.menu[menu_item])
     with Input(keynames='curses') as input_generator:
         for user_input in input_generator:
+            clear()
             manage_mails.handle_menu(repr(user_input))
             if manage_mails.exit:
                 break
