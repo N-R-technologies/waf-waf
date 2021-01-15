@@ -37,7 +37,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.SLIGHT if re.search(r"""\beval\b\s*\([^\)]+?\)""", request) \
+        return RiskLevels.MODERATE if re.search(r"""\beval\b\s*\([^\)]+?\)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -301,7 +301,7 @@ class BasicChecks:
         :rtype: enum RiskLevels
         """
 
-        return RiskLevels.MODERATE if re.search(r"fscommand", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"fscommand", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onabort(request):
@@ -313,7 +313,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onabort", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onabort", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onactivate(request):
@@ -325,7 +325,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onactivate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onactivate", request) else RiskLevels.NO_RISK
 
 
     @staticmethod
@@ -338,7 +338,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onafterprint", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onafterprint", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onafterupdate(request):
@@ -350,7 +350,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onafterupdate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onafterupdate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforeactivate(request):
@@ -362,7 +362,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforeactivate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforeactivate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforecopy(request):
@@ -374,7 +374,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforecopy", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforecopy", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforecut(request):
@@ -386,7 +386,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforecut", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforecut", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforedeactivate(request):
@@ -398,7 +398,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforedeactivate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforedeactivate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforeeditfocus(request):
@@ -410,7 +410,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforeeditfocus", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforeeditfocus", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforepaste(request):
@@ -422,7 +422,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforepaste", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforepaste", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforeprint(request):
@@ -434,7 +434,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforeprint", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforeprint", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforeunload(request):
@@ -446,7 +446,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforeunload", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforeunload", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbeforeupdate(request):
@@ -458,7 +458,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbeforeupdate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbeforeupdate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbegin(request):
@@ -470,7 +470,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbegin", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbegin", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onblur(request):
@@ -482,7 +482,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onblur", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onblur", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onbounce(request):
@@ -494,7 +494,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onbounce", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onbounce", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oncellchange(request):
@@ -506,7 +506,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oncellchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oncellchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onchange(request):
@@ -518,7 +518,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onclick(request):
@@ -530,7 +530,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onclick", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onclick", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oncontextmenu(request):
@@ -542,7 +542,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oncontextmenu", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oncontextmenu", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oncontrolselect(request):
@@ -554,7 +554,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oncontrolselect", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oncontrolselect", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oncopy(request):
@@ -566,7 +566,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oncopy", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oncopy", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oncut(request):
@@ -578,7 +578,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oncut", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oncut", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondataavailable(request):
@@ -590,7 +590,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondataavailable", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondataavailable", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondatasetchanged(request):
@@ -602,7 +602,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondatasetchanged", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondatasetchanged", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondatasetcomplete(request):
@@ -614,7 +614,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondatasetcomplete", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondatasetcomplete", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondblclick(request):
@@ -626,7 +626,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondblclick", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondblclick", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondeactivate(request):
@@ -638,7 +638,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondeactivate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondeactivate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondrag(request):
@@ -650,7 +650,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondrag", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondrag", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragend(request):
@@ -662,7 +662,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragend", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragend", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragleave(request):
@@ -674,7 +674,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragleave", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragleave", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragenter(request):
@@ -686,7 +686,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragenter", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragenter", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragover(request):
@@ -698,7 +698,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragover", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragover", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragdrop(request):
@@ -710,7 +710,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragdrop", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragdrop", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondragstart(request):
@@ -722,7 +722,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondragstart", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondragstart", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ondrop(request):
@@ -734,7 +734,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ondrop", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ondrop", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onend(request):
@@ -746,7 +746,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onend", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onend", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onerror(request):
@@ -758,7 +758,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onerror", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onerror", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onerrorupdate(request):
@@ -770,7 +770,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onerrorupdate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onerrorupdate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onfilterchange(request):
@@ -782,7 +782,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onfilterchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onfilterchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onfinish(request):
@@ -794,7 +794,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onfinish", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onfinish", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onfocus(request):
@@ -806,7 +806,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onfocus", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onfocus", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onfocusin(request):
@@ -818,7 +818,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onfocusin", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onfocusin", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onfocusout(request):
@@ -830,7 +830,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onfocusout", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onfocusout", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onhashchange(request):
@@ -842,7 +842,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onhashchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onhashchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onhelp(request):
@@ -854,7 +854,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onhelp", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onhelp", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def oninput(request):
@@ -866,7 +866,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"oninput", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"oninput", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onkeydown(request):
@@ -878,7 +878,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onkeydown", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onkeydown", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onkeypress(request):
@@ -890,7 +890,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onkeypress", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onkeypress", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onkeyup(request):
@@ -902,7 +902,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onkeyup", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onkeyup", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onlayoutcomplete(request):
@@ -914,7 +914,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onlayoutcomplete", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onlayoutcomplete", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onload(request):
@@ -926,7 +926,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onload", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onload", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onlosecapture(request):
@@ -938,7 +938,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onlosecapture", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onlosecapture", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmediacomplete(request):
@@ -950,7 +950,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmediacomplete", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmediacomplete", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmediaerror(request):
@@ -962,7 +962,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmediaerror", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmediaerror", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmessage(request):
@@ -974,7 +974,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmessage", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmessage", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmousedown(request):
@@ -986,7 +986,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmousedown", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmousedown", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmouseenter(request):
@@ -998,7 +998,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmouseenter", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmouseenter", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmouseleave(request):
@@ -1010,7 +1010,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmouseleave", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmouseleave", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmousemove(request):
@@ -1022,7 +1022,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmousemove", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmousemove", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmouseout(request):
@@ -1034,7 +1034,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmouseout", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmouseout", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmouseover(request):
@@ -1046,7 +1046,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmouseover", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmouseover", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmouseup(request):
@@ -1058,7 +1058,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmouseup", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmouseup", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmousewheel(request):
@@ -1070,7 +1070,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmousewheel", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmousewheel", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmove(request):
@@ -1082,7 +1082,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmove", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmove", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmoveend(request):
@@ -1094,7 +1094,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmoveend", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmoveend", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onmovestart(request):
@@ -1106,7 +1106,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onmovestart", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onmovestart", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onoffline(request):
@@ -1118,7 +1118,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onoffline", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onoffline", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ononline(request):
@@ -1130,7 +1130,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ononline", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ononline", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onoutofsync(request):
@@ -1142,7 +1142,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onoutofsync", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onoutofsync", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onpaste(request):
@@ -1154,7 +1154,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onpaste", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onpaste", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onpause(request):
@@ -1166,7 +1166,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onpause", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onpause", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onpopstate(request):
@@ -1178,7 +1178,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onpopstate", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onpopstate", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onprogress(request):
@@ -1190,7 +1190,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onprogress", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onprogress", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onpropertychange(request):
@@ -1202,7 +1202,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onpropertychange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onpropertychange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onreadystatechange(request):
@@ -1214,7 +1214,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onreadystatechange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onreadystatechange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onredo(request):
@@ -1226,7 +1226,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onredo", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onredo", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onrepeat(request):
@@ -1238,7 +1238,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onrepeat", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onrepeat", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onreset(request):
@@ -1250,7 +1250,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onreset", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onreset", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onresize(request):
@@ -1262,7 +1262,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onresize", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onresize", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onresizeend(request):
@@ -1274,7 +1274,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onresizeend", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onresizeend", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onresizestart(request):
@@ -1286,7 +1286,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onresizestart", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onresizestart", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onresume(request):
@@ -1298,7 +1298,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onresume", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onresume", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onreverse(request):
@@ -1310,7 +1310,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onreverse", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onreverse", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onrowsenter(request):
@@ -1322,7 +1322,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onrowsenter", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onrowsenter", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onrowexit(request):
@@ -1334,7 +1334,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onrowexit", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onrowexit", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onrowdelete(request):
@@ -1346,7 +1346,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onrowdelete", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onrowdelete", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onrowinserted(request):
@@ -1358,7 +1358,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onrowinserted", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onrowinserted", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onscroll(request):
@@ -1370,7 +1370,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onscroll", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onscroll", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onseek(request):
@@ -1382,7 +1382,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onseek", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onseek", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onselect(request):
@@ -1394,7 +1394,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onselect", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onselect", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onselectionchange(request):
@@ -1406,7 +1406,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onselectionchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onselectionchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onselectstart(request):
@@ -1418,7 +1418,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onselectstart", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onselectstart", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onstart(request):
@@ -1430,7 +1430,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onstart", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onstart", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onstop(request):
@@ -1442,7 +1442,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onstop", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onstop", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onstorage(request):
@@ -1454,7 +1454,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onstorage", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onstorage", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onsyncrestored(request):
@@ -1466,7 +1466,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onsyncrestored", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onsyncrestored", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onsubmit(request):
@@ -1478,7 +1478,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onsubmit", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onsubmit", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ontimeerror(request):
@@ -1490,7 +1490,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ontimeerror", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ontimeerror", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def ontrackchange(request):
@@ -1502,7 +1502,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"ontrackchange", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"ontrackchange", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onundo(request):
@@ -1514,7 +1514,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onundo", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onundo", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onunload(request):
@@ -1526,7 +1526,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onunload", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onunload", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def onurlflip(request):
@@ -1538,7 +1538,7 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"onurlflip", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"onurlflip", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def seeksegmenttime(request):
@@ -1550,44 +1550,108 @@ class BasicChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"seeksegmenttime", request) else RiskLevels.NO_RISK
+        return RiskLevels.SLIGHT if re.search(r"seeksegmenttime", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def html_break(request):
+        """
+        this function check if the user try to
+        use html breaks
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
         return RiskLevels.SLIGHT if re.search(r"([\"'].*?>)|(#.+?\)[\"\s]*>)|(['\"][,;\s]+\w*[\[(])|(>.*?<\s*\/?[\w\s]+>)|()", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def hash_location(request):
+        """
+        this function check if the user try to
+        get to location.hash
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
         return RiskLevels.CRITICAL if re.search(r"\blocation\b.*?\..*?\bhash\b", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def self_contained_payload(request):
+        """
+        this function check if the user try to
+        attack the server with contained payload xss attack
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
         return RiskLevels.CRITICAL if re.search(r"\bwith\b\s*\(.+?\)[\s\w]+\(", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def c_style_loops(request):
-        return RiskLevels.CRITICAL if re.search(r"(\b(do|while|for)\b.*?\([^)]*\).*?\{)|(\}.*?\b(do|while|for)\b.*?\([^)]*\))", requst) \
+        """
+        this function check if the user try to
+        use c style loops
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.MODERATE if re.search(r"(\b(do|while|for)\b.*?\([^)]*\).*?\{)|(\}.*?\b(do|while|for)\b.*?\([^)]*\))", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def c_style_short_condition(request):
+        """
+        this function check if the user try to
+        use c style shor if condition
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
         return RiskLevels.SLIGHT if re.search(r"[=<>].+?\?.+?:", request)\
             else RiskLevels.NO_RISK
 
     @staticmethod
     def jquery_selector(request):
-        return RiskLevels.MODERATE if re.search(r"\$\(.+?\)", request) \
+        """
+        this function check if the user try to
+        use jquery selector
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.NEGLIGIBLE if re.search(r"\$\(.+?\)", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def conditional_tokens(request):
+        """
+        this function check if the user try to
+        use condition tokens
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
         return RiskLevels.SLIGHT if re.search(r" @(cc_on|set)\b", request)\
             else RiskLevels.NO_RISK
 
     @staticmethod
     def fire_fox_url_handler(request):
-        return RiskLevels.SLIGHT if re.search(r"(\bfirefoxurl\s*:)|(\bwyciwyg\s*:)", request) \
+        """
+        this function check if the user try to
+        use url handler
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.NEGLIGIBLE if re.search(r"(\bfirefoxurl\s*:)|(\bwyciwyg\s*:)", request) \
             else RiskLevels.NO_RISK
