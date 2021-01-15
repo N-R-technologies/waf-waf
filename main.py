@@ -40,23 +40,22 @@ def print_help():
           "https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf\n")
 
 
-def start_menu(main_menu):
+def start_menu(menu):
     """
     function start the main menu of the program
     :param menu: object from class menu that is represent the main menu
     :type menu: class Menu
     :return: None
     """
-    main_menu.add_menu('1. Start the network scanning', start_scanning)
-    main_menu.add_menu('2. Manage your emails configuration file', manage_mails)
-    main_menu.add_menu('3. Get help and explanation about our tool', print_help)
-    main_menu.add_menu('4. Clear the screen', clear)
-    main_menu.add_menu('5. Exit', 'exit')
-    for menu_item in range(len(main_menu.menu)):
-        if main_menu.controller[menu_item] == 1:
-            print(main_menu.WARNING + main_menu.menu[menu_item])
+    menu.add_menu('1. Start the network scanning', start_scanning)
+    menu.add_menu('2. Manage your emails configuration file', manage_mails)
+    menu.add_menu('3. Get help and explanation about our tool', print_help)
+    menu.add_menu('4. Exit', 'exit')
+    for menu_item in range(len(menu.menu)):
+        if menu.controller[menu_item] == 1:
+            print(menu.WARNING + menu.menu[menu_item])
         else:
-            print(main_menu.OKBLUE + main_menu.menu[menu_item])
+            print(menu.OKBLUE + menu.menu[menu_item])
 
 
 def main():
@@ -64,6 +63,7 @@ def main():
     start_menu(main_menu)
     with Input(keynames='curses') as input_generator:
         for user_input in input_generator:
+            clear()
             main_menu.handle_menu(repr(user_input))
             if main_menu.exit:
                 break

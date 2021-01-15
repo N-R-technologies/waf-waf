@@ -11,7 +11,7 @@ class Menu:
         """
         self.OKBLUE = '\033[94m'
         self.WARNING = '\033[93m'
-        self.exit = 0
+        self.exit = False
         self.menu = []
         self.functions = []
         self.controller = []
@@ -56,8 +56,4 @@ class Menu:
             if self.functions[self.controller.index(1)] == 'exit':
                 self.exit = True
                 return
-            elif self.functions[self.controller.index(1)].__name__ == "clear":
-                self.functions[self.controller.index(1)]()
-                self.handle_menu("")
-            else:
-                self.functions[self.controller.index(1)]()
+            self.functions[self.controller.index(1)]()
