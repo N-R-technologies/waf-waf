@@ -1,9 +1,8 @@
-import os
 import network_scanner
 from curtsies import Input
 import mail_manager
 from menu import Menu
-import keyboard
+
 
 def start_scanning():
     """
@@ -19,13 +18,6 @@ def manage_mails():
     function start the manage emails menu
     """
     mail_manager.start_manage_mails()
-
-
-def clear():
-    """
-    function clear the terminal
-    """
-    os.system("clear")
 
 
 def print_help():
@@ -65,7 +57,7 @@ def main():
     start_menu(main_menu)
     with Input(keynames='curses') as input_generator:
         for user_input in input_generator:
-            clear()
+            main_menu.clear()
             main_menu.handle_menu(repr(user_input))
             if main_menu.exit:
                 break
