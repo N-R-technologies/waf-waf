@@ -22,6 +22,10 @@ class MailManager:
     def add_mail(self, name, address):
         """
         function add one mail to the mails file
+        :param name: the email owner name
+        :param address: the email address
+        :type name: str
+        :type address: str
         """
         if not self._is_mail_valid(address):
             messagebox.showerror("Invalid Email", "Your email address is invalid")

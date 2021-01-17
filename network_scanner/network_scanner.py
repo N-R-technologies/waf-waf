@@ -56,15 +56,17 @@ class NetworkScanner:
         ssid = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
         return [single_ssid[self.SSID_HEADER_LEN:] for single_ssid in ssid.split('\n') if (len(single_ssid) > 1 and single_ssid[0] == 'y')][0]
 
-    def scan(self):
+    def scan(self, router_username, router_password):
         """
         function scan the network
+        :param router_username: the username of the router
+        :param router_password: the password of the router
+        :type router_username: str
+        :type router_password: str
         """
         ssid = self._get_ssid()
         conclusion = list()
 
-        router_username = input("enter your username for the router, if you don't know, press enter:\n")
-        router_password = input("enter your password for the router, if you don't know, press enter:\n")
         self._reporter.start_loading("checking evil twin")
         conclusion.append(self._scan_functions.check_evil_twin(ssid))
         time.sleep(2)
@@ -77,7 +79,7 @@ class NetworkScanner:
             time.sleep(2)
             self._reporter.stop_loading()
             time.sleep(1)
-            if router_username.lower() != '':
+            if router_username != '':
                 self._reporter.start_loading("checking router username")
                 conclusion.append(ScanFunctions.find_in_file(router_username, "network_scanner/network_scanner_data/users_router.txt"))
                 time.sleep(2)
@@ -85,7 +87,7 @@ class NetworkScanner:
                 time.sleep(1)
             else:
                 conclusion.append("No-Username")
-            if router_password.lower() != '':
+            if router_password != '':
                 self._reporter.start_loading("checking router password")
                 conclusion.append(ScanFunctions.find_in_file(router_password, "network_scanner/network_scanner_data/passwords_router.txt"))
                 time.sleep(2)
