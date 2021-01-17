@@ -1,6 +1,6 @@
 import network_scanner
 from curtsies import Input
-import mail_manager
+from mail_manager import MailManager
 from menu import Menu
 
 
@@ -17,6 +17,7 @@ def manage_mails():
     """
     function start the manage emails menu
     """
+    mail_manager = MailManager()
     mail_manager.start_manage_mails()
 
 
