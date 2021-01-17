@@ -1,5 +1,6 @@
 import toml
 import os
+import logging
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective.detective import Detective
