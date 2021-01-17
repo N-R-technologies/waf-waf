@@ -43,7 +43,7 @@ def start_menu(menu):
     menu.add_menu('1. Start the network scanning', start_scanning)
     menu.add_menu('2. Manage your emails configuration file', manage_mails)
     menu.add_menu('3. Get help and explanation about our tool', print_help)
-    menu.add_menu('4. Exit', 'exit')
+    menu.add_menu('4. Exit or press Q', 'exit')
     for menu_item in range(len(menu.menu)):
         if menu.controller[menu_item] == 1:
             print(menu.WARNING + menu.menu[menu_item])

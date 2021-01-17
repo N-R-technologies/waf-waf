@@ -21,7 +21,7 @@ def add_mail():
     exit_flag = False
     while not is_mail_valid(address) or exit_flag:
         print("Your mail address is not valid...")
-        print("enter q for quit")
+        print("Press Q to quit")
         address = input("Enter the mail address:\n")
         if address.lower() == 'q':
             exit_flag = True
@@ -42,7 +42,7 @@ def remove_mail():
     mail_index = input("Enter the index of the mail which you want to remove\n")
     while not (mail_index.isdigit() and 1 <= int(mail_index) <= len(user_addresses)) or exit_flag:
         print("Invalid index")
-        print("Press q to quit")
+        print("Press Q to quit")
         mail_index = input("Enter the index of the mail which you want to remove\n")
         if mail_index.lower() == 'q':
             exit_flag = True
@@ -94,8 +94,8 @@ def start_manage_mails():
     manage_mails = Menu()
     manage_mails.add_menu('1. Display all the emails', display_mails)
     manage_mails.add_menu('2. Delete email from the list', remove_mail)
-    manage_mails.add_menu('3. add email to the list', add_mail)
-    manage_mails.add_menu('4. Exit', 'exit')
+    manage_mails.add_menu('3. Add email to the list', add_mail)
+    manage_mails.add_menu('4. Exit or press Q', 'exit')
     for menu_item in range(len(manage_mails.menu)):
         if manage_mails.controller[menu_item] == 1:
             print(manage_mails.WARNING + manage_mails.menu[menu_item])
