@@ -1,7 +1,8 @@
-import network_scanner
+from network_scanner import NetworkScanner
+
 
 def main():
-    scanner = network_scanner.NetworkScanner()
+    scanner = NetworkScanner()
     scanner.scan()
 
 

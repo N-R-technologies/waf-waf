@@ -3,24 +3,26 @@ from network_scanner.scan_functions import ScanFunctions
 
 class EngineError(Exception):
     """
-    class handle error in case one of the engines cant work properly with the given password
+    This class will handle errors if one of the engines
+    cant work properly with the given password
     """
     def __init__(self, engine_num):
         self._engine_num = engine_num
 
     def __str__(self):
-        return "the engine number: " + str(self._engine_num) + " cant work properly with your password"
+        return "Engine number: " + str(self._engine_num) + " cant work properly with your password"
 
 
 class InvalidChar(Exception):
     """
-    class handle error in case the password contain non asci char or symbol or number
+    This class will handle errors if the password
+    contains non ascii characters
     """
     def __init__(self, invalid_char):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Your Password contains invalid char: " + self._invalid_char + " so unfortunately we cant analyze it"
+        return "Your password contains an invalid character: " + self._invalid_char + " so unfortunately we cant analyze it"
 
 
 class PasswordEngines:
@@ -28,7 +30,8 @@ class PasswordEngines:
 
     def _convert_to_suitable_format(self, estimated_time):
         """
-        function convert the estimated time from seconds to more suitable format
+        This function will convert the estimated time
+        from seconds to a more suitable format
         :param estimated_time: the estimated time in seconds
         :type estimated_time: int
         :return type: the new type
@@ -49,12 +52,13 @@ class PasswordEngines:
             time_type = "days"
             estimated_time = estimated_time / (60 * 60 * 24)
         else:
-            time_type = "month"
+            time_type = "months"
         return time_type, int(estimated_time)
 
     def _estimated_crack_time_format(self, estimated_time, time_type, engine_num):
         """
-        function print the estimated time it would take to crack your password
+        This function will print the estimated time
+        it would take to crack your password
         :param estimated_time: the estimated time ot would take to crack your password
         :param time_type: the type of the time (like hours or minutes)
         :param engine_num: the number of the engine which calculated this time
@@ -62,17 +66,19 @@ class PasswordEngines:
         :type time_type: string
         :type engine_num: int
         :return: the estimated crack time
-        :rtype: str
+        :rtype: string
         """
-        if type != "month":
-            return(f"The engine number {str(engine_num)} calculate that it would take about "
-                   f"{str(estimated_time)} {time_type} to crack your password")
-        return(f"The engine number str(engine_num)"
-               " calculate that it would take more than a month to crack your password")
+        time_to_crack = ""
+        if time_type != "months":
+            time_to_crack = str(estimated_time) + ' ' + time_type
+        else:
+            time_to_crack = "more than a month"
+        return(f"Engine number {str(engine_num)} calculated that it would take about "
+               f"{time_to_crack} to crack your password.")
 
     def _analyze_password(self, password):
         """
-        function analyze password and check its content
+        This function will analyze the password and will check its content
         :param password: the password
         :type password: string
         :return attributes_lst: list of all attributes of password
@@ -99,10 +105,12 @@ class PasswordEngines:
 
     def _first_engine(self, password):
         """
-        function calculate with a mathematical formula how long it would take to crack your password with brute force
+        This function will calculate with a mathematical formula how long
+        it would take to crack the password with brute force attack
         :param password: the password
-        :type password: str
+        :type password: string
         :return: the time in seconds it would take to crack your password
+        :rtype: int
         """
         have_lower, have_upper, have_numbers, have_symbols = self._analyze_password(password)
         password_type = 0
@@ -121,9 +129,14 @@ class PasswordEngines:
         return crack_time_seconds
 
     def _second_engine(self, password):
-        """function calculate with static table how long it would take to crack your password with brute force attack
+        """
+        This function will calculate with static table how long
+        it would take to crack the password with brute force attack
+        :param password: the password
+        :type password: string
         :return: the time in seconds it would take to crack your password
-        :rtype: integer"""
+        :rtype: int
+        """
         have_lower, have_upper, have_numbers, have_symbols = self._analyze_password(password)
         password_length = len(password)
         time_crack_table = [[0, 0, 3, 10], [0, 8, 180, 780],
@@ -153,10 +166,10 @@ class PasswordEngines:
 
     def password_engines(self, password):
         """
-        function print the estimated time it would take to crack your password according
-        to two separate engines
+        This function will print the estimated time it would take
+        to crack the password according to two separate engines
         :param password: the password
-        :type password: str
+        :type password: string
         :return: the estimated crack time the engines calculated
         :rtype: list
         """

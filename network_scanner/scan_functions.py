@@ -13,6 +13,7 @@ class ScanFunctions:
         :type signature: string
         :type file: string
         :return: True if the given signature appears in the given file, otherwise, False
+        :rtype: boolean
         """
         signature += '\n'
         with open(file, 'r') as f:
@@ -25,10 +26,11 @@ class ScanFunctions:
 
     def get_details(self, ssid):
         """
-        This function will return all the details of the connected network
+        This function will return all the details about the connected network
         :param ssid: the ssid of the connected network
         :type ssid: string
         :return: all the details about the connected network from the command "nmcli -t -s connection show <network ssid>"
+        :rtype: dict
         """
         command = 'nmcli -t -s connection show "' + ssid + '"' + '| grep ^802-11-wireless-security.psk:'
         details = dict()
@@ -39,15 +41,13 @@ class ScanFunctions:
 
     def check_evil_twin(self, ssid):
         """
-        function check if there is another access point in the close range of the server
-        which have the same ssid as the user's network
+        This function will check if there is another access point in the close
+        range of the server which have the same ssid as the user's network
         :param ssid: the ssid of the user's network
-        :type ssid: str
+        :type ssid: string
         :return: if there is access point with the same ssid
         :rtype: boolean
         """
         command = "nmcli -f SSID device wifi list"
         all_access_points = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
         return all_access_points.count(ssid + '\n') > 1
-
-
