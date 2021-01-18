@@ -39,7 +39,7 @@ class EmailSender:
             daily_log_description = self.LOG_DESCRIPTION
             daily_log_mail.attach(MIMEText(daily_log_description))
 
-            daily_log_path = self.LOG_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".pdf"
+            daily_log_path = self.LOG_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".pdf"
             with open(daily_log_path, "rb") as daily_log:
                 part = MIMEApplication(daily_log.read(), Name=os.path.basename(daily_log_path))
             part["Content-Disposition"] = 'attachment; filename="%s"' % os.path.basename(daily_log_path)
@@ -63,13 +63,13 @@ class EmailSender:
             raise FileNotFoundError
 
     def _load_user_addresses_configuration(self, user_addresses_file_path):
-        user_addresses = dict()
+        user_emails = dict()
         if os.path.exists(user_addresses_file_path):
-            user_addresses = toml.load(user_addresses_file_path).get("addresses", {})
+            user_emails = toml.load(user_addresses_file_path).get("addresses", {})
         else:
             open(user_addresses_file_path, 'w').close()
 
-        addresses = set()
-        for address in user_addresses.values():
-            addresses.add(address)
-        return addresses
+        user_addresses = set()
+        for address in user_emails.values():
+            user_addresses.add(address)
+        return user_addresses

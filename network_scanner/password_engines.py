@@ -22,10 +22,11 @@ class InvalidChar(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Your password contains an invalid character: " + self._invalid_char + " so unfortunately we cant analyze it"
+        return "\nYour password contains an invalid character: " + self._invalid_char + " so unfortunately we cant analyze it"
 
 
 class PasswordEngines:
+    COMMON_NETWORK_PASSWORDS = "network_scanner/data/scan/network_passwords.txt"
     KEYS_PER_SECOND = 17042497
 
     def _convert_to_suitable_format(self, estimated_time):
@@ -70,11 +71,10 @@ class PasswordEngines:
         """
         time_to_crack = ""
         if time_type != "months":
-            time_to_crack = str(estimated_time) + ' ' + time_type
+            time_to_crack = "about " + str(estimated_time) + ' ' + time_type
         else:
             time_to_crack = "more than a month"
-        return(f"Engine number {str(engine_num)} calculated that it would take about "
-               f"{time_to_crack} to crack your password.")
+        return f"Engine number {str(engine_num)} calculated that it would take {time_to_crack} to crack your password."
 
     def _analyze_password(self, password):
         """
@@ -88,7 +88,7 @@ class PasswordEngines:
         have_lower_case = False
         have_numbers = False
         have_symbol = False
-        list_symbols = ['@', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', "\\", '|', '}',
+        list_symbols = ['@', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '\\', '|', '}',
                         '{', '~', ':', ']', '+', '=', '.', '`', ';', "'", '-', '"']
         for char in password[:-1]:
             if char.isnumeric():
@@ -122,7 +122,7 @@ class PasswordEngines:
             password_type += 10
         if have_symbols:
             password_type += 30
-        combinations = password_type ** len(password)  # ** - means pow
+        combinations = password_type ** len(password)
         crack_time_seconds = combinations / self.KEYS_PER_SECOND
         if crack_time_seconds < 1:
             return 0
@@ -173,10 +173,11 @@ class PasswordEngines:
         :return: the estimated crack time the engines calculated
         :rtype: list
         """
+        scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
         est_times = []
         common_password = [-1, -1]
-        if ScanFunctions.find_in_file(password, "network_scanner/network_scanner_data/passwords.txt"):
+        if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
             return common_password
         else:
             for engine in engines:

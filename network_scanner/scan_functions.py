@@ -4,8 +4,7 @@ import subprocess
 class ScanFunctions:
     PASSWORD_HEADER_LEN = 29
 
-    @staticmethod
-    def find_in_file(signature, file):
+    def find_in_file(self, signature, file):
         """
         This function will check if the given signature appears in the given file
         :param signature: the signature to check if appears in the file
@@ -21,7 +20,7 @@ class ScanFunctions:
                 if line == signature:
                     f.close()
                     return True
-        f.close()
+            f.close()
         return False
 
     def get_details(self, ssid):
@@ -29,7 +28,7 @@ class ScanFunctions:
         This function will return all the details about the connected network
         :param ssid: the ssid of the connected network
         :type ssid: string
-        :return: all the details about the connected network from the command "nmcli -t -s connection show <network ssid>"
+        :return: all the details about the connected network
         :rtype: dict
         """
         command = 'nmcli -t -s connection show "' + ssid + '"' + '| grep ^802-11-wireless-security.psk:'
