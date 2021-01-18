@@ -186,5 +186,5 @@ class PasswordEngines:
                     print(e.__str__())
                     est_times.append('!')
                 else:
-                    est_times.append(self._estimated_crack_time_format(est_time, time_type, engines.index(engine)))
+                    est_times.append(self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1))
         return est_times
