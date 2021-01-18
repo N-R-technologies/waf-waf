@@ -6,11 +6,12 @@ class Menu:
     OK_BLUE = '\033[94m'
     WARNING = '\033[93m'
 
-    menu = []
-    controller = []
-    exit = False
-    _functions = []
-    _input_window = None
+    def __init__(self):
+        self.menu = []
+        self.controller = []
+        self.exit = False
+        self._functions = []
+        self._input_window = None
 
     def clear(self):
         """
@@ -48,7 +49,7 @@ class Menu:
             if self.controller.index(1) != 0:
                 self.controller.append(0)
                 self.controller.pop(0)
-        elif event == "q":
+        elif event == 'q':
             self.exit = True
             return
         for menu_item in range(len(self.menu)):

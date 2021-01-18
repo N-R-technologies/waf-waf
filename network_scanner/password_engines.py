@@ -26,7 +26,7 @@ class InvalidChar(Exception):
 
 
 class PasswordEngines:
-    COMMON_NETWORK_PASSWORDS = "network_scanner/data/scan/network_passwords.txt"
+    COMMON_NETWORK_PASSWORDS = "network_scanner/data/files/network_passwords.txt"
     KEYS_PER_SECOND = 17042497
 
     def _convert_to_suitable_format(self, estimated_time):
@@ -59,10 +59,10 @@ class PasswordEngines:
     def _estimated_crack_time_format(self, estimated_time, time_type, engine_num):
         """
         This function will print the estimated time
-        it would take to crack your password
-        :param estimated_time: the estimated time ot would take to crack your password
-        :param time_type: the type of the time (like hours or minutes)
-        :param engine_num: the number of the engine which calculated this time
+        it would take to crack the password
+        :param estimated_time: the estimated time ot would take to crack the password
+        :param time_type: string
+        :param engine_num: the engine's number which calculated this time
         :type estimated_time: int
         :type time_type: string
         :type engine_num: int

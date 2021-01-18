@@ -1,6 +1,6 @@
 from curtsies import Input
 from menu import Menu
-import network_scanner
+from network_scanner import NetworkScanner
 from email_manager import EmailManager
 
 
@@ -15,9 +15,8 @@ class MainMenu:
         :type router_username: string
         :type router_password: string
         """
-        print("Starting the scan...")
         self._main_menu.close_input()
-        scanner = network_scanner.NetworkScanner()
+        scanner = NetworkScanner()
         scanner.scan(router_username, router_password)
 
     def _call_start_scan(self):
@@ -33,8 +32,8 @@ class MainMenu:
         """
         This function will start the emails manager menu
         """
-        mail_manager = EmailManager()
-        mail_manager.start_manage_emails()
+        email_manager = EmailManager()
+        email_manager.start_manage_emails()
 
     def _print_help(self):
         """
@@ -52,20 +51,17 @@ class MainMenu:
         """
         This function will start the main menu of the program
         """
-        self._main_menu.add_option('1. Start the network scanning', self._call_start_scan)
-        self._main_menu.add_option('2. Manage your emails configuration file', self._manage_emails)
-        self._main_menu.add_option('3. Get help and explanation about our tool', self._print_help)
-        self._main_menu.add_option('4. Exit or press Q', 'exit')
+        self._main_menu.clear()
+        self._main_menu.add_option("1. Start the network scan", self._call_start_scan)
+        self._main_menu.add_option("2. Manage your emails configuration file", self._manage_emails)
+        self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
+        self._main_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
                 print(self._main_menu.WARNING + self._main_menu.menu[menu_item])
             else:
                 print(self._main_menu.OK_BLUE + self._main_menu.menu[menu_item])
-        print("Press Q to quit")
-
-    def main_menu(self):
-        self.start_menu()
-        with Input(keynames='curses') as input_generator:
+        with Input(keynames="curses") as input_generator:
             for user_input in input_generator:
                 self._main_menu.clear()
                 self._main_menu.handle_menu_navigation(repr(user_input))
@@ -74,9 +70,9 @@ class MainMenu:
 
 
 if __name__ == "__main__":
+    main_menu = MainMenu()
     try:
-        newTool = MainMenu()
-        newTool.main_menu()
+        main_menu.start_menu()
     except KeyboardInterrupt:
         print("\nGoodbye!")
     except Exception:

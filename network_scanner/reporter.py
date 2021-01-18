@@ -42,7 +42,7 @@ class Reporter:
             if results[self.ENGINES][self.SECOND_ENGINE] != '!':
                 self._conclusions.append(results[self.ENGINES][self.SECOND_ENGINE])
             self._conclusions.append("\nRemember, good and strong passwords must contain at least 8 characters, including\n"
-                                     "numbers, both upper and lower letters, and special symbols like: @, $ or &.")
+                                     "numbers, both upper and lower letters, and special symbols like @, $ and &.")
 
     def report_conclusions(self, results):
         """

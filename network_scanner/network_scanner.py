@@ -7,9 +7,9 @@ from .loader import Loader
 
 
 class NetworkScanner:
-    COMMON_SSIDS = "network_scanner/data/scan/common_ssids.txt"
-    COMMON_ROUTER_USERNAMES = "network_scanner/data/scan/router_usernames.txt"
-    COMMON_ROUTER_PASSWORDS = "network_scanner/data/scan/router_passwords.txt"
+    COMMON_SSIDS = "network_scanner/data/files/common_ssids.txt"
+    COMMON_ROUTER_USERNAMES = "network_scanner/data/files/router_usernames.txt"
+    COMMON_ROUTER_PASSWORDS = "network_scanner/data/files/router_passwords.txt"
     SSID_HEADER_LEN = 4
 
     _scan_functions = ScanFunctions()
@@ -37,6 +37,7 @@ class NetworkScanner:
         :type router_username: string
         :type router_password: string
         """
+        print("Starting the scan...")
         ssid = self._get_ssid()
         if ssid is not None:
             results = list()

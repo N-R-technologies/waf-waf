@@ -10,8 +10,8 @@ from email.utils import formatdate
 
 class EmailSender:
     LOG_FILE_PATH = "log_related/data/logs/daily_log_"
-    BOT_ADDRESS_FILE_PATH = "log_related/data/bot_address.toml"
-    USER_ADDRESSES_FILE_PATH = "log_related/data/user_addresses.toml"
+    BOT_EMAIL_FILE_PATH = "log_related/data/bot_email.toml"
+    USER_EMAILS_FILE_PATH = "log_related/data/user_emails.toml"
     LOG_SUBJECT = "Daily Log - "
     LOG_DESCRIPTION = "Hello there, this is your daily log from the WAF.\nIf you have any problems you can " \
                       "contact us anytime.\nIn addition, if you recognize that you have been attacked and we " \
@@ -23,13 +23,13 @@ class EmailSender:
     _bot_pass = ""
 
     def __init__(self):
-        self._load_bot_address_configuration(self.BOT_ADDRESS_FILE_PATH)
+        self._load_bot_email_configuration(self.BOT_EMAIL_FILE_PATH)
 
     def send_log(self):
         """
         This function will send the daily log to the users email addresses
         """
-        user_addresses = self._load_user_addresses_configuration(self.USER_ADDRESSES_FILE_PATH)
+        user_addresses = self._load_user_addresses_configuration(self.USER_EMAILS_FILE_PATH)
         if len(user_addresses) > 0:
             daily_log_mail = MIMEMultipart()
             daily_log_mail["From"] = self._bot_address
@@ -54,20 +54,20 @@ class EmailSender:
             except Exception:
                 pass
 
-    def _load_bot_address_configuration(self, bot_address_file_path):
-        if os.path.exists(bot_address_file_path):
-            bot_address = toml.load(bot_address_file_path)
-            self._bot_address = bot_address["address"]
-            self._bot_pass = bot_address["pass"]
+    def _load_bot_email_configuration(self, bot_email_file_path):
+        if os.path.exists(bot_email_file_path):
+            bot_email = toml.load(bot_email_file_path)
+            self._bot_address = bot_email["address"]
+            self._bot_pass = bot_email["pass"]
         else:
             raise FileNotFoundError
 
-    def _load_user_addresses_configuration(self, user_addresses_file_path):
+    def _load_user_addresses_configuration(self, user_emails_file_path):
         user_emails = dict()
-        if os.path.exists(user_addresses_file_path):
-            user_emails = toml.load(user_addresses_file_path).get("addresses", {})
+        if os.path.exists(user_emails_file_path):
+            user_emails = toml.load(user_emails_file_path).get("emails", {})
         else:
-            open(user_addresses_file_path, 'w').close()
+            open(user_emails_file_path, 'w').close()
 
         user_addresses = set()
         for address in user_emails.values():

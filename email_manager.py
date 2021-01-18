@@ -7,23 +7,24 @@ from menu import Menu
 
 
 class EmailManager:
-    USER_ADDRESSES_FILE_PATH = "log_related/data/user_addresses.toml"
+    USER_EMAILS_FILE_PATH = "log_related/data/user_emails.toml"
 
-    _email_manager_menu = Menu()
+    def __init__(self):
+        self._email_manager_menu = Menu()
 
     def display_emails(self):
         """
         This function will display all the existing emails to the user
         """
-        user_addresses = dict()
-        if os.path.exists(self.USER_ADDRESSES_FILE_PATH):
-            user_addresses = toml.load(self.USER_ADDRESSES_FILE_PATH).get("addresses", {})
+        user_emails = dict()
+        if os.path.exists(self.USER_EMAILS_FILE_PATH):
+            user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
         else:
-            open(self.USER_ADDRESSES_FILE_PATH, 'w').close()
+            open(self.USER_EMAILS_FILE_PATH, 'w').close()
             print("There are no registered emails.\nYou might want to add some.")
         index = 1
-        for name in user_addresses:
-            print(f"{index}. {name}, {user_addresses[name]}")
+        for name, address in user_emails.items():
+            print(f"{index}. {name}, {address}")
             index += 1
 
     def add_email(self, name, address):
@@ -35,15 +36,18 @@ class EmailManager:
         :type address: string
         """
         valid_email = True
-        user_emails = toml.load(self.USER_ADDRESSES_FILE_PATH).get("addresses", {})
-        if not self._is_name_valid(name, user_emails.keys()):
+        user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
+        if name == "":
+            messagebox.showerror("Invalid Name", f"Please enter a name for the user")
+            valid_email = False
+        elif not self._is_valid_name(name, user_emails.keys()):
             messagebox.showerror("Invalid Name", f"A user named {name} already exists!")
             valid_email = False
-        if not self._is_address_valid(address):
+        if not self._is_valid_address(address):
             messagebox.showerror("Invalid Email", "Your address is not valid!")
             valid_email = False
         if valid_email:
-            with open(self.USER_ADDRESSES_FILE_PATH, 'a') as email_file:
+            with open(self.USER_EMAILS_FILE_PATH, 'a') as email_file:
                 toml.dump({name: address}, email_file)
                 email_file.close()
             messagebox.showinfo("Success", f"Successfully added {name} to the emails file!")
@@ -62,9 +66,9 @@ class EmailManager:
         """
         self.display_emails()
         exit_flag = False
-        user_addresses = toml.load(self.USER_ADDRESSES_FILE_PATH).get("addresses", {})
+        user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
         email_index = input("\nEnter the index of the email which you want to remove:\n")
-        while not (email_index.isdigit() and 1 <= int(email_index) <= len(user_addresses)) or exit_flag:
+        while not (email_index.isdigit() and 1 <= int(email_index) <= len(user_emails)) or exit_flag:
             print("Invalid index")
             print("Press Q to quit")
             email_index = input("Enter the index of the email which you want to remove:\n")
@@ -73,18 +77,18 @@ class EmailManager:
         if exit_flag:
             return
         index = 1
-        for name in user_addresses:
+        for name in user_emails.keys():
             if index == int(email_index):
-                del user_addresses[name]
+                del user_emails[name]
                 break
             index += 1
-        with open(self.USER_ADDRESSES_FILE_PATH, 'w') as email_file:
-            toml.dump(toml.loads("[addresses]"), email_file)
-            for name in user_addresses:
-                toml.dump({name: user_addresses[name]}, email_file)
-        email_file.close()
+        with open(self.USER_EMAILS_FILE_PATH, 'w') as email_file:
+            toml.dump(toml.loads("[emails]"), email_file)
+            for name, address in user_emails.items():
+                toml.dump({name: address}, email_file)
+            email_file.close()
 
-    def _is_address_valid(self, address):
+    def _is_valid_address(self, address):
         """
         This function will check if the given email address is valid
         :param address: the email address to check
@@ -94,7 +98,7 @@ class EmailManager:
         """
         return re.search(r"""^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$""", address)
 
-    def _is_name_valid(self, name, user_names):
+    def _is_valid_name(self, name, user_names):
         """
         This function will check if the given name is valid,
         which means if its not already exists
@@ -117,7 +121,7 @@ class EmailManager:
         self._email_manager_menu.add_option("1. Display all the emails", self.display_emails)
         self._email_manager_menu.add_option("2. Add an email to the list", self.call_add_email)
         self._email_manager_menu.add_option("3. Delete an email from the list", self.remove_email)
-        self._email_manager_menu.add_option("4. Exit or press Q", "exit")
+        self._email_manager_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._email_manager_menu.menu)):
             if self._email_manager_menu.controller[menu_item] == 1:
                 print(self._email_manager_menu.WARNING + self._email_manager_menu.menu[menu_item])
