@@ -133,19 +133,6 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def url_encoding_unicode(request):
-        """
-        This function will check if the user tries to access sensitive files
-        from the server, while hiding the location with url + unicode encoding
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        return RiskLevels.MODERATE if re.search(r"""%(c0\.|af\.|5c\.)|(%2e%2e[\/\\])|(%c0%ae[\/\\])""", request) \
-            else RiskLevels.NO_RISK
-
-    @staticmethod
     def php_files(request):
         """
         This function will check if the user tries to access sensitive files from
@@ -157,28 +144,6 @@ class BasicChecks:
         """
         return RiskLevels.MODERATE if re.search(r"""(\bc:.*\bwinint\b.*\bphp\.ini\b)|(\bc:.*\bphp\b.*\bphp\.ini\b)|(\bc:.*\bphp5\b.*\bphp\.ini\b)|(\bc:.*\bphp4\b.*\bphp\.ini\b)|(\bc:.*\bapache\b.*\bphp\b.*\bphp\.ini\b)|(\bc:.*\bxampp\b.*\bapache\b.*\bbin\b.*\bphp\.ini\b)|(\bc:.*\bhome2\b.*\bbin\b.*\bstable\b.*\bapache\b.*\bphp\.ini\b)|(\bc:.*\bhome\b.*\bbin\b.*\bstable\b.*\bapache\b.*\bphp\.ini\b)|(\bc:.*\bphp\b.*\bsessions\b)|(\bc:.*\bphp5\b.*\bsessions\b)|(\bc:.*\bphp4\b.*\bsessions\b)|(\bc:.*\bphp7\b.*\bsessions\b)""", request) \
             else RiskLevels.NO_RISK
-
-    @staticmethod
-    def php_stream_filter(request):
-        """
-        This function will check if the user tries to access the php stream filter argument
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        return RiskLevels.SLIGHT if re.search(r"""php:\/\/filter""", request) else RiskLevels.NO_RISK
-
-    @staticmethod
-    def stream_filter_zlib(request):
-        """
-        This function will check if the user tries to access the php zlib filter argument
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        return RiskLevels.MODERATE if re.search(r"""zlib\.(de|in)flate""", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def php_functions(request):
@@ -219,6 +184,40 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
+    def php_stream_filter(request):
+        """
+        This function will check if the user tries to access the php stream filter argument
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.SLIGHT if re.search(r"""php:\/\/filter""", request) else RiskLevels.NO_RISK
+
+    @staticmethod
+    def stream_filter_base64(request):
+        """
+        This function will check if the user tries to access the php base64 filter argument
+        which he can see a lot of useful information about the users and the system with
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.MODERATE if re.search(r"""convert\.base64-(de|en)code""", request) else RiskLevels.NO_RISK
+
+    @staticmethod
+    def stream_filter_zlib(request):
+        """
+        This function will check if the user tries to access the php zlib filter argument
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.MODERATE if re.search(r"""zlib\.(de|in)flate""", request) else RiskLevels.NO_RISK
+
+    @staticmethod
     def apache_server_side_inclusion(request):
         """
         This function will check if the user tries to access
@@ -232,16 +231,17 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def stream_filter_base64(request):
+    def url_encoding_unicode(request):
         """
-        This function will check if the user tries to access the php base64 filter argument
-        which he can see a lot of useful information about the users and the system with
+        This function will check if the user tries to access sensitive files
+        from the server, while hiding the location with url + unicode encoding
         :param request: the user's request
         :type request: string
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        return RiskLevels.MODERATE if re.search(r"""convert\.base64-(de|en)code""", request) else RiskLevels.NO_RISK
+        return RiskLevels.MODERATE if re.search(r"""%(c0\.|af\.|5c\.)|(%2e%2e[\/\\])|(%c0%ae[\/\\])""", request) \
+            else RiskLevels.NO_RISK
 
     @staticmethod
     def local_chrome_files(request):

@@ -1,5 +1,5 @@
-import toml
 import re
+import toml
 from urllib.parse import urlparse
 from detective.toolbox.risk_levels import RiskLevels
 

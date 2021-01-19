@@ -114,6 +114,18 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
+    def information_disclosure(request):
+        """
+        This function will check if the user tries to
+        run from the input mysql information disclosure
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.MODERATE if re.search(r"""\binformation_schema\b""", request) else RiskLevels.NO_RISK
+
+    @staticmethod
     def write_into_outfile(request):
         """
         This function will check if the user tries to
@@ -125,18 +137,6 @@ class BasicChecks:
         """
         return RiskLevels.MODERATE if re.search(r"""\bselect\b.*?\binto\b.*?\b(out|dump)file\b""", request) \
             else RiskLevels.NO_RISK
-
-    @staticmethod
-    def information_disclosure(request):
-        """
-        This function will check if the user tries to
-        run from the input mysql information disclosure
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        return RiskLevels.MODERATE if re.search(r"""\binformation_schema\b""", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def concat_command(request):
@@ -176,18 +176,6 @@ class BasicChecks:
         return RiskLevels.SLIGHT if re.search(r"""\bsleep\b.*?\(.+?\)""", request) else RiskLevels.NO_RISK
 
     @staticmethod
-    def sleep_pg_command(request):
-        """
-        This function will check if the user tries to
-        run from input the pgsql sleep command
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        return RiskLevels.SLIGHT if re.search(r"""\bpg_sleep\b.*?\(.+?\)""", request) else RiskLevels.NO_RISK
-
-    @staticmethod
     def blind_tsql(request):
         """
         This function will check if the user tries to
@@ -199,6 +187,18 @@ class BasicChecks:
         """
         return RiskLevels.SLIGHT if re.search(r"""\bwaitfor\b.*?\b(delay|time(out)?)\b""", request) \
             else RiskLevels.NO_RISK
+
+    @staticmethod
+    def sleep_pg_command(request):
+        """
+        This function will check if the user tries to
+        run from input the pgsql sleep command
+        :param request: the user's request
+        :type request: string
+        :return: the dangerous level according to the findings
+        :rtype: enum RiskLevels
+        """
+        return RiskLevels.SLIGHT if re.search(r"""\bpg_sleep\b.*?\(.+?\)""", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def length_command(request):
