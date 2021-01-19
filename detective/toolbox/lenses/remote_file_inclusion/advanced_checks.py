@@ -15,14 +15,14 @@ class AdvancedChecks:
         :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
-        ip_redirect_result = re.findall(r"(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", request)
+        ip_redirect_result = re.findall(r"""(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})""", request)
         if ip_redirect_result is not None:
             for ip_address in ip_redirect_result:
                 for num in ip_address.split('.'):
                     if not '0' <= num <= "255":
                         return RiskLevels.NO_RISK
             return RiskLevels.CATASTROPHIC
-        detect_url_result = re.findall(r"(?:ht|f)tps?://(?P<url>.*)", request)
+        detect_url_result = re.findall(r"""(?:ht|f)tps?://(?P<url>.*)""", request)
         if detect_url_result is not None:
             server_url = toml.load("server_info.toml")["host"]
             for url in detect_url_result:
@@ -61,7 +61,7 @@ class AdvancedChecks:
                                ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora"]
-        detect_url_result = re.findall(r"(ht|f)tps?://(?P<url>.*)", request)
+        detect_url_result = re.findall(r"""(ht|f)tps?://(?P<url>.*)""", request)
         if detect_url_result is not None:
             for url in detect_url_result:
                 for extension in malicious_extensions:
