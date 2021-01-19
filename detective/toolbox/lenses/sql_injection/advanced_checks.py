@@ -6,10 +6,11 @@ class AdvancedChecks:
     @staticmethod
     def grant_revoke(request):
         """
-        function check if the query is a grant or revoke sql statement
-        :param request: the sub statement
+        This function will check if the user tries to
+        run from input the grant/revoke sql statements
+        :param request: the user's request
         :type request: string
-        :return: the dangerous level according the findings
+        :return: the dangerous level according to the findings
         :rtype: enum RiskLevels
         """
         grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", request)
