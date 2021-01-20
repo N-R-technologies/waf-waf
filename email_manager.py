@@ -20,7 +20,6 @@ class EmailManager:
         if os.path.exists(self.USER_EMAILS_FILE_PATH):
             user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
         else:
-            open(self.USER_EMAILS_FILE_PATH, 'w').close()
             print("There are no registered emails.\nYou might want to add some.")
         index = 1
         for name, address in user_emails.items():
@@ -36,6 +35,10 @@ class EmailManager:
         :type address: string
         """
         valid_email = True
+        if not os.path.exists(self.USER_EMAILS_FILE_PATH):
+            with open(self.USER_EMAILS_FILE_PATH, 'w') as email_file:
+                toml.dump(toml.loads("[emails]"), email_file)
+                email_file.close()
         user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
         if name == "":
             messagebox.showerror("Invalid Name", f"Please enter a name for the user")

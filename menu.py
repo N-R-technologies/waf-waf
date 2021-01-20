@@ -65,7 +65,7 @@ class Menu:
             self._functions[self.controller.index(1)]()
             print("\n**Press any button to return to the menu**")
 
-    def get_input(self, function_on_submit, title, input_text, additional_input):
+    def get_input(self, function_on_submit, title, input_text, additional_input = ""):
         """
         This function will open a tiny GUI window
         in order to receive input from the user
@@ -77,10 +77,11 @@ class Menu:
         first_label.grid(row=0, sticky=tk.W)
         first_entry = tk.Entry(input_window, width=30)
         first_entry.grid(row=1)
-        second_label = tk.Label(input_window, text=additional_input, pady=5)
-        second_label.grid(row=2, sticky=tk.W)
-        second_entry = tk.Entry(input_window, width=30)
-        second_entry.grid(row=3)
+        if additional_input != "":
+            second_label = tk.Label(input_window, text=additional_input, pady=5)
+            second_label.grid(row=2, sticky=tk.W)
+            second_entry = tk.Entry(input_window, width=30)
+            second_entry.grid(row=3)
         submit_button = tk.Button(input_window, text="Submit", command=lambda: function_on_submit(first_entry.get(), second_entry.get()))
         submit_button.grid(row=4)
         input_window.mainloop()
