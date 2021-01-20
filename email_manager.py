@@ -1,6 +1,6 @@
+import os
 import toml
 import re
-import os
 from curtsies import Input
 from tkinter import messagebox
 from menu import Menu
@@ -61,6 +61,7 @@ class EmailManager:
         This function will call the add_email function
         with the appropriate parameters
         """
+        print("enter the input in the message box")
         self._email_manager_menu.get_input(self.add_email, "Add New Email", "Name", "Address")
 
     def remove_email(self):
@@ -133,6 +134,10 @@ class EmailManager:
         with Input(keynames="curses") as input_generator:
             for user_input in input_generator:
                 self._email_manager_menu.clear()
-                self._email_manager_menu.handle_menu_navigation(repr(user_input))
+                if self._email_manager_menu.get_ignore():
+                    self._email_manager_menu.reset_ignore()
+                    self._email_manager_menu.handle_menu_navigation("")
+                else:
+                    self._email_manager_menu.handle_menu_navigation(repr(user_input))
                 if self._email_manager_menu.exit:
                     break

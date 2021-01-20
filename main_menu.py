@@ -6,6 +6,7 @@ from email_manager import EmailManager
 
 class MainMenu:
     _main_menu = Menu()
+    _ignore_input = False
 
     def _start_scan(self, router_username, router_password):
         """
@@ -24,6 +25,7 @@ class MainMenu:
         This function will call the start_scan function
          with the appropriate parameters
         """
+        print("enter the input in the message box")
         self._main_menu.get_input(self._start_scan, "Enter router credentials",
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
@@ -64,7 +66,11 @@ class MainMenu:
         with Input(keynames="curses") as input_generator:
             for user_input in input_generator:
                 self._main_menu.clear()
-                self._main_menu.handle_menu_navigation(repr(user_input))
+                if self._main_menu.get_ignore():
+                    self._main_menu.reset_ignore()
+                    self._main_menu.handle_menu_navigation("")
+                else:
+                    self._main_menu.handle_menu_navigation(repr(user_input))
                 if self._main_menu.exit:
                     break
 
@@ -75,5 +81,6 @@ if __name__ == "__main__":
         main_menu.start_menu()
     except KeyboardInterrupt:
         print("\nGoodbye!")
-    except Exception:
+    except Exception as e:
         print("\nAn error has occurred...")
+        print(e)

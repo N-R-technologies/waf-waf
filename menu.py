@@ -1,12 +1,16 @@
 import os
+import random
 import tkinter as tk
 
 
 class Menu:
     OK_BLUE = '\033[94m'
     WARNING = '\033[93m'
+    _colors = [("#00539C", "#FFD662"), ("#D01C1F", "#4B878B"), ("#FC766A", "#184A45"), ("#28334A", "#FBDE44"),
+               ("#E95C20", "#006747"), ("#00203F", "#ADEFD1"), ("#2C5F2D", "#97BC62"), ("#00539C", "#EEA47F")]
 
     def __init__(self):
+        self._ignore = False
         self.menu = []
         self.controller = []
         self.exit = False
@@ -64,27 +68,47 @@ class Menu:
             self.clear()
             self._functions[self.controller.index(1)]()
             print("\n**Press any button to return to the menu**")
+            self._ignore = True
 
-    def get_input(self, function_on_submit, title, input_text, additional_input = ""):
+    def get_ignore(self):
+        """
+        the function return the ignore property
+        """
+        return self._ignore
+
+    def get_input(self, function_on_submit, title, first_input_text, second_input_text):
         """
         This function will open a tiny GUI window
         in order to receive input from the user
+        :param function_on_submit: the function that will be execute when submit is pressed
+        :param title: the title of the input
+        :param first_input_text: the first input text
+        :param second_input_text: the second input text
         """
         input_window = tk.Tk()
+        colors = random.choice(self._colors)
+        background_color = colors[0]
+        font_color = colors[1]
         self._input_window = input_window
+        self._input_window.configure(bg=background_color)
         input_window.title(title)
-        first_label = tk.Label(input_window, text=input_text, pady=5)
+        first_label = tk.Label(input_window, text=first_input_text, pady=5, bg=background_color, fg=font_color)
         first_label.grid(row=0, sticky=tk.W)
-        first_entry = tk.Entry(input_window, width=30)
+        first_entry = tk.Entry(input_window, width=30, bg=background_color, fg=font_color)
         first_entry.grid(row=1)
-        if additional_input != "":
-            second_label = tk.Label(input_window, text=additional_input, pady=5)
-            second_label.grid(row=2, sticky=tk.W)
-            second_entry = tk.Entry(input_window, width=30)
-            second_entry.grid(row=3)
-        submit_button = tk.Button(input_window, text="Submit", command=lambda: function_on_submit(first_entry.get(), second_entry.get()))
+        second_label = tk.Label(input_window, text=second_input_text, pady=5, bg=background_color, fg=font_color)
+        second_label.grid(row=2, sticky=tk.W)
+        second_entry = tk.Entry(input_window, width=30, bg=background_color, fg=font_color)
+        second_entry.grid(row=3)
+        submit_button = tk.Button(input_window, text="Submit", bg=background_color, fg=font_color, command=lambda: function_on_submit(first_entry.get(), second_entry.get()))
         submit_button.grid(row=4)
         input_window.mainloop()
+
+    def reset_ignore(self):
+        """
+        function reset the ignore property to false
+        """
+        self._ignore = False
 
     def close_input(self):
         """
