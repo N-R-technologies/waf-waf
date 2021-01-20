@@ -12,9 +12,9 @@ class Assistant:
     _info = {}
     _general_info = {}
     _links = {}
-    email_sender = log_related.EmailSender()
-    log_composer = log_related.LogComposer()
-    graph_handler = log_related.GraphHandler()
+    _email_sender = log_related.EmailSender()
+    _log_composer = log_related.LogComposer()
+    _graph_handler = log_related.GraphHandler()
 
     def __init__(self):
         thread = Thread(target=self._report_log)
@@ -67,22 +67,24 @@ class Assistant:
 
     def _reset(self):
         """
-        This function will reset all the information from the received requests today
+        This function will reset all the information about
+        today's detected malicious requests
         """
         self._risks_findings = [0] * len(RiskLevels)
         self._info = {}
 
     def _report_log(self):
         """
-        This function will report the log to the user every day
+        This function will report the log to
+        the user at the end of every day
         """
         while True:
             current_time = datetime.now()
             report_time = current_time.replace(hour=23, minute=59, second=55)
             seconds_until_tomorrow = abs((report_time - current_time).total_seconds())
             sleep(seconds_until_tomorrow)
-            self.graph_handler.create_graph(self._risks_findings)
-            self.log_composer.write_log(self._get_info())
-            self.email_sender.send_log()
+            self._graph_handler.create_graph(self._risks_findings)
+            self._log_composer.write_log(self._get_info())
+            self._email_sender.send_log()
             self._reset()
             sleep(5)
