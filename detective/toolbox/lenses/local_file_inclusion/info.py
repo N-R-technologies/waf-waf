@@ -31,7 +31,7 @@ deep_info = {
                  "information and data that is used by the server.\n",
 
     "information_files": "* Information Files: Be careful! if you see this message it means that a user\n  "
-                         "had probably tried to access some very sensitive files,\n  like php configurations or "
+                         "had probably tried to access some very sensitive files,\n  like PHP configurations or "
                          "authorized keys for the server.\n",
 
     "windows_files": "* Windows Files: In the windows directory you can find some really\n  important files that "
@@ -50,21 +50,24 @@ deep_info = {
                          "which a process runs.\n  An access to these variables can give a user useful information\n  "
                          "and even permissions to edit the process on the server.\n",
 
-    "php_files": "* PHP Files: This path contains all the php configuration files, and also information\n  "
-                 "about the php version and the server settings.\n",
+    "php_files": "* PHP Files: This path contains all the PHP configuration files, and also information\n  "
+                 "about the PHP version and the server settings.\n",
 
-    "php_functions": "*PHP Functions: Functions that can modify some php content on the server\n  "
+    "php_functions": "* PHP Functions: Functions that can modify some PHP content on the server\n  "
                      "if its read or write.\n",
 
-    "php_file_get_put_content": "* PHP file_get/put_contents: This php function will get\n  or set contents a file. "
+    "php_expect_wrapper": "* PHP Expect Wrapper: A module that can run a terminal command via\n  "
+                          "the PHP wrapper. You don't want any user to run commands on your machine.\n",
+
+    "php_file_get_put_content": "* PHP file_get/put_contents: This PHP function will get\n  or set contents a file. "
                                 "You don't want any user to have access to your files.\n",
 
-    "php_edit_files_function": "* PHP edit_files Function: This php function will edit the server's files\n  and it "
+    "php_edit_files_function": "* PHP edit_files Function: This PHP function will edit the server's files\n  and it "
                                "can interrupt its running.\n  You don't want any user to have access to your files.\n",
 
     "php_stream_filter": "* PHP Stream Filter: A final piece of code which may perform operations on data\n  "
                          "as it is being read from or written to a stream.\n  An attacker may use this to "
-                         "manipulate your php functions on the server side.\n",
+                         "manipulate your PHP functions on the server side.\n",
 
     "stream_filter_base64": "* Stream Filter base64: A final piece of code which may perform operations on data\n  "
                             "as it is being read from or written to a stream.\n  An attacker may use this to "
@@ -72,7 +75,7 @@ deep_info = {
 
     "stream_filter_zlib": "* Stream Filter zlib: A final piece of code which may perform operations on data\n  "
                           "as it is being read from or written to a stream.\n  An attacker may use this to "
-                          "manipulate your php functions on the server side.\n",
+                          "manipulate your PHP functions on the server side.\n",
 
     "apache_server_side_inclusion": "* Apache Server Side Inclusion: An attacker can pass through the URL\n  "
                                     "functions he wants the server to execute,\n  like exec, in order to run "
@@ -83,7 +86,11 @@ deep_info = {
 
     "local_chrome_files": "* Local Chrome Files: There is option on chrome to see and check the local files.\n  "
                           "The files can provide a user information that seems harmless\n  "
-                          "but can be very useful to a potential attacker.\n"
+                          "but can be very useful to a potential attacker.\n",
+
+    "malicious_parameters": "* Malicious Parameters: LFI can be achieved via using\n  "
+                            "parameters which will either, execute commands on your machine,\n  or include "
+                            "malicious files into your system.\n"
 }
 
 links_for_info = "For more information about Local File Inclusion, check the following links:\n" \

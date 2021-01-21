@@ -28,7 +28,7 @@ class AdvancedChecks:
 
     @staticmethod
     def malicious_file_injection(request) -> RiskLevels:
-        malicious_extensions = (".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq",
+        malicious_extensions = [".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq",
                                ".djvus", ".djvur", ".djvut", ".pdff", ".tro", ".tfude", ".tfudet", ".tfudeq", ".rumba",
                                ".adobe", ".adobee", ".blower", ".promos", ".promoz", ".promorad", ".promock",
                                ".promok", ".promorad2", ".kroput", ".kroput1", ".pulsar1", ".kropun1", ".charck",
@@ -46,10 +46,12 @@ class AdvancedChecks:
                                ".kovasoh", ".prandel", ".zatrov", ".masok", ".brusaf", ".londec", ".krusop",
                                ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
-                               ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
+                               ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora"]
         detect_url_result = re.findall(r"""(ht|f)tps?://(?P<url>.*)""", request)
         if detect_url_result is not None:
+            white_spaces = re.compile(r"\s+")
             for url in detect_url_result:
+                url = re.sub(white_spaces, '', url)
                 for extension in malicious_extensions:
                     if extension in url:
                         return RiskLevels.CRITICAL

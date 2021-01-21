@@ -75,6 +75,11 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
+    def php_expect_wrapper(request) -> RiskLevels:
+        return RiskLevels.CRITICAL if re.search(r"""php\?.+?=\s*expect://.+?""", request) \
+            else RiskLevels.NO_RISK
+
+    @staticmethod
     def php_file_get_put_content(request):
         return RiskLevels.CRITICAL if re.search(r"""\bfile_(get|put)_contents\b.*?\(.+?\)""", request) \
             else RiskLevels.NO_RISK
