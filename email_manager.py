@@ -40,7 +40,6 @@ class EmailManager:
                 toml.dump(toml.loads("[emails]"), email_file)
                 email_file.close()
         user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
-        print(user_emails)
         if name == "":
             messagebox.showerror("Invalid Name", "Please enter a name for the user")
             valid_email = False
