@@ -198,4 +198,6 @@ deep_info = {
     "comment_filter": "* Comment Filter: We detected SQL comment filter evasion.\n"
 }
 
-links_for_info = ""
+links_for_info = "For more information about 'PHPIDS', our source for\n"\
+                 "the general detections, check the following link:\n" \
+                 "https://github.com/PHPIDS/PHPIDS/blob/master/lib/IDS/default_filter.json"
