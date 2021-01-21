@@ -8,12 +8,12 @@ general_info = "Local file inclusion (LFI) is the process of including files,\n"
                "to be injected."
 
 deep_info = {
-    "etc_files": "* /etc Files: The etc path contains a lot files, and also sensitive ones\n  "
-                 "like passwd, and others. Many networking configuration files are in /etc as well.\n  "
-                 "An attacker can get information about the server in this path.\n",
+    "etc_files": "* /etc Files: The etc path contains a lot files, and also sensitive\n  ones "
+                 "like passwd, and others. Many networking\n  configuration files are in /etc as well. "
+                 "An attacker\n  can get information about the server in this path.\n",
 
-    "home_files": "* /home Files: The home directory, also called a login directory, is the directory on Unix-like\n  "
-                  "operating systems that serves as the repository for a user's personal files,\n  "
+    "home_files": "* /home Files: The home directory, also called a login directory, \n  is the directory on Unix-like"
+                  "operating systems that serves as the\n  repository for a user's personal files,"
                   "directories and programs.\n  It is also the directory that a user will be lead to "
                   "after logging into the system.\n",
 
@@ -26,8 +26,8 @@ deep_info = {
                   "A potential attacker can access the information\n  within this path in order "
                   "to get data about the server processes.\n",
 
-    "var_files": "* /var Files: The var directory contains things that are prone to change, such as websites,\n  "
-                 "temporary files (/var/tmp) and databases. The var directory contains useful\n  "
+    "var_files": "* /var Files: The var directory contains things that are prone to change,\n  such as websites, "
+                 "temporary files (/var/tmp) and databases.\n  The var directory contains useful "
                  "information and data that is used by the server.\n",
 
     "information_files": "* Information Files: Be careful! if you see this message it means that a user\n  "
@@ -56,7 +56,7 @@ deep_info = {
     "php_functions": "*PHP Functions: Functions that can modify some php content on the server\n  "
                      "if its read or write.\n",
 
-    "php_file_get_put_content": "* PHP file_get/put_contents: This php function will get or set contents a file.\n  "
+    "php_file_get_put_content": "* PHP file_get/put_contents: This php function will get\n  or set contents a file. "
                                 "You don't want any user to have access to your files.\n",
 
     "php_edit_files_function": "* PHP edit_files Function: This php function will edit the server's files\n  and it "
