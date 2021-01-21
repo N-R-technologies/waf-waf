@@ -1,0 +1,28 @@
+*****************************Scan Conclusions*****************************
+WARNING!
+Everyone have access to your wifi!
+In case you want devices to also know your wifi's SSID in order to connect it,
+follow the next steps:
+1. Open the website of your router.
+   In order to do this, just enter to the terminal and type 'ip r | grep default'.
+   Copy and paste the ip you get to your browser.
+   Then, enter your 'User Name' and 'Password' fields to log in to your router.
+   If you have issues logging to the router's website, contact your router's manufacturer.
+2. Select 'Wireless' then 'Basic Wireless Settings' from the menu.
+   Set 'SSID Broadcast' to 'Disabled' if your router operates on a dual band,
+   Set 'SSID Broadcast' to 'Disabled'.
+3. Click 'Save Settings' to hide your SSID.
+   Pay attention, these steps are not the same for all kind of routers, so if you can't find
+   the exact key words, try looking for similar ones instead.
+
+Your router's username was found in our common router names database.
+You should change it to something less common.
+
+Your router's password was found in our common router names database.
+You should change it to something less common.
+
+Engine number 1 calculated that it would take about 1 hours to crack your password.
+Engine number 2 calculated that it would take more than a month to crack your password.
+
+Remember, good and strong passwords must contain at least 8 characters, including
+numbers, both upper and lower letters, and special symbols like @, $ and &.

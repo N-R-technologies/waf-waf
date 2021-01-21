@@ -40,8 +40,9 @@ class EmailManager:
                 toml.dump(toml.loads("[emails]"), email_file)
                 email_file.close()
         user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
+        print(user_emails)
         if name == "":
-            messagebox.showerror("Invalid Name", f"Please enter a name for the user")
+            messagebox.showerror("Invalid Name", "Please enter a name for the user")
             valid_email = False
         elif not self._is_valid_name(name, user_emails.keys()):
             messagebox.showerror("Invalid Name", f"A user named {name} already exists!")
