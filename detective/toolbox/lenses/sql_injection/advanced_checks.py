@@ -4,14 +4,7 @@ from detective.toolbox.risk_levels import RiskLevels
 
 class AdvancedChecks:
     @staticmethod
-    def grant_revoke(request):
-        """
-        function check if the query is a grant or revoke sql statement
-        :param request: the sub statement
-        :type request: string
-        :return: the dangerous level according the findings
-        :rtype: enum RiskLevels
-        """
+    def grant_revoke(request) -> RiskLevels:
         grant_revoke_statement = re.search(r"""(?:grant|revoke)(?P<permissions>.+?)on\s+.+?\s+(?:to|from)\s+.+?""", request)
         risk_level = 0
         if grant_revoke_statement is not None:
