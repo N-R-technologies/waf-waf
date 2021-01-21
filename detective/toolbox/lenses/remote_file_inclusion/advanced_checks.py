@@ -6,15 +6,7 @@ from detective.toolbox.risk_levels import RiskLevels
 
 class AdvancedChecks:
     @staticmethod
-    def off_site_url(request):
-        """
-        This function will check if the user tries to
-        redirect the page to a malicious url address
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
+    def off_site_url(request) -> RiskLevels
         ip_redirect_result = re.findall(r"""(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})""", request)
         if ip_redirect_result is not None:
             for ip_address in ip_redirect_result:
@@ -32,17 +24,8 @@ class AdvancedChecks:
         return RiskLevels.NO_RISK
 
     @staticmethod
-    def malicious_file_injection(request):
-        """
-        This function will check if the user tries
-        to redirect the page to an outside url
-        that contains some malicious file
-        :param request: the user's request
-        :type request: string
-        :return: the dangerous level according to the findings
-        :rtype: enum RiskLevels
-        """
-        malicious_extensions = [".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq",
+    def malicious_file_injection(request) -> RiskLevels:
+        malicious_extensions = (".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq",
                                ".djvus", ".djvur", ".djvut", ".pdff", ".tro", ".tfude", ".tfudet", ".tfudeq", ".rumba",
                                ".adobe", ".adobee", ".blower", ".promos", ".promoz", ".promorad", ".promock",
                                ".promok", ".promorad2", ".kroput", ".kroput1", ".pulsar1", ".kropun1", ".charck",
@@ -60,7 +43,7 @@ class AdvancedChecks:
                                ".kovasoh", ".prandel", ".zatrov", ".masok", ".brusaf", ".londec", ".krusop",
                                ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
-                               ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora"]
+                               ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
         detect_url_result = re.findall(r"""(ht|f)tps?://(?P<url>.*)""", request)
         if detect_url_result is not None:
             for url in detect_url_result:
