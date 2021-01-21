@@ -6,10 +6,11 @@ from detective.toolbox.risk_levels import RiskLevels
 class AdvancedChecks:
     @staticmethod
     def blind_xxe(request) -> RiskLevels:
-        urls_found = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:'|\")(?P<url>.+?|)(?:'|\")""", request)
+        urls_found = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<url>.+?|)(?:\"|')""", request)
         if urls_found is not None:
+            white_spaces = re.compile(r"\s+")
             for url in urls_found:
-                parse_result = urlparse(url)
+                parse_result = urlparse(re.sub(white_spaces, '', url))
                 if parse_result.scheme != '' and parse_result.netloc != '':
                     return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
@@ -35,7 +36,7 @@ class AdvancedChecks:
                                 ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                 ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
                                 ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
-        files = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:'|\")(?P<file_name>.+?|)(?:'|\")""", request)
+        files = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<file_name>.+?|)(?:\"|')""", request)
         for file in files:
             for malicious_extension in malicious_extensions:
                 if malicious_extension in file:
