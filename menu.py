@@ -6,8 +6,8 @@ import tkinter as tk
 class Menu:
     OK_BLUE = '\033[94m'
     WARNING = '\033[93m'
-    _colors = [("#00539C", "#FFD662"), ("#D01C1F", "#4B878B"), ("#FC766A", "#184A45"), ("#28334A", "#FBDE44"),
-               ("#E95C20", "#006747"), ("#00203F", "#ADEFD1"), ("#2C5F2D", "#97BC62"), ("#00539C", "#EEA47F")]
+    _colors = (("#00539C", "#FFD662"), ("#D01C1F", "#4B878B"), ("#FC766A", "#184A45"), ("#28334A", "#FBDE44"),
+               ("#E95C20", "#006747"), ("#00203F", "#ADEFD1"), ("#2C5F2D", "#97BC62"), ("#00539C", "#EEA47F"))
 
     def __init__(self):
         self._ignore = False
