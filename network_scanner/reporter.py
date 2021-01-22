@@ -11,6 +11,7 @@ class Reporter:
     COMMON_USERNAME = 3
     COMMON_PASSWORD = 4
     ENGINES = 5
+    ENCRYPTION_TYPE = 6
     FIRST_ENGINE = 0
     SECOND_ENGINE = 1
 
@@ -34,15 +35,16 @@ class Reporter:
         if results[self.COMMON_PASSWORD] not in ("No-Password", ""):
             self._conclusions.append(info["common router password"])
         if results[self.ENGINES][self.FIRST_ENGINE] == -1:
-            self._conclusions.append("\nYour network's password is in the common passwords database, which means "
-                                     "it will be\ncracked instantly. Please make it to stronger and more complex.")
+            self._conclusions.append(info["crackable password"])
         else:
             if results[self.ENGINES][self.FIRST_ENGINE] != '!':
                 self._conclusions.append(results[self.ENGINES][self.FIRST_ENGINE])
             if results[self.ENGINES][self.SECOND_ENGINE] != '!':
                 self._conclusions.append(results[self.ENGINES][self.SECOND_ENGINE])
-            self._conclusions.append("\nRemember, good and strong passwords must contain at least 8 characters, including\n"
-                                     "numbers, both upper and lower letters, and special symbols like @, $ and &.")
+            self._conclusions.append(info["good password recommendation"])
+        if results[self.ENCRYPTION_TYPE]:
+            self._conclusions.append(info["broken encryption type"])
+
 
     def report_conclusions(self, results):
         """

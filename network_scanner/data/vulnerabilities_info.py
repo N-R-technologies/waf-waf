@@ -27,5 +27,16 @@ info = {
                               "You should change it to something less common.\n",
 
     "common router password": "Your router's password was found in our common router names database.\n"
-                              "You should change it to something less common.\n"
+                              "You should change it to something less common.\n",
+
+    "crackable password": "\nYour network's password is in the common passwords database, which means it will be\n"
+                          "cracked instantly. Please make it to stronger and more complex.\n",
+
+    "good password recommendation": "\nRemember, good and strong passwords must contain at "
+                                    "least 8 characters, including\nnumbers, both upper and "
+                                    "lower letters, and special symbols like @, $ and &.\n",
+
+    "broken encryption type": "Your encryption type for the network is not the safer and newer one\n"
+                              "which is WPA2, we recommend you to change the encryption type in order\n"
+                              "to make it harder to observe your traffic.\n"
 }
