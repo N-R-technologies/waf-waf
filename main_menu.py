@@ -10,7 +10,7 @@ class MainMenu:
 
     def _start_scan(self, router_username, router_password):
         """
-        This function will start the network scanning
+        This function will start the network scan
         :param router_username: the username of the router
         :param router_password: the password of the router
         :type router_username: string
@@ -23,9 +23,8 @@ class MainMenu:
     def _call_start_scan(self):
         """
         This function will call the start_scan function
-         with the appropriate parameters
+        with the appropriate parameters
         """
-        print("enter the input in the message box")
         self._main_menu.get_input(self._start_scan, "Enter router credentials",
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
