@@ -342,4 +342,3 @@ citysearch_project/
 blacklist.toml
 log_related/data/bot_email.toml
 log_related/data/user_emails.toml
-log_related/data/logs/

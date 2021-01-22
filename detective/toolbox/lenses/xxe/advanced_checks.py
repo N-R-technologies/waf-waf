@@ -36,7 +36,7 @@ class AdvancedChecks:
                                 ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                 ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
                                 ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
-        files = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<file_name>.+?|)(?:\"|')""", request)
+        files = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:'|\")(?P<file_name>.+?|)(?:'|\")""", request)
         for file in files:
             for malicious_extension in malicious_extensions:
                 if malicious_extension in file:
