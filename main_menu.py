@@ -2,6 +2,7 @@ from curtsies import Input
 from menu import Menu
 from network_scanner import NetworkScanner
 from email_manager import EmailManager
+from colors import Colors
 
 
 class MainMenu:
@@ -60,9 +61,9 @@ class MainMenu:
         self._main_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
-                print(self._main_menu.WARNING + self._main_menu.menu[menu_item])
+                print(Colors.YELLOW + self._main_menu.menu[menu_item])
             else:
-                print(self._main_menu.OK_BLUE + self._main_menu.menu[menu_item])
+                print(Colors.BLUE + self._main_menu.menu[menu_item])
         with Input(keynames="curses") as input_generator:
             for user_input in input_generator:
                 self._main_menu.clear()

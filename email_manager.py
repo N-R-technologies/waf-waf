@@ -4,6 +4,7 @@ import re
 from curtsies import Input
 from tkinter import messagebox
 from menu import Menu
+from colors import Colors
 
 
 class EmailManager:
@@ -128,9 +129,9 @@ class EmailManager:
         self._email_manager_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._email_manager_menu.menu)):
             if self._email_manager_menu.controller[menu_item] == 1:
-                print(self._email_manager_menu.WARNING + self._email_manager_menu.menu[menu_item])
+                print(Colors.YELLOW + self._email_manager_menu.menu[menu_item])
             else:
-                print(self._email_manager_menu.OK_BLUE + self._email_manager_menu.menu[menu_item])
+                print(Colors.BLUE + self._email_manager_menu.menu[menu_item])
         with Input(keynames="curses") as input_generator:
             for user_input in input_generator:
                 self._email_manager_menu.clear()

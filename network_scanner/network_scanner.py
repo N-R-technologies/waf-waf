@@ -4,6 +4,7 @@ from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
 from .reporter import Reporter
 from .loader import Loader
+from colors import Colors
 
 
 class NetworkScanner:
@@ -42,20 +43,20 @@ class NetworkScanner:
         if ssid is not None:
             results = list()
 
-            self._loader.start_loading("Checking Evil Twin")
+            self._loader.start_loading("Checking Evil Twin", Colors.WHITE)
             results.append(self._scan_functions.check_evil_twin(ssid))
             time.sleep(2)
             self._loader.stop_loading()
             time.sleep(1)
             if ssid != "":
                 results.append(ssid != "--")  # need to check if it means the ssid is hidden
-                self._loader.start_loading("Checking router's SSID")
+                self._loader.start_loading("Checking router's SSID", Colors.RED)
                 results.append(self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS))
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
                 if router_username != "":
-                    self._loader.start_loading("Checking router's username")
+                    self._loader.start_loading("Checking router's username", Colors.PURPLE)
                     results.append(self._scan_functions.find_in_file(router_username, self.COMMON_ROUTER_USERNAMES))
                     time.sleep(2)
                     self._loader.stop_loading()
@@ -63,7 +64,7 @@ class NetworkScanner:
                 else:
                     results.append("No-Username")
                 if router_password != "":
-                    self._loader.start_loading("Checking router's password")
+                    self._loader.start_loading("Checking router's password", Colors.CYAN)
                     results.append(self._scan_functions.find_in_file(router_password, self.COMMON_ROUTER_PASSWORDS))
                     time.sleep(2)
                     self._loader.stop_loading()
@@ -73,7 +74,7 @@ class NetworkScanner:
                 details = self._scan_functions.get_details(ssid)
                 password = details["password"]
                 encryption_type = details["encryption_type"]
-                self._loader.start_loading("Checking network's password")
+                self._loader.start_loading("Checking network's password", Colors.ORANGE)
                 results.append(self._engines.password_engines(password))
                 time.sleep(2)
                 self._loader.stop_loading()

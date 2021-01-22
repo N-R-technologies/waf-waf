@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from .data.vulnerabilities_info import info
+from colors import Colors
 
 
 class Reporter:
@@ -14,7 +15,7 @@ class Reporter:
     FIRST_ENGINE = 0
     SECOND_ENGINE = 1
 
-    _conclusions = ["*****************************Scan Conclusions*****************************"]
+    _conclusions = {Colors.GREEN: "*****************************Scan Conclusions*****************************"}
 
     def _filter_conclusions(self, results):
         """
@@ -24,25 +25,28 @@ class Reporter:
         :type results: list
         """
         if results[self.EVIL_TWIN]:
-            self._conclusions.append(info["evil twin"])
+            self._conclusions[Colors.WHITE] = (info["evil twin"])
         if results[self.BROADCAST]:
-            self._conclusions.append(info["open ssid"])
+            self._conclusions[Colors.RED] = (info["open ssid"])
         if results[self.COMMON_SSID]:
-            self._conclusions.append(info["common ssid"])
+            self._conclusions[Colors.RED] = (info["common ssid"])
         if results[self.COMMON_USERNAME] not in ("No-Username", ""):
-            self._conclusions.append(info["common router username"])
+            self._conclusions[Colors.PURPLE] = (info["common router username"])
         if results[self.COMMON_PASSWORD] not in ("No-Password", ""):
-            self._conclusions.append(info["common router password"])
+            self._conclusions[Colors.CYAN] = (info["common router password"])
+        self._conclusions[Colors.ORANGE] = ""
         if results[self.ENGINES][self.FIRST_ENGINE] == -1:
-            self._conclusions.append("\nYour network's password is in the common passwords database, which means "
-                                     "it will be\ncracked instantly. Please make it to stronger and more complex.")
+            self._conclusions[Colors.ORANGE] += ("\nYour network's password is in the common passwords database,"
+                                                 " which means it will be\ncracked instantly. "
+                                                 "Please make it to stronger and more complex.")
         else:
             if results[self.ENGINES][self.FIRST_ENGINE] != '!':
-                self._conclusions.append(results[self.ENGINES][self.FIRST_ENGINE])
+                self._conclusions[Colors.ORANGE] += '\n' + (results[self.ENGINES][self.FIRST_ENGINE])
             if results[self.ENGINES][self.SECOND_ENGINE] != '!':
-                self._conclusions.append(results[self.ENGINES][self.SECOND_ENGINE])
-            self._conclusions.append("\nRemember, good and strong passwords must contain at least 8 characters, including\n"
-                                     "numbers, both upper and lower letters, and special symbols like @, $ and &.")
+                self._conclusions[Colors.ORANGE] += '\n' + (results[self.ENGINES][self.SECOND_ENGINE])
+            self._conclusions[Colors.ORANGE] += ("\nRemember, good and strong passwords must contain at least"
+                                                 " 8 characters, including\nnumbers, both upper "
+                                                 "and lower letters, and special symbols like @, $ and &.")
 
     def report_conclusions(self, results):
         """
@@ -52,8 +56,9 @@ class Reporter:
         """
         self._filter_conclusions(results)
         print('\n')
-        for conclusion in self._conclusions:
-            print(conclusion)
+        for color, conclusion in self._conclusions.items():
+            print(color + conclusion)
+        print(Colors.BLUE)
 
     def report_log(self):
         """
@@ -62,7 +67,7 @@ class Reporter:
         """
         scan_file_path = self.LOG_FILE_PATH + datetime.now().strftime("%d_%m_%Y__%H_%M_%S") + ".txt"
         with open(scan_file_path, 'w') as scan_log:
-            for conclusion in self._conclusions:
+            for conclusion in self._conclusions.values():
                 scan_log.write(conclusion + '\n')
             scan_log.close()
         print(f"\nThe report has also been saved at:\n{os.path.abspath(scan_file_path)}")
@@ -71,4 +76,4 @@ class Reporter:
         """
         This function will reset the conclusions of the last network scan
         """
-        self._conclusions = ["*****************************Scan Conclusions*****************************"]
+        self._conclusions = {Colors.GREEN: "*****************************Scan Conclusions*****************************"}
