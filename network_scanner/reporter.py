@@ -9,7 +9,6 @@ class Reporter:
     IS_FOUND = 0
     PRINT_COLOR = 1
 
-
     def report_conclusions(self, results):
         """
         This function will print the conclusions of the last network scan
