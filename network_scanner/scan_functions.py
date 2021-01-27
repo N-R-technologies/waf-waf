@@ -3,6 +3,7 @@ import subprocess
 
 class ScanFunctions:
     PASSWORD_HEADER_LEN = 29
+    RECOMMENDED_ENCRYPTION_TYPE = "wpa2"
 
     def find_in_file(self, signature, file):
         """
@@ -50,3 +51,14 @@ class ScanFunctions:
         command = "nmcli -f SSID device wifi list"
         all_access_points = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
         return all_access_points.count(ssid + '\n') > 1
+
+    def check_encryption_type(self, encryption_type):
+        """
+        This function will check if the encryption type is like
+        the recommended safer encryption type
+        :param encryption_type: the network's encryption type
+        :type encryption_type: string
+        :return: True if its match, otherwise False
+        :rtype: boolean
+        """
+        return self.RECOMMENDED_ENCRYPTION_TYPE not in encryption_type.lower()

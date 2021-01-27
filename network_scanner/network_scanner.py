@@ -72,9 +72,14 @@ class NetworkScanner:
                     results.append("No-Password")
                 details = self._scan_functions.get_details(ssid)
                 password = details["password"]
-                encryption_type = details["encryption_type"]
                 self._loader.start_loading("Checking network's password")
                 results.append(self._engines.password_engines(password))
+                time.sleep(2)
+                self._loader.stop_loading()
+                time.sleep(1)
+                encryption_type = details["encryption_type"]
+                self._loader.start_loading("Checking network's encryption")
+                results.append(self._scan_functions.check_encryption_type(encryption_type))
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
