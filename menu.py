@@ -57,9 +57,9 @@ class Menu:
             return
         for menu_item in range(len(self.menu)):
             if self.controller[menu_item] == 1:
-                print(Colors.YELLOW + self.menu[menu_item])
+                print(self.WARNING + self.menu[menu_item])
             else:
-                print(Colors.BLUE + self.menu[menu_item])
+                print(self.OK_BLUE + self.menu[menu_item])
         if event == '\\n':
             if self._functions[self.controller.index(1)] == "exit":
                 self.exit = True

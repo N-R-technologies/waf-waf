@@ -54,7 +54,7 @@ class EmailManager:
             with open(self.USER_EMAILS_FILE_PATH, 'a') as email_file:
                 toml.dump({name: address}, email_file)
                 email_file.close()
-            messagebox.showinfo("Success", f"Successfully added {name} to the emails file!")
+            messagebox.showinfo("Success", f"Successfully added {name} to the list!")
         self._email_manager_menu.close_input()
 
     def call_add_email(self):
