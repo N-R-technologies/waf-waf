@@ -1,14 +1,12 @@
 import os
 import random
 import tkinter as tk
+from colors import Colors
 
 
 class Menu:
-    OK_BLUE = '\033[94m'
-    WARNING = '\033[93m'
-
-    _colors = (("#000000", "#00FF00"), ("#000000", "#23F7F7"), ("#000000", "#FFFF00"),
-               ("#4D004D", "#FFEE00"), ("#00203F", "#ADEFD1"), ("#11004D", "#FF77FF"))
+    _colors = [("#00539C", "#FFD662"), ("#D01C1F", "#4B878B"), ("#FC766A", "#184A45"), ("#28334A", "#FBDE44"),
+               ("#E95C20", "#006747"), ("#00203F", "#ADEFD1"), ("#2C5F2D", "#97BC62"), ("#00539C", "#EEA47F")]
 
     def __init__(self):
         self._ignore = False
@@ -73,15 +71,9 @@ class Menu:
 
     def get_ignore(self):
         """
-        This function will return the ignore property
+        the function return the ignore property
         """
         return self._ignore
-
-    def reset_ignore(self):
-        """
-        This function will reset the ignore property to false
-        """
-        self._ignore = False
 
     def get_input(self, function_on_submit, title, first_input_text, second_input_text):
         """
@@ -110,6 +102,12 @@ class Menu:
         submit_button = tk.Button(input_window, text="Submit", bg=background_color, fg=font_color, command=lambda: function_on_submit(first_entry.get(), second_entry.get()))
         submit_button.grid(row=4)
         input_window.mainloop()
+
+    def reset_ignore(self):
+        """
+        function reset the ignore property to false
+        """
+        self._ignore = False
 
     def close_input(self):
         """
