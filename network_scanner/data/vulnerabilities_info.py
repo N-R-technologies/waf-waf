@@ -38,5 +38,7 @@ info = {
 
     "broken encryption type": "Your encryption type for the network is not the safer and newer one\n"
                               "which is WPA2, we recommend you to change the encryption type in order\n"
-                              "to make it harder to observe your traffic.\n"
+                              "to make it harder to observe your traffic.\n",
+
+    "password estimated crack time": ""
 }

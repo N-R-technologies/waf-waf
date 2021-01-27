@@ -2,7 +2,6 @@ import subprocess
 
 
 class ScanFunctions:
-    PASSWORD_HEADER_LEN = 29
     RECOMMENDED_ENCRYPTION_TYPE = "wpa2"
 
     def find_in_file(self, signature, file):
@@ -24,7 +23,7 @@ class ScanFunctions:
             f.close()
         return False
 
-    def get_details(self, ssid):
+    def get_network_details(self, ssid):
         """
         This function will return all the details about the connected network
         :param ssid: the ssid of the connected network
@@ -32,11 +31,11 @@ class ScanFunctions:
         :return: all the details about the connected network
         :rtype: dict
         """
-        command = 'nmcli -t -s connection show "' + ssid + '"' + '| grep ^802-11-wireless-security.psk:'
+        command = "nmcli -t -s connection show '" + ssid + "' | grep -oP '(?<=^802-11-wireless-security.psk:).*'"
         details = dict()
-        details["password"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[self.PASSWORD_HEADER_LEN:]
-        command = "nmcli -t -f IN-USE,SECURITY device wifi list | grep '^\*'"
-        details["encryption_type"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[2:]
+        details["password"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[:-1]
+        command = "nmcli -t -f IN-USE,SECURITY device wifi list | grep -oP '(?<=^\*:).*'"
+        details["encryption_type"] = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[:-1]
         return details
 
     def check_evil_twin(self, ssid):
@@ -50,7 +49,10 @@ class ScanFunctions:
         """
         command = "nmcli -f SSID device wifi list"
         all_access_points = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
-        return all_access_points.count(ssid + '\n') > 1
+        access_points_list = all_access_points.split('\n')
+        access_points_list = list(map(str.strip, access_points_list))
+        ssid = ssid.strip()
+        return access_points_list.count(ssid) > 1
 
     def check_encryption_type(self, encryption_type):
         """
@@ -62,3 +64,15 @@ class ScanFunctions:
         :rtype: boolean
         """
         return self.RECOMMENDED_ENCRYPTION_TYPE not in encryption_type.lower()
+
+    def get_ssid(self):
+        """
+        This function will return the ssid of the connected network
+        :return: the ssid of the connected network
+        :rtype: string or None
+        """
+        command = 'nmcli -t -f active,ssid dev wifi | grep -oP "(?<=^yes:).*"'
+        ssid = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout[:-1]
+        if ssid == "":
+            return None
+        return ssid

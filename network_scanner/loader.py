@@ -42,4 +42,4 @@ class Loader:
         This function will tell the loading function to stop
         """
         self._finish_load = True
-        time.sleep(0.1)
+        time.sleep(0.2)

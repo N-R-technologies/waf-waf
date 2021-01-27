@@ -1,4 +1,5 @@
-from network_scanner.scan_functions import ScanFunctions
+from .scan_functions import ScanFunctions
+from .data import vulnerabilities_info
 
 
 class EngineError(Exception):
@@ -171,21 +172,21 @@ class PasswordEngines:
         :param password: the password
         :type password: string
         :return: the estimated crack time the engines calculated
-        :rtype: list
+        :rtype: tuple
         """
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
-        est_times = []
-        common_password = [-1, -1]
         if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
-            return common_password
+            password_in_common_passwords = "Your network's password was found in our common router names database.\n" \
+                                           "You should change it to something less common.\n"
+            vulnerabilities_info.info["password estimated crack time"] = password_in_common_passwords
+            return True
         else:
             for engine in engines:
                 try:
                     time_type, est_time = self._convert_to_suitable_format(engine(password))
                 except Exception as e:
-                    print(e.__str__())
-                    est_times.append('!')
+                    vulnerabilities_info.info["password estimated crack time"] += '\n' + e.__str__()
                 else:
-                    est_times.append(self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1))
-        return est_times
+                    vulnerabilities_info.info["password estimated crack time"] += '\n' + self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1)
+        return True

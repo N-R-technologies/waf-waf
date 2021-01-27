@@ -1,4 +1,3 @@
-import subprocess
 from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
 from .reporter import Reporter
@@ -10,24 +9,11 @@ class NetworkScanner:
     COMMON_SSIDS = "network_scanner/data/files/common_ssids.txt"
     COMMON_ROUTER_USERNAMES = "network_scanner/data/files/router_usernames.txt"
     COMMON_ROUTER_PASSWORDS = "network_scanner/data/files/router_passwords.txt"
-    SSID_HEADER_LEN = 4
 
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
     _reporter = Reporter()
     _runner = Runner()
-
-    def _get_ssid(self):
-        """
-        This function will return the ssid of the connected network
-        :return: the ssid of the connected network
-        :rtype: string or None
-        """
-        command = "nmcli -t -f active,ssid dev wifi | grep yes:"
-        ssid = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True).stdout
-        if ssid == "":
-            return None
-        return [single_ssid[self.SSID_HEADER_LEN:] for single_ssid in ssid.split('\n') if (len(single_ssid) > 1 and single_ssid[0:self.SSID_HEADER_LEN] == "yes:")][0]
 
     def scan(self, router_username, router_password):
         """
@@ -37,31 +23,24 @@ class NetworkScanner:
         :type router_username: string
         :type router_password: string
         """
-        ssid = self._runner.execute_operation("Receiving your SSID", Colors.BLUE, self._get_ssid)
+        ssid = self._runner.execute_operation("Receiving your SSID", Colors.BLUE, self._scan_functions.get_ssid)
         if ssid is not None:
-            results = list()
+            results = dict()
 
-            results.append(self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid))
+            results["evil twin"] = [self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid), Colors.WHITE]
             if ssid != "":
                 find_in_file = self._scan_functions.find_in_file
-                results.append(ssid != "--")
-                results.append(self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS))
+                results["open ssid"] = [ssid != "--", Colors.BEIGE]
+                results["common ssid"] = [self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS), Colors.BEIGE]
                 if router_username != "":
-                    results.append(self._runner.execute_operation("Checking router's username", Colors.PURPLE, find_in_file, router_username, self.COMMON_ROUTER_USERNAMES))
-                else:
-                    results.append("No-Username")
+                    results["common router username"] = [self._runner.execute_operation("Checking router's username", Colors.PURPLE, find_in_file, router_username, self.COMMON_ROUTER_USERNAMES), Colors.PURPLE]
                 if router_password != "":
-                    results.append(self._runner.execute_operation("Checking router's password", Colors.CYAN, find_in_file, router_password, self.COMMON_ROUTER_PASSWORDS))
-                else:
-                    results.append("No-Password")
-                details = self._scan_functions.get_details(ssid)
+                    results["common router password"] = [self._runner.execute_operation("Checking router's password", Colors.CYAN, find_in_file, router_password, self.COMMON_ROUTER_PASSWORDS), Colors.CYAN]
+                details = self._scan_functions.get_network_details(ssid)
                 password = details["password"]
-                out = self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password)
-                results.append(self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password))
+                results["password estimated crack time"] = [self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password), Colors.ORANGE]
                 encryption_type = details["encryption_type"]
-                results.append(self._runner.execute_operation("Checking network's encryption", Colors.PINK, self._scan_functions.check_encryption_type, encryption_type))
+                results["broken encryption type"] = [self._runner.execute_operation("Checking network's encryption", Colors.PINK, self._scan_functions.check_encryption_type, encryption_type), Colors.PINK]
             self._reporter.report_conclusions(results)
-            self._reporter.report_log()
-            self._reporter.reset_conclusions()
         else:
             print("Please connect to a network to start the scan")
