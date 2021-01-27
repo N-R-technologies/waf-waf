@@ -167,12 +167,12 @@ class PasswordEngines:
 
     def password_engines(self, password):
         """
-        This function will print the estimated time it would take
-        to crack the password according to two separate engines
+        This function will save the estimated time it would take to crack 
+        the password according to two separate engines in the info dict
         :param password: the password
         :type password: string
-        :return: the estimated crack time the engines calculated
-        :rtype: tuple
+        :return: True
+        :rtype: boolean
         """
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
