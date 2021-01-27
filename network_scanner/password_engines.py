@@ -82,7 +82,7 @@ class PasswordEngines:
         This function will analyze the password and will check its content
         :param password: the password
         :type password: string
-        :return attributes_lst: list of all attributes of password
+        :return: attributes_lst: list of all attributes of password
         :rtype: list
         """
         have_upper_case = False
@@ -177,9 +177,8 @@ class PasswordEngines:
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
         if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
-            password_in_common_passwords = "Your network's password was found in our common router names database.\n" \
-                                           "You should change it to something less common.\n"
-            vulnerabilities_info.info["password estimated crack time"] = password_in_common_passwords
+            vulnerabilities_info.info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
+                                                                         "database.\nYou should change it to something less common.\n"
             return True
         else:
             for engine in engines:
