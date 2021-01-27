@@ -5,7 +5,7 @@ info = {
                  "We detected two access points with the same name in the area, it is very dangerous!\n"
                  "You might want to check the source of the other access point.\n",
 
-    "open ssid": "WARNING!\nEveryone have access to your wifi!\n"
+    "open ssid": "Everyone have access to your wifi!\n"
                  "In case you want devices to also know your wifi's SSID in order to connect it,\n"
                  "follow the next steps:\n"
                  "1. Open the website of your router.\n"

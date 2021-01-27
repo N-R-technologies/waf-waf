@@ -12,6 +12,7 @@ class Reporter:
     COMMON_USERNAME = 3
     COMMON_PASSWORD = 4
     ENGINES = 5
+    ENCRYPTION_TYPE = 6
     FIRST_ENGINE = 0
     SECOND_ENGINE = 1
 
@@ -25,28 +26,26 @@ class Reporter:
         :type results: list
         """
         if results[self.EVIL_TWIN]:
-            self._conclusions[Colors.WHITE] = (info["evil twin"])
+            self._conclusions[Colors.WHITE] = info["evil twin"]
         if results[self.BROADCAST]:
-            self._conclusions[Colors.RED] = (info["open ssid"])
+            self._conclusions[Colors.BEIGE] = info["open ssid"]
         if results[self.COMMON_SSID]:
-            self._conclusions[Colors.RED] = (info["common ssid"])
+            self._conclusions[Colors.BEIGE] = info["common ssid"]
         if results[self.COMMON_USERNAME] not in ("No-Username", ""):
-            self._conclusions[Colors.PURPLE] = (info["common router username"])
+            self._conclusions[Colors.PURPLE] = info["common router username"]
         if results[self.COMMON_PASSWORD] not in ("No-Password", ""):
-            self._conclusions[Colors.CYAN] = (info["common router password"])
+            self._conclusions[Colors.CYAN] = info["common router password"]
         self._conclusions[Colors.ORANGE] = ""
         if results[self.ENGINES][self.FIRST_ENGINE] == -1:
-            self._conclusions[Colors.ORANGE] += ("\nYour network's password is in the common passwords database,"
-                                                 " which means it will be\ncracked instantly. "
-                                                 "Please make it to stronger and more complex.")
+            self._conclusions[Colors.ORANGE] += info["crackable password"]
         else:
             if results[self.ENGINES][self.FIRST_ENGINE] != '!':
-                self._conclusions[Colors.ORANGE] += '\n' + (results[self.ENGINES][self.FIRST_ENGINE])
+                self._conclusions[Colors.ORANGE] += '\n' + results[self.ENGINES][self.FIRST_ENGINE]
             if results[self.ENGINES][self.SECOND_ENGINE] != '!':
-                self._conclusions[Colors.ORANGE] += '\n' + (results[self.ENGINES][self.SECOND_ENGINE])
-            self._conclusions[Colors.ORANGE] += ("\nRemember, good and strong passwords must contain at least"
-                                                 " 8 characters, including\nnumbers, both upper "
-                                                 "and lower letters, and special symbols like @, $ and &.")
+                self._conclusions[Colors.ORANGE] += '\n' + results[self.ENGINES][self.SECOND_ENGINE]
+            self._conclusions[Colors.ORANGE] += info["good password recommendation"]
+        if results[self.ENCRYPTION_TYPE]:
+            self._conclusions[Colors.PINK] = info["broken encryption type"]
 
     def report_conclusions(self, results):
         """
