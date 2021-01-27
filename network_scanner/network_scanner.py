@@ -1,7 +1,7 @@
 from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
-from .reporter import Reporter
 from .runner import Runner
+from .reporter import Reporter
 from colors import Colors
 
 
@@ -12,8 +12,8 @@ class NetworkScanner:
 
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
-    _reporter = Reporter()
     _runner = Runner()
+    _reporter = Reporter()
 
     def scan(self, router_username, router_password):
         """
@@ -23,7 +23,7 @@ class NetworkScanner:
         :type router_username: string
         :type router_password: string
         """
-        ssid = self._runner.execute_operation("Receiving your SSID", Colors.BLUE, self._scan_functions.get_ssid)
+        ssid = self._runner.execute_operation("Receiving network's SSID", Colors.BLUE, self._scan_functions.get_ssid)
         if ssid is not None:
             results = dict()
 
@@ -41,6 +41,7 @@ class NetworkScanner:
                 results["password estimated crack time"] = [self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password), Colors.ORANGE]
                 encryption_type = details["encryption_type"]
                 results["broken encryption type"] = [self._runner.execute_operation("Checking network's encryption", Colors.PINK, self._scan_functions.check_encryption_type, encryption_type), Colors.PINK]
+
             self._reporter.report_conclusions(results)
         else:
             print("Please connect to a network to start the scan")
