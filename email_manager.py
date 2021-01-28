@@ -13,7 +13,7 @@ class EmailManager:
     def __init__(self):
         self._email_manager_menu = Menu()
 
-    def display_emails(self):
+    def _display_emails(self):
         """
         This function will display all the existing emails to the user
         """
@@ -27,7 +27,7 @@ class EmailManager:
             print(f"{index}. {name}, {address}")
             index += 1
 
-    def add_email(self, name, address):
+    def _add_email(self, name, address):
         """
         This function will add an email to the configuration file
         :param name: the email owner name
@@ -59,14 +59,14 @@ class EmailManager:
             messagebox.showinfo("Success", f"Successfully added {name} to the list!")
         self._email_manager_menu.close_input()
 
-    def call_add_email(self):
+    def _call_add_email(self):
         """
         This function will call the add_email function
         with the appropriate parameters
         """
-        self._email_manager_menu.get_input(self.add_email, "Add New Email", "", "Name", "Address")
+        self._email_manager_menu.get_input(self._add_email, "Add New Email", "", "Name", "Address")
 
-    def remove_email(self, email_index):
+    def _remove_email(self, email_index):
         """
         This function will remove an email from the configuration file
         :param email_index: the index of the email to remove in the list
@@ -97,14 +97,14 @@ class EmailManager:
                 messagebox.showinfo("Success", f"Successfully removed {user_name} from the list!")
         self._email_manager_menu.close_input()
 
-    def call_remove_email(self):
+    def _call_remove_email(self):
         """
         This function will call the add_email function
         with the appropriate parameters
         """
-        self.display_emails()
+        self._display_emails()
         print("\nPlease enter the index of the email you wish to remove")
-        self._email_manager_menu.get_input(self.remove_email, "Remove Email", "", "Index")
+        self._email_manager_menu.get_input(self._remove_email, "Remove Email", "", "Index")
 
     def _is_valid_address(self, address):
         """
@@ -136,9 +136,9 @@ class EmailManager:
         """
         This function will start the emails manager menu
         """
-        self._email_manager_menu.add_option("1. Display all the emails", self.display_emails)
-        self._email_manager_menu.add_option("2. Add an email to the list", self.call_add_email)
-        self._email_manager_menu.add_option("3. Delete an email from the list", self.call_remove_email)
+        self._email_manager_menu.add_option("1. Display all the emails", self._display_emails)
+        self._email_manager_menu.add_option("2. Add an email to the list", self._call_add_email)
+        self._email_manager_menu.add_option("3. Delete an email from the list", self._call_remove_email)
         self._email_manager_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._email_manager_menu.menu)):
             if self._email_manager_menu.controller[menu_item] == 1:
