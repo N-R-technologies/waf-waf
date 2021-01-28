@@ -6,7 +6,7 @@ class BasicChecks:
     @staticmethod
     def data_disclosure(request) -> RiskLevels:
         return RiskLevels.CRITICAL \
-            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?:file:///etc|php://filter/|expect://).*?(?:\"|')""", request) \
+            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?P<quote>\"|')(?:file:///etc|php://filter/|expect://).*?(?P=quote)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -18,25 +18,25 @@ class BasicChecks:
     @staticmethod
     def endless_file(request) -> RiskLevels:
         return RiskLevels.CATASTROPHIC \
-            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')file:///dev.*?(?:\"|')""", request) \
+            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?P<quote>\"|')file:///dev.*?(?P=quote)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def xinclude(request) -> RiskLevels:
         return RiskLevels.CATASTROPHIC \
-            if re.search(r"""<\s*xi:\s*include\s+(?:.+\s+)*?href\s*=\s*(?:\"|')file:///etc.*?(?:\"|')""", request) \
+            if re.search(r"""<\s*xi:\s*include\s+(?:.+\s+)*?href\s*=\s*(?P<quote>\"|')file:///etc.*?(?P=quote)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def svg_uploading(request) -> RiskLevels:
         return RiskLevels.MODERATE \
-            if re.search(r"""<\s*image\s+xlink:\s*(?:.+\s+)*?href\s*=\s*(?:\"|')(?:file:///etc.*?|expect://.+?)(?:\"|')""", request) \
+            if re.search(r"""<\s*image\s+xlink:\s*(?:.+\s+)*?href\s*=\s*(?P<quote>\"|')(?:file:///etc.*?|expect://.+?)(?P=quote)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def base64_encoded(request) -> RiskLevels:
         return RiskLevels.SLIGHT \
-            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')data://text/plain;base64.*?(?:\"|')""", request) \
+            if re.search(r"""!\s*entity\s+.+?\s+system\s+(?P<quote>\"|')data://text/plain;base64.*?(?P=quote)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -47,5 +47,5 @@ class BasicChecks:
 
     @staticmethod
     def xxe_comments(request) -> RiskLevels:
-        return RiskLevels.NEGLIGIBLE if re.search(r"""<\s*!(\[cdata\[|\-\-)""", request) \
-            else RiskLevels.NO_RISK
+        return RiskLevels.NEGLIGIBLE \
+            if re.search(r"""<\s*!(\[cdata\[|\-\-)""", request) else RiskLevels.NO_RISK
