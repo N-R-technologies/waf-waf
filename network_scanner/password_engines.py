@@ -1,4 +1,5 @@
-from network_scanner.scan_functions import ScanFunctions
+from .scan_functions import ScanFunctions
+from .data import vulnerabilities_info
 
 
 class EngineError(Exception):
@@ -81,7 +82,7 @@ class PasswordEngines:
         This function will analyze the password and will check its content
         :param password: the password
         :type password: string
-        :return attributes_lst: list of all attributes of password
+        :return: attributes_lst: list of all attributes of password
         :rtype: list
         """
         have_upper_case = False
@@ -166,26 +167,21 @@ class PasswordEngines:
 
     def password_engines(self, password):
         """
-        This function will print the estimated time it would take
-        to crack the password according to two separate engines
+        This function will save the estimated time it would take to crack 
+        the password according to two separate engines in the info dict
         :param password: the password
         :type password: string
-        :return: the estimated crack time the engines calculated
-        :rtype: list
         """
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
-        est_times = []
-        common_password = [-1, -1]
         if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
-            return common_password
+            vulnerabilities_info.info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
+                                                                         "database.\nYou should change it to something less common.\n"
         else:
             for engine in engines:
                 try:
                     time_type, est_time = self._convert_to_suitable_format(engine(password))
                 except Exception as e:
-                    print(e.__str__())
-                    est_times.append('!')
+                    vulnerabilities_info.info["password estimated crack time"] += '\n' + e.__str__()
                 else:
-                    est_times.append(self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1))
-        return est_times
+                    vulnerabilities_info.info["password estimated crack time"] += '\n' + self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1)

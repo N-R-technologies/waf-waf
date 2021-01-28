@@ -28,51 +28,47 @@ class NetworkScanner:
         print("Starting the scan...")
         ssid = self._scan_functions.get_ssid()
         if ssid is not None:
-            results = list()
+            results = dict()
 
             self._loader.start_loading("Checking Evil Twin", Colors.WHITE)
-            results.append(self._scan_functions.check_evil_twin(ssid))
+            results["evil twin"] = (self._scan_functions.check_evil_twin(ssid), Colors.WHITE)
             time.sleep(2)
             self._loader.stop_loading()
             time.sleep(1)
             if ssid != "":
-                results.append(ssid != "--")  # need to check if it means the ssid is hidden
-                self._loader.start_loading("Checking router's SSID", Colors.BEIGE)
-                results.append(self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS))
+                results["open ssid"] = (ssid != "--", Colors.RED)  # need to check if it means the ssid is hidden
+                self._loader.start_loading("Checking router's SSID", Colors.RED)
+                results["common ssid"] = (self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS), Colors.RED)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
                 if router_username != "":
                     self._loader.start_loading("Checking router's username", Colors.PURPLE)
-                    results.append(self._scan_functions.find_in_file(router_username, self.COMMON_ROUTER_USERNAMES))
+                    results["common router username"] = (self._scan_functions.find_in_file(router_username, self.COMMON_ROUTER_USERNAMES), Colors.PURPLE)
                     time.sleep(2)
                     self._loader.stop_loading()
                     time.sleep(1)
-                else:
-                    results.append("No-Username")
                 if router_password != "":
                     self._loader.start_loading("Checking router's password", Colors.CYAN)
-                    results.append(self._scan_functions.find_in_file(router_password, self.COMMON_ROUTER_PASSWORDS))
+                    results["common router password"] = (self._scan_functions.find_in_file(router_password, self.COMMON_ROUTER_PASSWORDS), Colors.CYAN)
                     time.sleep(2)
                     self._loader.stop_loading()
                     time.sleep(1)
-                else:
-                    results.append("No-Password")
                 details = self._scan_functions.get_network_details(ssid)
                 password = details["password"]
                 self._loader.start_loading("Checking network's password")
-                results.append(self._engines.password_engines(password))
+                self._engines.password_engines(password)
+                results["password estimated crack time"] = (True, Colors.ORANGE)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
                 encryption_type = details["encryption_type"]
                 self._loader.start_loading("Checking network's encryption")
-                results.append(self._scan_functions.check_encryption_type(encryption_type))
+                results["broken encryption type"] = (self._scan_functions.check_encryption_type(encryption_type), Colors.PINK)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
+
             self._reporter.report_conclusions(results)
-            self._reporter.report_log()
-            self._reporter.reset_conclusions()
         else:
             print("Please connect to a network to start the scan")
