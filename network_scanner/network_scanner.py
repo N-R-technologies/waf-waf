@@ -50,7 +50,7 @@ class NetworkScanner:
             time.sleep(1)
             if ssid != "":
                 results.append(ssid != "--")  # need to check if it means the ssid is hidden
-                self._loader.start_loading("Checking router's SSID", Colors.RED)
+                self._loader.start_loading("Checking router's SSID", Colors.BEIGE)
                 results.append(self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS))
                 time.sleep(2)
                 self._loader.stop_loading()

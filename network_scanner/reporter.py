@@ -27,9 +27,9 @@ class Reporter:
         if results[self.EVIL_TWIN]:
             self._conclusions[Colors.WHITE] = (info["evil twin"])
         if results[self.BROADCAST]:
-            self._conclusions[Colors.RED] = (info["open ssid"])
+            self._conclusions[Colors.BEIGE] = (info["open ssid"])
         if results[self.COMMON_SSID]:
-            self._conclusions[Colors.RED] = (info["common ssid"])
+            self._conclusions[Colors.BEIGE] = (info["common ssid"])
         if results[self.COMMON_USERNAME] not in ("No-Username", ""):
             self._conclusions[Colors.PURPLE] = (info["common router username"])
         if results[self.COMMON_PASSWORD] not in ("No-Password", ""):

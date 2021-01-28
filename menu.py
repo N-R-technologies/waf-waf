@@ -5,8 +5,8 @@ from colors import Colors
 
 
 class Menu:
-    _colors = [("#00539C", "#FFD662"), ("#D01C1F", "#4B878B"), ("#FC766A", "#184A45"), ("#28334A", "#FBDE44"),
-               ("#E95C20", "#006747"), ("#00203F", "#ADEFD1"), ("#2C5F2D", "#97BC62"), ("#00539C", "#EEA47F")]
+    _colors = (("#000000", "#00FF00"), ("#000000", "#23F7F7"), ("#000000", "#FFFF00"),
+               ("#4D004D", "#FFEE00"), ("#00203F", "#ADEFD1"), ("#11004D", "#FF77FF"))
 
     def __init__(self):
         self._ignore = False
@@ -57,9 +57,9 @@ class Menu:
             return
         for menu_item in range(len(self.menu)):
             if self.controller[menu_item] == 1:
-                print(self.WARNING + self.menu[menu_item])
+                print(Colors.YELLOW + self.menu[menu_item])
             else:
-                print(self.OK_BLUE + self.menu[menu_item])
+                print(Colors.BLUE + self.menu[menu_item])
         if event == '\\n':
             if self._functions[self.controller.index(1)] == "exit":
                 self.exit = True
