@@ -1,8 +1,7 @@
-import time
 from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
+from .runner import Runner
 from .reporter import Reporter
-from .loader import Loader
 from colors import Colors
 
 
@@ -13,8 +12,8 @@ class NetworkScanner:
 
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
+    _runner = Runner()
     _reporter = Reporter()
-    _loader = Loader()
 
     def scan(self, router_username, router_password):
         """
@@ -24,49 +23,39 @@ class NetworkScanner:
         :type router_username: string
         :type router_password: string
         """
-        print("Starting the scan...")
-        ssid = self._scan_functions.get_ssid()
+        ssid = self._runner.execute_operation("Receiving network's SSID", Colors.BLUE, self._scan_functions.get_ssid)
         if ssid is not None:
             results = dict()
-
-            self._loader.start_loading("Checking Evil Twin", Colors.WHITE)
-            results["evil twin"] = (self._scan_functions.check_evil_twin(ssid), Colors.WHITE)
-            time.sleep(2)
-            self._loader.stop_loading()
-            time.sleep(1)
+            results["evil twin"] = self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid)
             if ssid != "":
+                find_in_file = self._scan_functions.find_in_file
+                results.append(ssid != "--")
+                results.append(self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS))
                 results["open ssid"] = (ssid != "--", Colors.BEIGE)
-                self._loader.start_loading("Checking router's SSID", Colors.BEIGE)
                 results["common ssid"] = (self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS), Colors.BEIGE)
-                time.sleep(2)
-                self._loader.stop_loading()
-                time.sleep(1)
                 if router_username != "":
-                    self._loader.start_loading("Checking router's username", Colors.PURPLE)
                     results["common router username"] = (self._scan_functions.find_in_file(router_username, self.COMMON_ROUTER_USERNAMES), Colors.PURPLE)
-                    time.sleep(2)
-                    self._loader.stop_loading()
-                    time.sleep(1)
+                    results.append(self._runner.execute_operation("Checking router's username", Colors.PURPLE, find_in_file, router_username, self.COMMON_ROUTER_USERNAMES))
                 if router_password != "":
-                    self._loader.start_loading("Checking router's password", Colors.CYAN)
                     results["common router password"] = (self._scan_functions.find_in_file(router_password, self.COMMON_ROUTER_PASSWORDS), Colors.CYAN)
-                    time.sleep(2)
-                    self._loader.stop_loading()
-                    time.sleep(1)
                 details = self._scan_functions.get_network_details(ssid)
+                    results.append(self._runner.execute_operation("Checking router's password", Colors.CYAN, find_in_file, router_password, self.COMMON_ROUTER_PASSWORDS))
+                details = self._scan_functions.get_details(ssid)
                 password = details["password"]
-                self._loader.start_loading("Checking network's password", Colors.ORANGE)
                 self._engines.password_engines(password)
                 results["password estimated crack time"] = (True, Colors.ORANGE)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
+                results.append(self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password))
                 encryption_type = details["encryption_type"]
                 self._loader.start_loading("Checking network's encryption", Colors.PINK)
                 results["broken encryption type"] = (self._scan_functions.check_encryption_type(encryption_type), Colors.PINK)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
+
+                results.append(self._runner.execute_operation("Checking network's encryption", Colors.PINK, self._scan_functions.check_encryption_type, encryption_type))
 
             self._reporter.report_conclusions(results)
         else:
