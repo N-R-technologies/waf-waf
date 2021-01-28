@@ -2,7 +2,7 @@ import toml
 import os
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
-from detective.detective import Detective
+from detective import Detective
 
 PROXY_LISTEN_HOST = "127.0.0.1"
 PROXY_LISTEN_PORT = 8080
