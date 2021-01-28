@@ -1,4 +1,5 @@
 import re
+import toml
 from urllib.parse import urlparse
 from detective.toolbox.risk_levels import RiskLevels
 
@@ -8,10 +9,11 @@ class AdvancedChecks:
     def blind_xxe(request) -> RiskLevels:
         urls_found = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<url>.+?|)(?:\"|')""", request)
         if urls_found is not None:
+            server_url = toml.load("server_info.toml")["host"]
             white_spaces = re.compile(r"\s+")
             for url in urls_found:
                 parse_result = urlparse(re.sub(white_spaces, '', url))
-                if parse_result.netloc != '':
+                if parse_result.netloc != '' and server_url not in url:
                     return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
 

@@ -18,8 +18,8 @@ class AdvancedChecks:
             return RiskLevels.CATASTROPHIC
         detect_url_result = re.findall(r"""(?:ht|f)tps?://(?P<url>.*)""", request)
         if detect_url_result is not None:
-            white_spaces = re.compile(r"\s+")
             server_url = toml.load("server_info.toml")["host"]
+            white_spaces = re.compile(r"\s+")
             for url in detect_url_result:
                 parse_result = urlparse(re.sub(white_spaces, '', url))
                 if parse_result.netloc != '' and server_url not in url:
