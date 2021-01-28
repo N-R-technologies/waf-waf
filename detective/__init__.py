@@ -1,0 +1,1 @@
+from .detective import Detective
