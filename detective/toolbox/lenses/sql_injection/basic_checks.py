@@ -6,11 +6,10 @@ class BasicChecks:
     @staticmethod
     def cstyle_comment(request):
         """
-        This function will check if the user tries to run
-        from the input Common C-style comment
+        check if the user try to run from the input Common C-style comment
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r" \/\*.*?\*\/", request) else RiskLevels.NO_RISK
@@ -18,11 +17,10 @@ class BasicChecks:
     @staticmethod
     def find_in_set(request):
         """
-        This function will check if the user tries to run
-        from the input common MySQL function “find_in_set”
+        check if the user try to run from the input common MySQL function “find_in_set”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bfind_in_set\b.*?\(.+?,.+?\)", request)\
@@ -31,11 +29,10 @@ class BasicChecks:
     @staticmethod
     def master_access(request):
         """
-        This function will check if the user tries to run
-        from the input SQLite information disclosure “sqlite_master”
+        check if the user try to run from the input SQLite information disclosure “sqlite_master”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"\bsqlite_master\b", request) else RiskLevels.NO_RISK
@@ -43,11 +40,10 @@ class BasicChecks:
     @staticmethod
     def user_disclosure(request):
         """
-        This function will check if the user tries to run
-        from the input MySQL information disclosure “mysql.user”
+        check if the user try to run from the input MySQL information disclosure “mysql.user”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"\bmysql.*?\..*?user\b", request) else RiskLevels.NO_RISK
@@ -55,11 +51,10 @@ class BasicChecks:
     @staticmethod
     def user_info_disclosure(request):
         """
-        This function will check if the user tries to run
-        from input the PgSQL information disclosure “pg_user”
+        check if the user try to run from input the PgSQL information disclosure “pg_user”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"\bpg_user\b", request) else RiskLevels.NO_RISK
@@ -67,11 +62,10 @@ class BasicChecks:
     @staticmethod
     def db_info_disclosure(request):
         """
-        This function will check if the user tries to run
-        from input the PgSQL information disclosure “pg_database”
+        check if the user try to run from input the PgSQL information disclosure “pg_database”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MEDIUM_RISK if re.search(r"\bpg_database\b", request) else RiskLevels.NO_RISK
@@ -79,11 +73,10 @@ class BasicChecks:
     @staticmethod
     def shadow_info_disclosure(request):
         """
-        This function will check if the user tries to run
-        from input the PgSQL information disclosure “pg_shadow”
+        check if the user try to run from input the PgSQL information disclosure “pg_shadow”
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MEDIUM_RISK if re.search(r"\bpg_shadow\b", request) else RiskLevels.NO_RISK
@@ -91,11 +84,10 @@ class BasicChecks:
     @staticmethod
     def load_file_disclosure(request):
         """
-        This function will check if the user tries to run
-        from the input blind mysql disclosure "load_file"
+        check if the user try to run from the input blind mysql disclosure "load_file"
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"\bload_file\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -103,11 +95,10 @@ class BasicChecks:
     @staticmethod
     def load_data_disclosure(request):
         """
-        This function will check if the user tries to run
-        from the input blind mysql disclosure "load_data"
+        check if the user try to run from the input blind mysql disclosure "load_data"
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"\bload\b.*?\bdata\b.*?\binfile\b.*?\binto\b.*?\btable\b", request) \
@@ -116,11 +107,10 @@ class BasicChecks:
     @staticmethod
     def write_into_outfile(request):
         """
-        This function will check if the user tries to run
-        from the input MySQL file write "into outfile"
+        check if the user try to run from the input MySQL file write "into outfile"
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"\bselect\b.*?\binto\b.*?\b(out|dump)file\b", request) \
@@ -129,11 +119,10 @@ class BasicChecks:
     @staticmethod
     def information_disclosure(request):
         """
-        This function will check if the user tries to run
-        from the input mysql information disclosure
+        check if the user try to run from the input mysql information disclosure
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"\binformation_schema\b", request) else RiskLevels.NO_RISK
@@ -141,11 +130,10 @@ class BasicChecks:
     @staticmethod
     def concat_command(request):
         """
-        This function will check if the user tries to run
-        from the input the command concat
+        check if the user try to run from the input the command concat
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\b(group_)?concat(_ws)?\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -153,11 +141,10 @@ class BasicChecks:
     @staticmethod
     def blind_benchmark(request):
         """
-        This function will check if the user tries to run
-        from the input blind sql benchmark
+        check if the user try to run from the input blind sql benchmark
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"bbenchmark\b.*?\(.+?,.+?\)", request) else RiskLevels.NO_RISK
@@ -165,11 +152,10 @@ class BasicChecks:
     @staticmethod
     def blind_sql_sleep(request):
         """
-        This function will check if the user tries to run
-        from the input blind sql sleep
+        check if the user try to run from the input blind sql sleep
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"\bsleep\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -177,11 +163,10 @@ class BasicChecks:
     @staticmethod
     def sleep_pg_command(request):
         """
-        This function will check if the user tries to run
-        from input the pgsql sleep command
+        check if the user try to run from input the pgsql sleep command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(request, r"\bpg_sleep\b.*?\(.+?\)") else RiskLevels.NO_RISK
@@ -189,11 +174,10 @@ class BasicChecks:
     @staticmethod
     def blind_tsql(request):
         """
-        This function will check if the user tries to run
-        from input the blind tsql "waitfor"
+        check if the user try to run from input the blind tsql "waitfor"
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"\bwaitfor\b.*?\b(delay|time(out)?)\b", request) \
@@ -202,11 +186,10 @@ class BasicChecks:
     @staticmethod
     def length_command(request):
         """
-        This function will check if the user tries to run
-        from input the mysql length command
+        check if the user try to run from input the mysql length command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         r"""
         return RiskLevels.NEGLIGIBLE if re.search(request, r"\b(char_|bit_)?length\b.*?\(.+?\)")\
@@ -215,11 +198,10 @@ class BasicChecks:
     @staticmethod
     def hex_command(request):
         """
-        This function will check if the user tries to run
-        from input the mysql hex/unhex command
+        check if the user try to run from input the mysql hex/unhex command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\b(un)?hex\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -227,11 +209,10 @@ class BasicChecks:
     @staticmethod
     def base64_command(request):
         """
-        This function will check if the user tries to run
-        from input the mysql to base 64/ from base 64 command
+        check if the user try to run from input the mysql to base 64/ from base 64 command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\b(from|to)_base64\b.*?\(.+?\)", request) \
@@ -240,11 +221,10 @@ class BasicChecks:
     @staticmethod
     def oct_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL oct command
+        check if the user try to run from input the SQL oct command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\boct\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -252,11 +232,10 @@ class BasicChecks:
     @staticmethod
     def ord_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL ord command
+        check if the user try to run from input the SQL ord command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bord\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -264,11 +243,10 @@ class BasicChecks:
     @staticmethod
     def ascii_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL ascii command
+        check if the user try to run from input the SQL ascii command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bascii\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -276,11 +254,10 @@ class BasicChecks:
     @staticmethod
     def bin_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL bin command
+        check if the user try to run from input the SQL bin command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bbin\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -288,11 +265,10 @@ class BasicChecks:
     @staticmethod
     def char_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL char command
+        check if the user try to run from input the SQL char command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bcha?r\b.*?\(.+?\)", request) else RiskLevels.NO_RISK
@@ -300,11 +276,10 @@ class BasicChecks:
     @staticmethod
     def substr_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL substr command
+        check if the user try to run from input the SQL substr command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"\bsubstr(ing(_index)?)?\b.*?\(.+?,.+?\)", request) \
@@ -313,11 +288,10 @@ class BasicChecks:
     @staticmethod
     def user_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL user command
+        check if the user try to run from input the SQL user command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"\b(current_)?user\b.*?\(.*?\)", request) else RiskLevels.NO_RISK
@@ -325,11 +299,10 @@ class BasicChecks:
     @staticmethod
     def version_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL version command
+        check if the user try to run from input the SQL version command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"@@version", request) else RiskLevels.NO_RISK
@@ -337,11 +310,10 @@ class BasicChecks:
     @staticmethod
     def system_variable(request):
         """
-        This function will check if the user tries to run
-        from input the SQL system variable command
+        check if the user try to run from input the SQL system variable command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.NEGLIGIBLE if re.search(r"@@.+?", request) else RiskLevels.NO_RISK
@@ -349,23 +321,20 @@ class BasicChecks:
     @staticmethod
     def if_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL if command
+        check if the user try to run from input the SQL if command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels"""
         return RiskLevels.SLIGHT if re.search(r"\bif\b.*?\(.+?,.+?,.+?\)", request) else \
             RiskLevels.NO_RISK
 
     @staticmethod
     def ifnull_command(request):
-        """
-        This function will check if the user tries to run
-        from input the SQL ifnull command
+        """check if the user try to run from input the SQL ifnull command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(request, r"\b(ifnull|nullif)\b.*?\(.+?,.+?\)") else \
@@ -374,11 +343,10 @@ class BasicChecks:
     @staticmethod
     def case_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL case command
+        check if the user try to run from input the SQL case command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"\bcase\b.+?\bwhen\b.+?\bend\b", request) \
@@ -387,11 +355,10 @@ class BasicChecks:
     @staticmethod
     def exec_command(request):
         """
-        This function will check if the user tries to run
-        from input the MSSQL exec command
+        check if the user try to run from input the MSSQL exec command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.CATASTROPHIC if re.search(r"\bexec\b.+?\bxp_cmdshell\b", request) else RiskLevels.NO_RISK
@@ -399,11 +366,10 @@ class BasicChecks:
     @staticmethod
     def create_command(request):
         """
-        This function will check if the user tries to run
-        from input the SQL create command
+        check if the user try to run from input the SQL create command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"\bcreate\b.+?\b(procedure|function)\b.*?\(.*?\)", request)\
@@ -412,11 +378,10 @@ class BasicChecks:
     @staticmethod
     def mongo_db_command(request):
         """
-        This function will check if the user tries to run
-        from the input Common mongoDB commands
+        check if the user try to run from the input Common mongoDB commands
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if \
@@ -426,11 +391,10 @@ class BasicChecks:
     @staticmethod
     def db_command(request):
         """
-        This function will check if the user tries to run
-        from input the DATABASE command
+        check if the user try to run from input the DATABASE command
         :param request: the request packet
         :type request: integer
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings if found, zero if not
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"\b(current_)?database\b.*?\(.*?\)", request) \
@@ -439,10 +403,10 @@ class BasicChecks:
     @staticmethod
     def alter(request):
         """
-        This function will check if the query is a alter table sql statement
+        function check if the query is a alter table sql statement
         :param request: the sub statement
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE \
@@ -451,10 +415,10 @@ class BasicChecks:
     @staticmethod
     def exist(request):
         """
-        This function will check if the query is a where sql statement
+        function check if the query is a where sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.SLIGHT if re.search(r"""where\s+exists""", request) \
@@ -463,10 +427,10 @@ class BasicChecks:
     @staticmethod
     def create(request):
         """
-        This function will check if the query is a create sql statement
+        function check if the query is a create sql statement
         :param request: the sub statement
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if \
@@ -476,10 +440,10 @@ class BasicChecks:
     @staticmethod
     def update(request):
         """
-        This function will check if the query is a update sql statement
+        function check if the query is a update sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"""update\s+.+?\s+set\s+.+""", request) \
@@ -488,11 +452,10 @@ class BasicChecks:
     @staticmethod
     def delete(request):
         """
-        This function will check if this is a delete statement,
-        and return the dangerous level
+        function check if this is a delete statement, and return the dangerous level
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"""delete\s+.+?\s+from\s+.+""", request) \
@@ -501,10 +464,10 @@ class BasicChecks:
     @staticmethod
     def drop(request):
         """
-        This function will check if the query is a drop sql statement
+        function check if the query is a drop sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CATASTROPHIC \
@@ -513,10 +476,10 @@ class BasicChecks:
     @staticmethod
     def truncate(request):
         """
-        This function will check if the query is a truncate table sql statement
+        function check if the query is a truncate table sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(r"""truncate\s+table\s+.+""", request) \
@@ -525,10 +488,10 @@ class BasicChecks:
     @staticmethod
     def insert(request):
         """
-        This function will check if the query is a insert into sql statement
+        function check if the query is a insert into sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL if re.search(
@@ -538,10 +501,10 @@ class BasicChecks:
     @staticmethod
     def select_union(request):
         """
-        This function will check if the query is a select union sql statement
+        function check if the query is a select union sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if \
@@ -551,10 +514,10 @@ class BasicChecks:
     @staticmethod
     def select_into(request):
         """
-        This function will check if the query is a select into sql statement
+        function check if the query is a select into sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"""select\s+.+?\s+into\s+.+?\s+from\s+.+""", request) \
@@ -563,10 +526,10 @@ class BasicChecks:
     @staticmethod
     def select_from(request):
         """
-        This function will check if the query is a select from sql statement
+        function check if the query is a select from sql statement
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.MODERATE if re.search(r"""select.+?from\s+.+""", request) \
@@ -575,11 +538,10 @@ class BasicChecks:
     @staticmethod
     def or_statement(request):
         """
-        This function will check the or custom, and if its true,
-        and return the risk level of the query
+        function check the or custom, and if its true, and return the risk level of the query
         :param request: the request
         :type request: string
-        :return: the dangerous level according to the findings
+        :return: the dangerous level according the findings
         :rtype: enum RiskLevels
         """
         return RiskLevels.CRITICAL \

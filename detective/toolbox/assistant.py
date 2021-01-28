@@ -2,16 +2,16 @@ from time import sleep
 from datetime import datetime
 from threading import Thread
 from importlib import import_module
-from detective.toolbox import lenses
+import detective.toolbox.lenses as lenses
 from detective.toolbox.risk_levels import RiskLevels
 import log_related
 
 
 class Assistant:
-    _risks_findings = [0] * len(RiskLevels)
     _info = {}
     _general_info = {}
     _links = {}
+    _risks_findings = [0] * len(RiskLevels)
     email_sender = log_related.EmailSender()
     log_composer = log_related.LogComposer()
     graph_handler = log_related.GraphHandler()
@@ -52,25 +52,19 @@ class Assistant:
             for attack_detected in attack_info:
                 self._info[category]["attacks"].add(attack_detected)
 
-    def _get_info(self):
+    def _pop_info(self):
         """
-        This function will gather all the information from the
-        received requests today and will return the conclusions of it
-        :return: the conclusions of the detected attacks information
+        This function will gather all the information from the packet
+        and will return the conclusions of it. then it will reset it
+        :return: the conclusions of the detected attack's information
         :rtype: dict
         """
         summarized_info = {}
         for attack_name, attack_info in self._info.items():
             detected_risks = "Detected risks:\n" + "".join(attack_info["attacks"])
             summarized_info[attack_name] = f'{attack_info["general"]}\n{detected_risks}\n{attack_info["links"]}'
-        return summarized_info
-
-    def _reset(self):
-        """
-        This function will reset all the information from the received requests today
-        """
-        self._risks_findings = [0] * len(RiskLevels)
         self._info = {}
+        return summarized_info
 
     def _report_log(self):
         """
@@ -79,10 +73,9 @@ class Assistant:
         while True:
             current_time = datetime.now()
             report_time = current_time.replace(hour=23, minute=59, second=55)
-            seconds_until_tomorrow = abs((report_time - current_time).total_seconds())
+            seconds_until_tomorrow = abs(round((report_time - current_time).total_seconds()))
             sleep(seconds_until_tomorrow)
             self.graph_handler.create_graph(self._risks_findings)
-            self.log_composer.write_log(self._get_info())
+            self.log_composer.write_log(self._pop_info())
             self.email_sender.send_log()
-            self._reset()
             sleep(5)
