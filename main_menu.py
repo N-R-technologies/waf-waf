@@ -14,9 +14,11 @@ class MainMenu:
         This function will start the network scan
         :param router_username: the username of the router
         :param router_password: the password of the router
-        :type router_username: string
-        :type router_password: string
+        :type router_username: tkinter.Entry
+        :type router_password: tkinter.Entry
         """
+        router_username = router_username.get()
+        router_password = router_password.get()
         self._main_menu.close_input()
         scanner = NetworkScanner()
         scanner.scan(router_username, router_password)
@@ -26,7 +28,7 @@ class MainMenu:
         This function will call the start_scan function
         with the appropriate parameters
         """
-        self._main_menu.get_input(self._start_scan, "Enter router credentials",
+        self._main_menu.get_input(self._start_scan, "Enter Router Credentials", '*',
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
 

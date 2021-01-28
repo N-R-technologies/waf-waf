@@ -70,18 +70,18 @@ class Menu:
             self._ignore = True
             print("\n**Press any button to return to the menu**")
 
-    def get_input(self, function_on_submit, title, first_input_text, second_input_text):
+    def get_input(self, function_on_submit, title, entries_show, *args):
         """
         This function will open a tiny GUI window
         in order to receive input from the user
         :param function_on_submit: the function that will be execute when submit is pressed
         :param title: the title of the input
-        :param first_input_text: the first input text
-        :param second_input_text: the second input text
+        :param entries_show: what entry boxes will show when they receive input
+        :param args: the packed input texts
         :type function_on_submit: function
         :type title: string
-        :type first_input_text: string
-        :type second_input_text: string
+        :param entries_show: string
+        :type args: tuple
         """
         input_window = tk.Tk()
         colors = random.choice(self._colors)
@@ -90,16 +90,19 @@ class Menu:
         self._input_window = input_window
         self._input_window.configure(bg=background_color)
         input_window.title(title)
-        first_label = tk.Label(input_window, text=first_input_text, pady=5, bg=background_color, fg=font_color)
-        first_label.grid(row=0, sticky=tk.W)
-        first_entry = tk.Entry(input_window, width=30, bg=background_color, fg=font_color)
-        first_entry.grid(row=1)
-        second_label = tk.Label(input_window, text=second_input_text, pady=5, bg=background_color, fg=font_color)
-        second_label.grid(row=2, sticky=tk.W)
-        second_entry = tk.Entry(input_window, width=30, bg=background_color, fg=font_color)
-        second_entry.grid(row=3)
-        submit_button = tk.Button(input_window, text="Submit", bg=background_color, fg=font_color, command=lambda: function_on_submit(first_entry.get(), second_entry.get()))
-        submit_button.grid(row=4)
+
+        row_index = 0
+        entries = []
+        for arg in args:
+            label = tk.Label(input_window, text=arg, pady=5, bg=background_color, fg=font_color)
+            label.grid(row=row_index, sticky=tk.W)
+            row_index += 1
+            entry = tk.Entry(input_window, width=30, show=entries_show, bg=background_color, fg=font_color)
+            entry.grid(row=row_index, pady=2)
+            row_index += 1
+            entries.append(entry)
+        submit_button = tk.Button(input_window, text="Submit", bg=background_color, fg=font_color, command=lambda: function_on_submit(*entries))
+        submit_button.grid(row=row_index)
         input_window.mainloop()
 
     def close_input(self):
