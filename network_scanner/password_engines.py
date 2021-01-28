@@ -172,9 +172,9 @@ class PasswordEngines:
         :param password: the password
         :type password: string
         """
-        scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
-        if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
+        info["password estimated crack time"] = ""
+        if ScanFunctions().find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
             info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
                                                     "database.\nYou should change it to something less common.\n"
         else:

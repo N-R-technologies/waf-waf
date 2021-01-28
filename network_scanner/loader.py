@@ -22,7 +22,7 @@ class Loader:
                 if self._finish_load:
                     break
                 print(f"* {color}{loading_str} {sign}", end="\r")
-                time.sleep(0.2)  # this is for the user experience, when he can see the loading animation
+                time.sleep(0.15)
             print(f"* {color}{loading_str}  {Colors.GREEN} DONE", end="\r\n")
 
     def start_loading(self, loading_str, color):

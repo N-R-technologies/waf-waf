@@ -66,8 +66,8 @@ class Menu:
                 return
             self.clear()
             self._functions[self.controller.index(1)]()
-            print("\n**Press any button to return to the menu**")
             self._ignore = True
+            print("\n**Press any button to return to the menu**")
 
     def get_input(self, function_on_submit, title, first_input_text, second_input_text):
         """
