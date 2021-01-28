@@ -1,1 +1,1 @@
-__all__ = ["sql_injection", "xss", "xxe"]
+__all__ = ["local_file_inclusion", "remote_file_inclusion", "sql_injection", "xxe"]

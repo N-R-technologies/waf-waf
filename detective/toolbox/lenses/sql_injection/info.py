@@ -39,13 +39,13 @@ deep_info = {
                             "a table.\n  An attacker can use this function in order to inject some malicious "
                             "script into the database.\n",
 
-    "write_into_outfile": "* Write Into Outfile: This function writes the selected rows to a file, so the attacker "
-                          "can write\n  some parts of the database to a specific file and then some how take it.\n",
-
     "information_disclosure": "* Information Disclosure: INFORMATION_SCHEMA provides access to database metadata.\n  "
                               "With this function the attacker can see all the information about the MySQL server,\n  "
                               "such as the name of a database or a table, the data type of a column, "
                               "or access privileges.\n",
+
+    "write_into_outfile": "* Write Into Outfile: This function writes the selected rows to a file, so the attacker "
+                          "can write\n  some parts of the database to a specific file and then some how take it.\n",
 
     "concat_command": "* Concat Command: The concat command is another way for the attacker to check if his injection "
                       "can\n  work. This command is basically concat couple of strings together into one string.\n",
@@ -57,11 +57,11 @@ deep_info = {
     "blind_sql_sleep": "* Blind SQL Sleep: With this function the attacker can delay the server's response\n  "
                        "and see if his injections can work.\n",
 
-    "sleep_pg_command": "* Sleep PG Command: With this function the attacker can delay the\n  "
-                        "server's response and see if his injections can work.\n",
-
     "blind_tsql": "* Blind TSQL: With this function the attacker can delay the server's response\n  "
                   "and see if his injections can work.\n",
+
+    "sleep_pg_command": "* Sleep PG Command: With this function the attacker can delay the\n  "
+                        "server's response and see if his injections can work.\n",
 
     "length_command": "* Length Command: For themselves, this function is not dangerous at all, but you "
                       "shouldn't let\n  a user enter any kind of function as input.\n  This function returns "

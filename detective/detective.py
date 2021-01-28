@@ -11,13 +11,13 @@ class Detective:
     CATASTROPHIC = 1
     INFO_INDEX = 2
 
-    _multiplying_factors = []
+    _multiplying_factors = ()
     _lenses = []
     _magnifying_glass = toolbox.MagnifyingGlass()
     _assistant = toolbox.Assistant()
 
     def __init__(self):
-        self._multiplying_factors = [self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC]
+        self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
         for lens in toolbox.lenses.__all__:
             lens_package = f"detective.toolbox.lenses.{lens}"
             basic_checks = getattr(import_module(".basic_checks", lens_package), "BasicChecks")

@@ -23,10 +23,10 @@ class GraphHandler:
     RED = "#FF0000"
     BLANK = "#FFFFFF"
 
-    _multiplying_factors = []
+    _multiplying_factors = ()
 
     def __init__(self):
-        self._multiplying_factors = [self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC]
+        self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
         plt.rcdefaults()
 
     def create_graph(self, risks_found_today):
