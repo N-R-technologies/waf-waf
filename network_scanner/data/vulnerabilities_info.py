@@ -5,7 +5,7 @@ info = {
                  "We detected two access points with the same name in the area, it is very dangerous!\n"
                  "You might want to check the source of the other access point.\n",
 
-    "open ssid": "Everyone have access to your wifi!\n"
+    "open ssid": "WARNING!\nEveryone have access to your wifi!\n"
                  "In case you want devices to also know your wifi's SSID in order to connect it,\n"
                  "follow the next steps:\n"
                  "1. Open the website of your router.\n"
@@ -38,7 +38,5 @@ info = {
 
     "broken encryption type": "Your encryption type for the network is not the safer and newer one\n"
                               "which is WPA2, we recommend you to change the encryption type in order\n"
-                              "to make it harder to observe your traffic.\n",
-
-    "password estimated crack time": ""
+                              "to make it harder to observe your traffic.\n"
 }

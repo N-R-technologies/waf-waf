@@ -11,7 +11,7 @@ class Runner:
         :param loading_str: the string to display on the loading animation
         :param color: the color of the loaded string
         :param operation_to_run: a pointer to the executed function
-        :param *args: the packed parameters of the executed function
+        :param args: the packed parameters of the executed function
         :type loading_str: string
         :type color: Color
         :type operation_to_run: function

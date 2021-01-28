@@ -7,9 +7,8 @@ from colors import Colors
 class Loader:
     _finish_load = False
     _current_thread = None
-    _lock = threading.Lock()
 
-    def _load(self, loading_str, color):
+    def _load(self, loading_str, color=""):
         """
         This function will display the given string with animated loading
         :param loading_str: the string to display on loading
@@ -17,15 +16,14 @@ class Loader:
         :type loading_str: string
         :type color: Colors
         """
-        with self._lock:
-            for sign in itertools.cycle(['|', '/', '-', '\\']):
-                if self._finish_load:
-                    break
-                print(f"* {color}{loading_str} {sign}", end="\r")
-                time.sleep(0.1)
-            print(f"* {color}{loading_str}  {Colors.GREEN} DONE", end="\r\n")
+        for sign in itertools.cycle(['|', '/', '-', '\\']):
+            if self._finish_load:
+                break
+            print(f"* {color}{loading_str} {sign}", end="\r")
+            time.sleep(0.1)
+        print(f"* {color}{loading_str}  {Colors.GREEN} DONE", end="\r\n")
 
-    def start_loading(self, loading_str, color):
+    def start_loading(self, loading_str, color=""):
         """
         This function will start the loading as thread
         :param loading_str: the string to display on loading
@@ -42,4 +40,3 @@ class Loader:
         This function will tell the loading function to stop
         """
         self._finish_load = True
-        time.sleep(0.2)
