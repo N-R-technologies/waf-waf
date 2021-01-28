@@ -21,7 +21,7 @@ class AdvancedChecks:
                 if parse_result.scheme != '' and parse_result.netloc != '':
                     return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
-    
+
     @staticmethod
     def inject_file(request):
         """
