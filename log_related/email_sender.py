@@ -57,8 +57,8 @@ class EmailSender:
     def _load_bot_email_configuration(self, bot_email_file_path):
         if os.path.exists(bot_email_file_path):
             bot_email = toml.load(bot_email_file_path)
-            self._bot_address = bot_address["address"]
-            self._bot_pass = bot_address["pass"]
+            self._bot_address = bot_email["address"]
+            self._bot_pass = bot_email["pass"]
         else:
             raise FileNotFoundError
 
