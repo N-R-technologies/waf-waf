@@ -61,8 +61,8 @@ class LogComposer:
             self._daily_log.set_font("Calibri Light", size=14)
             for detail in attack_info.split('\n'):
                 self._daily_log.cell(w=200, h=12, txt=detail, ln=2, align='L')
-        self._add_graph(self.GRAPH_TITLE, self.GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
-        self._daily_log.output(self.LOG_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".pdf")
+        self._add_graph(self.GRAPH_TITLE, self.GRAPH_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".png")
+        self._daily_log.output(self.LOG_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".pdf")
 
     def _set_page_header(self, title):
         """
