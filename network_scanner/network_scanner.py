@@ -43,4 +43,4 @@ class NetworkScanner:
 
             self._reporter.report_conclusions(results)
         else:
-            print("\nPlease connect to a network to start the scan")
+            print(f"{Colors.BLUE}\nPlease connect to a network to start the scan")

@@ -136,8 +136,8 @@ class EmailManager:
             for user_input in input_generator:
                 self._email_manager_menu.clear()
                 if self._email_manager_menu.get_ignore():
-                    self._email_manager_menu.reset_ignore()
                     self._email_manager_menu.handle_menu_navigation("")
+                    self._email_manager_menu.reset_ignore()
                 else:
                     self._email_manager_menu.handle_menu_navigation(repr(user_input))
                 if self._email_manager_menu.exit:

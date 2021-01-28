@@ -44,9 +44,10 @@ class MainMenu:
         print("Our project can do couple of useful stuff to your server.\n"
               "Our WAF (Web Application Firewall) runs in the background and protects your server\n"
               "from web attacks and hackers. In addition, our tool can scan your network and see if its safe.\n"
-              "More than that, every 24 hours our WAF will send to your email a log containing information about all the attacks it blocked.\n"
-              "You have the option to see the current Emails the WAF will send to them the log, or even add Email or remove Email from the list.\n"
-              "This is an open source project, if you would like to see the source, enter to the link below:\n"
+              "More than that, every 24 hours our WAF will send to your email a log containing information about all "
+              "the attacks it blocked.\nYou have the option to see the current Emails the WAF will send to them "
+              "the log, or even add Email or remove Email from the list.\nThis is an open source project, "
+              "if you would like to see the source, enter to the link below:\n"
               "https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf\n")
 
     def start_menu(self):
@@ -67,8 +68,8 @@ class MainMenu:
             for user_input in input_generator:
                 self._main_menu.clear()
                 if self._main_menu.get_ignore():
-                    self._main_menu.reset_ignore()
                     self._main_menu.handle_menu_navigation("")
+                    self._main_menu.reset_ignore()
                 else:
                     self._main_menu.handle_menu_navigation(repr(user_input))
                 if self._main_menu.exit:

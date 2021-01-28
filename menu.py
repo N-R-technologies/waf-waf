@@ -55,6 +55,7 @@ class Menu:
         elif event == 'q':
             self.exit = True
             return
+
         for menu_item in range(len(self.menu)):
             if self.controller[menu_item] == 1:
                 print(Colors.YELLOW + self.menu[menu_item])
