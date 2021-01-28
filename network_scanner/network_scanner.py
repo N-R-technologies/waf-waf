@@ -70,7 +70,8 @@ class NetworkScanner:
                 details = self._scan_functions.get_details(ssid)
                 password = details["password"]
                 self._loader.start_loading("Checking network's password")
-                results["password estimated crack time"] = (self._engines.password_engines(password), Colors.ORANGE)
+                self._engines.password_engines(password)
+                results["password estimated crack time"] = (True, Colors.ORANGE)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)

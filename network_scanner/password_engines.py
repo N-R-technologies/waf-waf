@@ -171,15 +171,12 @@ class PasswordEngines:
         the password according to two separate engines in the info dict
         :param password: the password
         :type password: string
-        :return: True
-        :rtype: boolean
         """
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
         if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
             vulnerabilities_info.info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
                                                                          "database.\nYou should change it to something less common.\n"
-            return True
         else:
             for engine in engines:
                 try:
@@ -188,4 +185,3 @@ class PasswordEngines:
                     vulnerabilities_info.info["password estimated crack time"] += '\n' + e.__str__()
                 else:
                     vulnerabilities_info.info["password estimated crack time"] += '\n' + self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1)
-        return True
