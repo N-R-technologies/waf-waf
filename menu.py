@@ -9,12 +9,12 @@ class Menu:
                ("#4D004D", "#FFEE00"), ("#00203F", "#ADEFD1"), ("#11004D", "#FF77FF"))
 
     def __init__(self):
-        self._ignore = False
         self.menu = []
         self.controller = []
         self.exit = False
         self._functions = []
         self._input_window = None
+        self._ignore = False
 
     def clear(self):
         """
@@ -43,7 +43,7 @@ class Menu:
         :param event: the user's input
         :type event: string
         """
-        event = event[1:-1]
+        event = event[1: -1]
         if event == "KEY_DOWN":
             if self.controller.index(1) != (len(self.controller) - 1):
                 self.controller.insert(0, 0)
@@ -69,12 +69,6 @@ class Menu:
             print("\n**Press any button to return to the menu**")
             self._ignore = True
 
-    def get_ignore(self):
-        """
-        the function return the ignore property
-        """
-        return self._ignore
-
     def get_input(self, function_on_submit, title, first_input_text, second_input_text):
         """
         This function will open a tiny GUI window
@@ -83,6 +77,10 @@ class Menu:
         :param title: the title of the input
         :param first_input_text: the first input text
         :param second_input_text: the second input text
+        :type function_on_submit: function
+        :type title: string
+        :type first_input_text: string
+        :type second_input_text: string
         """
         input_window = tk.Tk()
         colors = random.choice(self._colors)
@@ -103,14 +101,20 @@ class Menu:
         submit_button.grid(row=4)
         input_window.mainloop()
 
-    def reset_ignore(self):
-        """
-        function reset the ignore property to false
-        """
-        self._ignore = False
-
     def close_input(self):
         """
         This function will close the tiny input GUI window
         """
         self._input_window.destroy()
+
+    def get_ignore(self):
+        """
+        This function will return the ignore property
+        """
+        return self._ignore
+
+    def reset_ignore(self):
+        """
+        This function will reset the ignore property to false
+        """
+        self._ignore = False

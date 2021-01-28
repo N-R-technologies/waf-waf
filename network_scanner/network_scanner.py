@@ -1,5 +1,4 @@
 import time
-import subprocess
 from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
 from .reporter import Reporter
@@ -36,9 +35,9 @@ class NetworkScanner:
             self._loader.stop_loading()
             time.sleep(1)
             if ssid != "":
-                results["open ssid"] = (ssid != "--", Colors.RED)  # need to check if it means the ssid is hidden
-                self._loader.start_loading("Checking router's SSID", Colors.RED)
-                results["common ssid"] = (self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS), Colors.RED)
+                results["open ssid"] = (ssid != "--", Colors.BEIGE)
+                self._loader.start_loading("Checking router's SSID", Colors.BEIGE)
+                results["common ssid"] = (self._scan_functions.find_in_file(ssid, self.COMMON_SSIDS), Colors.BEIGE)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
@@ -56,14 +55,14 @@ class NetworkScanner:
                     time.sleep(1)
                 details = self._scan_functions.get_network_details(ssid)
                 password = details["password"]
-                self._loader.start_loading("Checking network's password")
+                self._loader.start_loading("Checking network's password", Colors.ORANGE)
                 self._engines.password_engines(password)
                 results["password estimated crack time"] = (True, Colors.ORANGE)
                 time.sleep(2)
                 self._loader.stop_loading()
                 time.sleep(1)
                 encryption_type = details["encryption_type"]
-                self._loader.start_loading("Checking network's encryption")
+                self._loader.start_loading("Checking network's encryption", Colors.PINK)
                 results["broken encryption type"] = (self._scan_functions.check_encryption_type(encryption_type), Colors.PINK)
                 time.sleep(2)
                 self._loader.stop_loading()

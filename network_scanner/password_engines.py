@@ -1,5 +1,5 @@
 from .scan_functions import ScanFunctions
-from .data import vulnerabilities_info
+from .data.vulnerabilities_info import info
 
 
 class EngineError(Exception):
@@ -175,13 +175,13 @@ class PasswordEngines:
         scan_functions = ScanFunctions()
         engines = [self._first_engine, self._second_engine]
         if scan_functions.find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
-            vulnerabilities_info.info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
-                                                                         "database.\nYou should change it to something less common.\n"
+            info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
+                                                    "database.\nYou should change it to something less common.\n"
         else:
             for engine in engines:
                 try:
                     time_type, est_time = self._convert_to_suitable_format(engine(password))
                 except Exception as e:
-                    vulnerabilities_info.info["password estimated crack time"] += '\n' + e.__str__()
+                    info["password estimated crack time"] += e.__str__() + '\n'
                 else:
-                    vulnerabilities_info.info["password estimated crack time"] += '\n' + self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1)
+                    info["password estimated crack time"] += self._estimated_crack_time_format(est_time, time_type, engines.index(engine) + 1) + '\n'

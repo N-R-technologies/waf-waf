@@ -18,11 +18,11 @@ class ScanFunctions:
 
     def check_evil_twin(self, ssid):
         """
-        This function will check if there is another access point in the close
-        range of the server which have the same ssid as the user's network
+        This function will check if there is an evil twin - another access point
+        in the close range of the server which have the same ssid as the user's network
         :param ssid: the ssid of the user's network
         :type ssid: string
-        :return: if there is access point with the same ssid
+        :return: True, if there is an evil twin, otherwise, False
         :rtype: boolean
         """
         command = "nmcli -f SSID device wifi list"
@@ -39,7 +39,7 @@ class ScanFunctions:
         :param file: the file that contains the common signature type (for example common passwords)
         :type signature: string
         :type file: string
-        :return: True if the given signature appears in the given file, otherwise, False
+        :return: True, if the given signature appears in the given file, otherwise, False
         :rtype: boolean
         """
         signature += '\n'
@@ -68,11 +68,11 @@ class ScanFunctions:
 
     def check_encryption_type(self, encryption_type):
         """
-        This function will check if the encryption type is like
-        the recommended safer encryption type
+        This function will check if the encryption type
+        is WPA2, the recommended and safer one
         :param encryption_type: the network's encryption type
         :type encryption_type: string
-        :return: True if its match, otherwise False
+        :return: True, if the encryption type is not WPA2, otherwise, False
         :rtype: boolean
         """
         return self.RECOMMENDED_ENCRYPTION_TYPE not in encryption_type.lower()
