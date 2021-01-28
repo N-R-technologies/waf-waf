@@ -17,7 +17,7 @@ class AdvancedChecks:
 
     @staticmethod
     def inject_file(request) -> RiskLevels:
-        malicious_extensions = [".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq", ".djvus",
+        malicious_extensions = (".shadow", ".zip", ".exe", ".djvu", ".djvur", ".djvuu", ".udjvu", ".uudjvu", ".djvuq", ".djvus",
                                 ".djvur", ".djvut", ".pdff", ".tro", ".tfude", ".tfudet", ".tfudeq", ".rumba",
                                 ".adobe", ".adobee", ".blower", ".promos", ".promoz", ".promorad", ".promock",
                                 ".promok", ".promorad2", ".kroput", ".kroput1", ".pulsar1", ".kropun1", ".charck",
@@ -35,7 +35,7 @@ class AdvancedChecks:
                                 ".kovasoh", ".prandel", ".zatrov", ".masok", ".brusaf", ".londec", ".krusop",
                                 ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                 ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
-                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora"]
+                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
         files = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<file_name>.+?|)(?:\"|')""", request)
         for file in files:
             for malicious_extension in malicious_extensions:
