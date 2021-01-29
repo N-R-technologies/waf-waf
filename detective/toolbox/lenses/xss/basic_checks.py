@@ -551,8 +551,8 @@ class BasicChecks:
 
     @staticmethod
     def c_style_loops(request) -> RiskLevels:
-        return RiskLevels.MODERATE if re.search(
-            r"(\b(do|while|for)\b.*?\([^)]*\).*?\{)|(\}.*?\b(do|while|for)\b.*?\([^)]*\))""", request) \
+        return RiskLevels.MODERATE \
+            if re.search(r"""(\b(do|while|for)\b.*?\([^)]*\).*?\{)|(\}.*?\b(do|while|for)\b.*?\([^)]*\))""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -571,6 +571,6 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def fire_fox_url_handler(request) -> RiskLevels:
+    def firefox_url_handler(request) -> RiskLevels:
         return RiskLevels.NEGLIGIBLE if re.search(r"""(\bfirefoxurl\s*:)|(\bwyciwyg\s*:)""", request) \
             else RiskLevels.NO_RISK
