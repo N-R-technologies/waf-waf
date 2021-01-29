@@ -29,7 +29,7 @@ class EmailSender:
         """
         This function will send the daily log to the users email addresses
         """
-        user_addresses = self._load_user_emails_configuration(self.USER_EMAILS_FILE_PATH)
+        user_addresses = self._load_user_addresses_configuration(self.USER_EMAILS_FILE_PATH)
         if len(user_addresses) > 0:
             daily_log_mail = MIMEMultipart()
             daily_log_mail["From"] = self._bot_address
@@ -62,7 +62,7 @@ class EmailSender:
         else:
             raise FileNotFoundError
 
-    def _load_user_emails_configuration(self, user_emails_file_path):
+    def _load_user_addresses_configuration(self, user_emails_file_path):
         user_emails = dict()
         if os.path.exists(user_emails_file_path):
             user_emails = toml.load(user_emails_file_path).get("emails", {})
