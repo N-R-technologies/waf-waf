@@ -66,8 +66,6 @@ class EmailSender:
         user_emails = dict()
         if os.path.exists(user_emails_file_path):
             user_emails = toml.load(user_emails_file_path).get("emails", {})
-        else:
-            open(user_emails_file_path, 'w').close()
 
         user_addresses = set()
         for address in user_emails.values():

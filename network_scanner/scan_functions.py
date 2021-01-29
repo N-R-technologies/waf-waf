@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 
@@ -35,21 +36,24 @@ class ScanFunctions:
     def find_in_file(self, signature, file):
         """
         This function will check if the given signature appears in the given file
-        :param signature: the signature to check if appears in the file
-        :param file: the file that contains the common signature type (for example common passwords)
+        :param signature: the signature to check if it appears in the file
+        :param file: the file that contains the common signature type
         :type signature: string
         :type file: string
         :return: True, if the given signature appears in the given file, otherwise, False
         :rtype: boolean
         """
-        signature += '\n'
-        with open(file, 'r') as f:
-            for line in f:
-                if line == signature:
-                    f.close()
-                    return True
-            f.close()
-        return False
+        if os.path.exists(file):
+            signature += '\n'
+            with open(file, 'r') as f:
+                for line in f:
+                    if line == signature:
+                        f.close()
+                        return True
+                f.close()
+            return False
+        else:
+            raise FileNotFoundError
 
     def get_network_details(self, ssid):
         """

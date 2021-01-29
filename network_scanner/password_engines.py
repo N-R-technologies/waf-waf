@@ -11,7 +11,7 @@ class EngineError(Exception):
         self._engine_num = engine_num
 
     def __str__(self):
-        return "Engine number: " + str(self._engine_num) + " cant work properly with your password"
+        return f"Engine number {str(self._engine_num)} can not work properly with your network's password."
 
 
 class InvalidChar(Exception):
@@ -23,7 +23,8 @@ class InvalidChar(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "\nYour password contains an invalid character: " + self._invalid_char + " so unfortunately we cant analyze it"
+        return f"Your network's password contains an invalid character: '{self._invalid_char}'." \
+               "\nUnfortunately, we are unable to analyze your password because of it."
 
 
 class PasswordEngines:
@@ -75,7 +76,7 @@ class PasswordEngines:
             time_to_crack = "about " + str(estimated_time) + ' ' + time_type
         else:
             time_to_crack = "more than a month"
-        return f"Engine number {str(engine_num)} calculated that it would take {time_to_crack} to crack your password."
+        return f"Engine number {str(engine_num)} calculated that it would take {time_to_crack} to crack your network's password."
 
     def _analyze_password(self, password):
         """
@@ -175,8 +176,9 @@ class PasswordEngines:
         engines = [self._first_engine, self._second_engine]
         info["password estimated crack time"] = ""
         if ScanFunctions().find_in_file(password, self.COMMON_NETWORK_PASSWORDS):
-            info["password estimated crack time"] = "Your network's password was found in our common network passwords " \
-                                                    "database.\nYou should change it to something less common.\n"
+            info["password estimated crack time"] = "Your network's password has been found in our common network " \
+                                                    "passwords database, which means it will be cracked instantly.\n" \
+                                                    "Please make it stronger and more complicated.\n"
         else:
             for engine in engines:
                 try:

@@ -38,6 +38,7 @@ class NetworkScanner:
             password = network_details["password"]
             self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password)
             results["password estimated crack time"] = (True, Colors.ORANGE)
+            results["good password recommendation"] = (True, Colors.ORANGE)
             encryption_type = network_details["encryption_type"]
             results["broken encryption type"] = (self._runner.execute_operation("Checking network's encryption", Colors.PINK, self._scan_functions.check_encryption_type, encryption_type), Colors.PINK)
 

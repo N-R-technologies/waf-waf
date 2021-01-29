@@ -10,6 +10,8 @@ from colors import Colors
 class EmailManager:
     USER_EMAILS_FILE_PATH = "log_related/data/user_emails.toml"
 
+    _user_emails = dict()
+
     def __init__(self):
         self._email_manager_menu = Menu()
 
@@ -17,13 +19,13 @@ class EmailManager:
         """
         This function will display all the existing emails to the user
         """
-        user_emails = dict()
+        self._user_emails = dict()
         if os.path.exists(self.USER_EMAILS_FILE_PATH):
-            user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
-        else:
+            self._user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
+        if len(self._user_emails) == 0:
             print("There are no registered emails.\nYou might want to add some.")
         index = 1
-        for name, address in user_emails.items():
+        for name, address in self._user_emails.items():
             print(f"{index}. {name}, {address}")
             index += 1
 
@@ -50,7 +52,7 @@ class EmailManager:
             messagebox.showerror("Invalid Name", f"A user named {name} already exists!")
             valid_email = False
         if not self._is_valid_address(address):
-            messagebox.showerror("Invalid Email", "Address is not valid!")
+            messagebox.showerror("Invalid Address", "Email address is not valid!")
             valid_email = False
         if valid_email:
             with open(self.USER_EMAILS_FILE_PATH, 'a') as email_file:
@@ -103,8 +105,9 @@ class EmailManager:
         with the appropriate parameters
         """
         self._display_emails()
-        print("\nPlease enter the index of the email you wish to remove")
-        self._email_manager_menu.get_input(self._remove_email, "Remove Email", "", "Index")
+        if len(self._user_emails) > 0:
+            print("\nPlease enter the index of the email you wish to remove")
+            self._email_manager_menu.get_input(self._remove_email, "Remove Email", "", "Index")
 
     def _is_valid_address(self, address):
         """
@@ -138,7 +141,7 @@ class EmailManager:
         """
         self._email_manager_menu.add_option("1. Display all the emails", self._display_emails)
         self._email_manager_menu.add_option("2. Add an email to the list", self._call_add_email)
-        self._email_manager_menu.add_option("3. Delete an email from the list", self._call_remove_email)
+        self._email_manager_menu.add_option("3. Remove an email from the list", self._call_remove_email)
         self._email_manager_menu.add_option("4. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._email_manager_menu.menu)):
             if self._email_manager_menu.controller[menu_item] == 1:
