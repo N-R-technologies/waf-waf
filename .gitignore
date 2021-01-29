@@ -340,6 +340,6 @@ ASALocalRun/
 # Our WAF project's files
 citysearch_project/
 blacklist.toml
+server_info.toml
 log_related/data/bot_address.toml
 log_related/data/user_addresses.toml
-server_info.toml
