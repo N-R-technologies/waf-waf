@@ -338,14 +338,11 @@ ASALocalRun/
 .localhistory/
 
 # Our WAF project's files
-citysearch_project/
 blacklist.toml
+server_info.toml
 log_related/data/bot_email.toml
 log_related/data/user_emails.toml
 log_related/data/logs/
 log_related/data/graphs/
 network_scanner/data/logs/
 citysearch_project/
-server_info.toml
-log_related/data/bot_address.toml
-log_related/data/user_addresses.toml

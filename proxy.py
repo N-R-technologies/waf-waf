@@ -44,8 +44,8 @@ class WAF:
         :return: None
         """
         if self._is_first_request:
-            self._is_first_request = False
             self._write_server_info_configuration(flow.request, self.SERVER_INFO_FILE_PATH)
+            self._is_first_request = False
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
         if is_client_blocked and flow.killable:
