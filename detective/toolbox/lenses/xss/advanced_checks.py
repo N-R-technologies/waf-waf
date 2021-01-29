@@ -21,5 +21,4 @@ class AdvancedChecks:
                 parse_result = urlparse(re.sub(white_spaces, '', url))
                 if parse_result.netloc != '' and server_url not in url:
                     return RiskLevels.CATASTROPHIC
-            return RiskLevels.MODERATE
         return RiskLevels.NO_RISK
