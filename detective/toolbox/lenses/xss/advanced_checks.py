@@ -19,7 +19,7 @@ class AdvancedChecks:
             white_spaces = re.compile(r"\s+")
             for url in urls_found:
                 parse_result = urlparse(re.sub(white_spaces, '', url))
-                if parse_result.netloc != '' and url not in server_url:
+                if parse_result.netloc != '' and server_url not in url:
                     return RiskLevels.CATASTROPHIC
             return RiskLevels.MODERATE
         return RiskLevels.NO_RISK
