@@ -79,4 +79,3 @@ class Assistant:
             self.log_composer.write_log(self._pop_info())
             self.email_sender.send_log()
             sleep(5)
-
