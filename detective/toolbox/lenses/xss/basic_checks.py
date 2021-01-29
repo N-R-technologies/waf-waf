@@ -25,7 +25,7 @@ class BasicChecks:
 
     @staticmethod
     def script(request) -> RiskLevels:
-        return RiskLevels.CATASTROPHIC if re.search(r"""(?:<|%3c)\s*script(?:/|\s|\()(?:.+?(?:>|%3e)|(?:>|%3e).+?)""", request) \
+        return RiskLevels.CATASTROPHIC if re.search(r"""(?:<|%3c)\s*script(?:.+?(?:>|%3e)|(?:>|%3e).+?)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -540,19 +540,13 @@ class BasicChecks:
         return RiskLevels.SLIGHT if re.search(r"""seeksegmenttime""", request) else RiskLevels.NO_RISK
 
     @staticmethod
-    def html_break(request) -> RiskLevels:
-        return RiskLevels.SLIGHT\
-            if re.search(r"""(["'].*?(?:>|%3e))|(#.+?\)["\s]*(?:>|%3e))|(['"][,;\s]+\w*[\[(])|((?:>|%3e).*?(?:<|%3c)\s*\/?[\w\s]+(?:>|%3e))|()""", request) \
-            else RiskLevels.NO_RISK
-
-    @staticmethod
     def hash_location(request) -> RiskLevels:
         return RiskLevels.CRITICAL if re.search(r"""\blocation\b.*?\..*?\bhash\b""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
     def self_contained_payload(request) -> RiskLevels:
-        return RiskLevels.CRITICAL if re.search(r"""\bwith\b\s*\(.+?\)[\s\w]+\(""", request) \
+        return RiskLevels.SLIGHT if re.search(r"""\bwith\b\s*\(.+?\)[\s\w]+\(""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod

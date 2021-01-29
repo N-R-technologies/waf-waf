@@ -12,9 +12,9 @@ general_info = "Cross-site scripting (also known as XSS) is a web security vulne
 deep_info = {
     'cookie_steal': 'The attacker can inject and see some sensitive data\n'
                     'by printing or access the variable document.cookie\n',
-    'alert': 'Commen javascript function, that is being used by xss attackers\n'
+    'alert': 'Common javascript function, that is being used by xss attackers\n'
              'is the alert function, that pop up little notification\n',
-    'eval': 'With the eval function attacker can execute external code on the\n' \
+    'eval': 'With the eval function attacker can execute external code on the\n'
             'server side, this can be super dangerous because this code can harm the server\n',
     'utf7': 'With the UTF-7 encoding, potential attacker can hide his malicious code and attack\n'
             'The server, with out the parser or input checker even know about that\n',
@@ -177,8 +177,6 @@ deep_info = {
     'seeksegmenttime': 'seeksegmenttime this is a method that locates the specified point on the element’s segment time line \n'
                     'and begins playing from that point. the segment consists of one \n'
                     'repetition of the time line including reverse play using the autoreverse\n',
-    'html_break': 'html breaks like " or ;, can use the attacker to stop current statement\n'
-                 'and create his own\n',
     'hash_location': 'location.hash variable return to the attacker the location of the hash table with info\n'
                      'about the users. so he can watch and use this information very badly\n',
     'self_contained_payload': 'The name "Self-contained XSS" explains it all.\n'
