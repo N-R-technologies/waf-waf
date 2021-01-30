@@ -12,13 +12,13 @@ deep_info = {
                  "like passwd, and others. Many networking\n  configuration files are in /etc as well. "
                  "An attacker\n  can get information about the server in this path.\n",
 
-    "home_files": "* /home Files: The home directory, also called a login directory, \n  is the directory on Unix-like"
-                  "operating systems that serves as the\n  repository for a user's personal files,"
+    "home_files": "* /home Files: The home directory, also called a login directory, \n  is the directory on Unix-like "
+                  "operating systems that serves as the\n  repository for a user's personal files, "
                   "directories and programs.\n  It is also the directory that a user will be lead to "
                   "after logging into the system.\n",
 
     "root_files": "* /root Files: The / directory known as the root directory sits on the\n  top of the file "
-                  "system hierarchy. It means that from the\n  access to the root directory,"
+                  "system hierarchy. It means that from the\n  access to the root directory, "
                   "an attacker can\n  access all the files on the server.\n",
 
     "proc_files": "* /proc Files: The proc directory is a special directory that\n  holds all the details about "
