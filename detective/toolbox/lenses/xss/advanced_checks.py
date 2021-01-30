@@ -14,7 +14,7 @@ class AdvancedChecks:
         urls_found.extend(re.findall(r"""<\s*style(?:/|\s)*>.*?@\s*import\s*(?:(?:\"|'|`)\s*)?(?:<\s*)?(?P<url>[^\"'`<>]+)""", request))
         urls_found.extend(re.findall(r"""<\s*style(?:/|\s)*>.*?body\s*{\s*-moz-binding\s*:[^(]+?\((?:(?:\"|'|`)\s*)?(?:<\s*)?(?P<url>[^\"'`<>]+)""", request))
         urls_found.extend(re.findall(r"""<\s*a(?:/|\s).*?href\s*=\s*(?:(?:\"|'|`)\s*)?(?:javascript\s*:\s*document\.location\s*=\s*(?:(?:\"|'|`)\s*)?)?(?:<\s*)?(?P<url>[^\"'`<>]+)""", request))
-        if urls_found is not None:
+        if len(urls_found) > 0:
             server_url = toml.load("server_info.toml")["host"]
             white_spaces = re.compile(r"\s+")
             for url in urls_found:
