@@ -1,6 +1,5 @@
 import re
 import toml
-from urllib.parse import urlparse
 from detective.toolbox.risk_levels import RiskLevels
 
 
@@ -8,20 +7,17 @@ class AdvancedChecks:
     @staticmethod
     def off_site_url(request) -> RiskLevels:
         ip_redirect_result = re.findall(r"""(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})""", request)
-        if len(ip_redirect_result) != 0:
-            white_spaces = re.compile(r"\s+")
+        if len(ip_redirect_result) > 0:
             for ip_address in ip_redirect_result:
-                ip_address = re.sub(white_spaces, '', ip_address)
                 for num in ip_address.split('.'):
                     if '0' <= num <= "255":
                         return RiskLevels.CATASTROPHIC
             return RiskLevels.NO_RISK
-        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?://[^\s]+)""", request)
-        if len(detect_url_result) != 0:
+        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?:\/\/[^\s]+?\.\w{2,3})""", request)
+        if len(detect_url_result) > 0:
             server_url = toml.load("server_info.toml")["host"]
             for url in detect_url_result:
-                parse_result = urlparse(url)
-                if parse_result.netloc != '' and server_url not in url:
+                if server_url not in url:
                     return RiskLevels.CRITICAL
         return RiskLevels.NO_RISK
 
@@ -46,8 +42,8 @@ class AdvancedChecks:
                                ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
-        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?://[^\s]+)""", request)
-        if len(detect_url_result) != 0:
+        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?:\/\/[^\s]+?\.\w{2,3})""", request)
+        if len(detect_url_result) > 0:
             for url in detect_url_result:
                 for extension in malicious_extensions:
                     if extension in url:
