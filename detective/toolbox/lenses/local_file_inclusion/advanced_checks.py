@@ -9,7 +9,7 @@ class AdvancedChecks:
                                 "path", "folder", "prefix", "include", "inc", "locate", "show", "doc",
                                 "site", "type", "view", "content", "document", "layout", "mod", "conf")
         detect_parameters_result = re.findall(r"""\?(?P<parameter>.+)=\s*.+?""", request)
-        if detect_parameters_result is not None:
+        if len(detect_parameters_result) > 0:
             white_spaces = re.compile(r"\s+")
             for parameter in detect_parameters_result:
                 parameter = re.sub(white_spaces, '', parameter)

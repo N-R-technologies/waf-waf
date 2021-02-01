@@ -1,28 +1,24 @@
 import re
 import toml
-from urllib.parse import urlparse
 from detective.toolbox.risk_levels import RiskLevels
 
 
 class AdvancedChecks:
     @staticmethod
     def off_site_url(request) -> RiskLevels:
-        ip_redirect_result = re.findall(r"""(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})""", request)
-        if ip_redirect_result is not None:
-            white_spaces = re.compile(r"\s+")
+        ip_redirect_result = re.findall(r"""(?:ht|f)tps?:\/\/(?P<ip>\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3}\s*\.\s*\d{1,3})""", request)
+        if len(ip_redirect_result) > 0:
             for ip_address in ip_redirect_result:
-                ip_address = re.sub(white_spaces, '', ip_address)
-                for num in ip_address.split('.'):
-                    if not '0' <= num <= "255":
-                        return RiskLevels.NO_RISK
-            return RiskLevels.CATASTROPHIC
-        detect_url_result = re.findall(r"""(?:ht|f)tps?://(?P<url>.*)""", request)
-        if detect_url_result is not None:
+                for ip_part in ip_address.split('.'):
+                    ip_part = ip_part.strip()
+                    if "0" <= ip_part <= "255":
+                        return RiskLevels.CATASTROPHIC
+            return RiskLevels.NO_RISK
+        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?:\/\/[^\.]+?\.\w{2,3})""", request)
+        if len(detect_url_result) > 0:
             server_url = toml.load("server_info.toml")["host"]
-            white_spaces = re.compile(r"\s+")
             for url in detect_url_result:
-                parse_result = urlparse(re.sub(white_spaces, '', url))
-                if parse_result.netloc != '' and server_url not in url:
+                if server_url not in url:
                     return RiskLevels.CRITICAL
         return RiskLevels.NO_RISK
 
@@ -47,11 +43,9 @@ class AdvancedChecks:
                                ".mtogas", ".nasoh", ".nacro", ".pedro", ".nuksus", ".vesrato", ".masodas",
                                ".cetori", ".stare", ".carote", ".gero", ".hese", ".seto", ".peta", ".moka",
                                ".kvag", ".karl", ".nesa", ".noos", ".kuub", ".reco", ".bora")
-        detect_url_result = re.findall(r"""(ht|f)tps?://(?P<url>.*)""", request)
-        if detect_url_result is not None:
-            white_spaces = re.compile(r"\s+")
+        detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?:\/\/[^\.]+?\.\w{2,3})""", request)
+        if len(detect_url_result) > 0:
             for url in detect_url_result:
-                url = re.sub(white_spaces, '', url)
                 for extension in malicious_extensions:
                     if extension in url:
                         return RiskLevels.CRITICAL

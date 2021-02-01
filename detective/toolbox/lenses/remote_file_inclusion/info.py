@@ -16,13 +16,13 @@ general_info = "Remote file inclusion (RFI) is an attack targeting vulnerabiliti
                "URL to be supplied to the include function.\n"
 
 deep_info = {
-    "include_site": "* Include Site: An attacker tried to include other\n  web site in the URL, in order to"
+    "include_site": "* Include Site: An attacker tried to include other\n  web site in the URL, in order to "
                     "inject your server a malicious code.\n",
 
     "q_mark_after_url": "* A '?' After the URL: An attacker tried to inject your\n  server with ending with "
                         "question mark. This question mark,\n  like a comment, disable everything comes after it.\n",
 
-    "off_site_url": "* Off Site URL: A potential attacker can enter to the server's\n  parameter a"
+    "off_site_url": "* Off Site URL: A potential attacker can enter to the server's\n  parameter a "
                     "URL or even an IP address which leads to a malicious code.\n",
 
     "malicious_file_injection": "* Malicious File Injection: An attacker can use RFI\n  in order to inject to "
