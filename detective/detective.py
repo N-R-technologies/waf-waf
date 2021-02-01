@@ -58,7 +58,10 @@ class Detective:
         if request.method == "GET":
             return unquote_plus(request.data.path.decode().lower())
         elif request.method == "POST":
-            return request.content.decode().lower().replace('\n', "")
+            post_request_content = ""
+            for data_info in request.urlencoded_form.values():
+                post_request_content += str(data_info) + " "
+            return post_request_content.lower().replace('\n', "")
         return None
 
     def _is_malicious_request(self, findings):
