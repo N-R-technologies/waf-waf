@@ -23,10 +23,10 @@ class GraphHandler:
     RED = "#FF0000"
     BLANK = "#FFFFFF"
 
-    _multiplying_factors = []
+    _multiplying_factors = ()
 
     def __init__(self):
-        self._multiplying_factors = [self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC]
+        self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
         plt.rcdefaults()
 
     def create_graph(self, risks_found_today):
@@ -49,7 +49,7 @@ class GraphHandler:
         plt.ylabel(self.GRAPH_Y_TITLE)
         plt.xlabel(self.GRAPH_X_TITLE)
         plt.bar(y_pos, risks_found_today, align="center", alpha=1, color=graph_colors)
-        plt.savefig(self.GRAPH_FILE_PATH + date.today().strftime("%d/%m/%Y").replace('/', '_') + ".png")
+        plt.savefig(self.GRAPH_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".png")
 
     def _calculate_risk_colors(self, risks_found_today):
         """
@@ -57,7 +57,7 @@ class GraphHandler:
         will show for each risk level according to its impact
         :param risks_found_today: all the risk levels which were found today
         :type risks_found_today: list
-        :return: each of risk levels colors
+        :return: each of the risk levels colors
         :rtype: list
         """
         graph_colors = [self.BLANK]
