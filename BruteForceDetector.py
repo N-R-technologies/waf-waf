@@ -16,22 +16,47 @@ class BruteForceDetection:
         self._log_lock = threading.Lock()
         self._delay_ip_lock = threading.Lock()
         self._login_url = login_url
-        self._common_login_fields_name = {"uname", "username", "pass", "password", "email", "mail"}
+        self._common_login_fields_name = {"uname", "username", "pass", "password", "email", "mail", "user", "access", "identity", "credential", "user account", "access code", "login name", "name"}
         self._common_login_urls = ("login", "signin")
+        self._common_username_fields = ("uname", "username", "user", "access", "identity", "credential", "user account", "access code", "login name", "name")
         self._user_logins_log = dict()
         self._block_users = list()
 
-    def is_login_request(self, url):
+    def _is_login_request(self, url):
         """
         function checks if the request is a login request, by the url
         :param url: the url of the request
         :type url: str
-        :return: True if it is a lopgin request, otherwise False
+        :return: True if it is a login request, otherwise False
         :rtype: bool
         """
         return url in self._login_url
 
-    def add_user_login_attempt(self, username):
+    def _get_username(self, login_request):
+        """
+        function returns the username of the login request
+        :param login_request: the login request
+        :type login_request: multidict
+        :return: the username which tries to login, if not found None
+        :rtype: str
+        """
+        for username_field in self._common_username_fields:
+            if username_field in login_request.keys():
+                return login_request[username_field]
+        return None
+
+    def detect_login_brute_force(self, request):
+        """
+        function detect login brute force
+        :param request: the request
+        :type request: mitm proxy request
+        """
+        if self._is_login_request(request.url):
+            username = self._get_username(request.urlencoded_form)
+            if username is not None:
+                self._add_user_login_attempt(username)
+
+    def _add_user_login_attempt(self, username):
         """
         function add login attempt to the logins log with the key of the username
         :param username: the username try to login
