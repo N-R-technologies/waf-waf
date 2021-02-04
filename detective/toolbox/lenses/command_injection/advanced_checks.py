@@ -12,7 +12,7 @@ class AdvancedChecks:
                               ("i[fp]config(?:\s+\/all)?", RiskLevels.CATASTROPHIC), ("netstat\s+-an", RiskLevels.CRITICAL),
                               ("(?:(?:rm|ps)\s+-.+|tasklist)", RiskLevels.CATASTROPHIC), ("(?:ping|echo)\s+.+", RiskLevels.SLIGHT),
                               ("nslookup\s+.+", RiskLevels.CATASTROPHIC), ("cat\s+/etc/.+", RiskLevels.CATASTROPHIC))
-        detect_commands_result = re.findall(r"""(?:&{1,2}|\|{1,2}|;|\n|0x0a)\s*(?:`|\$\s*\()?(?P<command>.+)""", request)
+        detect_commands_result = re.findall(r"""(?:&{1,2}|\|{1,2}|;|\n|0x0a)\s*(?:`|\$\s*\()?(?P<command>(?:(?!&|\||\n|0x0a).)+)""", request)
         for command in detect_commands_result:
             for malicious_command in malicious_commands:
                 if re.search(malicious_command[REGEX_QUERY], command):
