@@ -15,8 +15,10 @@ class Detective:
     _lenses = []
     _magnifying_glass = toolbox.MagnifyingGlass()
     _assistant = toolbox.Assistant()
+    _requests_log = toolbox.lenses.BruteForceDetection()
 
     def __init__(self):
+        self._requests_log.start_brute_force_scheduler_threads()
         self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
         for lens in toolbox.lenses.__all__:
             lens_package = f"detective.toolbox.lenses.{lens}"
