@@ -11,7 +11,7 @@ class BruteForceDetection:
     TIME_SECONDS_CHECK_LOGIN_BRUTE_FORCE = 60
     DELAY_TIME_SECONDS = 3
     MAX_LOGIN_ATTEMPTS_PER_MINUTE = 15
-    TIME_RESET_BLOCKED_USERS = 1800
+    TIME_RESET_BLOCKED_USERS = 7200
     TIME_RESET_DELAY_IP = 3600
 
     def __init__(self):
@@ -61,6 +61,8 @@ class BruteForceDetection:
         if the response is for ip that brute force the server recently
         :param response: the response to be changed
         :param client_ip: the ip of the client
+        :type response: mitm proxy response
+        :type client_ip: str
         :return: None
         """
         self._add_delay(client_ip, response)
@@ -161,7 +163,8 @@ class BruteForceDetection:
         """
         function reset the block users list
         """
-        self._block_users.clear()
+        with self._logins_log_lock:
+            self._block_users.clear()
 
     def _scheduling_login_brute_force(self):
         """

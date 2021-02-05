@@ -61,7 +61,7 @@ class WAF:
                 self._add_client_to_blacklist(client_ip_address)
 
     def response(self, flow: http.HTTPFlow) -> None:
-        self._brute_force_detection.edit_response(flow.response, flow.client_conn.ip_address[0])
+        self._brute_force_detection.edit_response(flow.response, str(flow.client_conn.ip_address[0]))
 
 
 addons = [
