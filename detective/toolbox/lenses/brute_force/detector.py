@@ -32,15 +32,48 @@ class BruteForceDetection:
         self._logins_log_lock = threading.Lock()
         self._block_users_lock = threading.Lock()
 
-    def _is_login_request(self, url):
+    def detect(self, request, client_ip):
+        """
+        function is responsible to add the request to the
+        relevant logs, and to add delay header to the request if it
+        is brute force one
+        """
+        self._add_login_attempt(request)
+        self._add_user_request(client_ip)
+
+    def is_request_block(self, request):
+        """
+        function checked if the username that try to login
+        is blocked
+        :param request: the request
+        :type request: mimtproxy request
+        :return: True if the request supposed to be blocked, otherwise False
+        :rtype: bool
+        """
+        if self._is_login_request(request):
+            username = self._get_username(request)
+            return self._is_username_blocked(username)
+        return False
+
+    def edit_response(self, response, client_ip):
+        """
+        function add retry after header to the response,
+        if the response is for ip that brute force the server recently
+        :param response: the response to be changed
+        :param client_ip: the ip of the client
+        :return: None
+        """
+        self._add_delay(client_ip, response)
+
+    def _is_login_request(self, request):
         """
         function checks if the request is a login request, by the url
-        :param url: the url of the request
-        :type url: str
+        :param request: the request
+        :type request mimt proxy request
         :return: True if it is a login request, otherwise False
         :rtype: bool
         """
-        return url in self._load_login_url()
+        return request.url in self._load_login_url() or self._check_login_url(request)
 
     def _get_username(self, login_request):
         """
@@ -61,7 +94,7 @@ class BruteForceDetection:
         :param request: the request
         :type request: mitm proxy request
         """
-        if self._is_login_request(request.url):
+        if self._is_login_request(request):
             username = self._get_username(request.urlencoded_form)
             if username is not None:
                 self._add_user_login_attempt(username)
@@ -89,10 +122,10 @@ class BruteForceDetection:
                     self._block_users.append(username)
             self._user_logins_log.clear()
 
-    def check_login_url(self, request):
+    def _check_login_url(self, request):
         """
         function checks if the request is a login request
-        if so, returns the url of the request
+        if so, returns true
         :param request: the request
         :type request: mitm proxy request
         :return the login url, None if not found
@@ -100,9 +133,8 @@ class BruteForceDetection:
         """
         if request.method == "POST":
             keys_set = set(request.urlencoded_form.keys())
-            if self._common_login_fields_name & keys_set and any(map(request.url.__contains__, self._common_login_fields_name)):
-                return request.url
-        return None
+            return self._common_login_fields_name & keys_set and any(map(request.url.__contains__, self._common_login_fields_name))
+        return False
 
     def _load_login_url(self):
         """
@@ -207,7 +239,7 @@ class BruteForceDetection:
                     self._delay_ip[ip] = True
             self._requests_log.clear()
 
-    def add_delay(self, ip, response):
+    def _add_delay(self, ip, response):
         """
         function add delay to the packet , with the header Retry-After
         if the packet ip is in the delay_ip dict
