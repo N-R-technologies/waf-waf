@@ -1,268 +1,230 @@
 import os
 import time
-import sched
 import threading
+import sched
 import toml
 
 
-class BruteForceDetection:
-    MAX_REQUEST_IN_HALF_MINUTE = 20
-    TIME_SECONDS_CHECK_BRUTE_FORCE = 30
-    TIME_SECONDS_CHECK_LOGIN_BRUTE_FORCE = 60
-    DELAY_TIME_SECONDS = 3
-    MAX_LOGIN_ATTEMPTS_PER_MINUTE = 15
-    TIME_RESET_BLOCKED_USERS = 7200
-    TIME_RESET_DELAY_IP = 3600
+class BruteForceDetector:
+    LOGIN_URL_FILE_PATH = "login_url.toml"
+    DELAY_TIME = 3
+    MAX_LOGINS_PER_MINUTE = 15
+    MAX_REQUESTS_PER_HALF_MINUTE = 20
+    CHECK_BRUTE_FORCE_TIMER = 30
+    CHECK_LOGIN_BRUTE_FORCE_TIMER = 60
+    RESET_BLOCKED_USERS_TIMER = 7200
+    RESET_DELAY_IP_TIMER = 3600
+
+    COMMON_LOGIN_URL = ("login", "signin")
+    COMMON_LOGIN_FIELDS = {"uname", "username", "pass", "password",
+                           "email", "mail", "user", "access", "identity",
+                           "credential", "user account", "access code",
+                           "login name", "name"}
+    COMMON_USERNAME_FIELDS = ("uname", "username", "user", "access",
+                              "identity", "credential", "user account",
+                              "access code", "login name", "name")
+
+    _login_url = ""
+    _blocked_users = list()
+    _users_logins_attempts = dict()
+    _users_requests_counter = dict()
+    _users_delay = dict()
+    _blocked_users_lock = threading.Lock()
+    _logins_counter_lock = threading.Lock()
+    _requests_counter_lock = threading.Lock()
+    _users_delay_lock = threading.Lock()
 
     def __init__(self):
-        self._requests_log = dict()
-        self._delay_ip = dict()
-        self._request_log_lock = threading.Lock()
-        self._delay_ip_lock = threading.Lock()
-        self._common_login_fields_name = {"uname", "username", "pass", "password",
-                                          "email", "mail", "user", "access", "identity",
-                                          "credential", "user account", "access code",
-                                          "login name", "name"}
-        self._common_login_urls = ("login", "signin")
-        self._common_username_fields = ("uname", "username", "user", "access",
-                                        "identity", "credential", "user account",
-                                        "access code", "login name", "name")
-        self._user_logins_log = dict()
-        self._block_users = list()
-        self._logins_log_lock = threading.Lock()
-        self._block_users_lock = threading.Lock()
+        self._load_login_url_configuration(self.LOGIN_URL_FILE_PATH)
+        self._schedule_threads()
 
-    def detect(self, request, client_ip):
-        """
-        function is responsible to add the request to the
-        relevant logs, and to add delay header to the request if it
-        is brute force one
-        """
-        self._add_login_attempt(request)
-        self._add_user_request(client_ip)
+    def _load_login_url_configuration(self, login_url_file_path):
+        if os.path.exists(login_url_file_path):
+            self._login_url = toml.load(login_url_file_path).get("url", None)
 
-    def is_request_block(self, request):
+    def _schedule_threads(self):
         """
-        function checked if the username that try to login
-        is blocked
+        This function will start the all brute force scheduler threads
+        """
+        login_brute_force_scheduler = threading.Thread(target=self._login_brute_force_scheduler)
+        brute_force_scheduler = threading.Thread(target=self._brute_force_scheduler)
+        reset_blocked_users_scheduler = threading.Thread(target=self._reset_blocked_users_scheduler)
+        reset_users_delay_scheduler = threading.Thread(target=self._reset_users_delay_scheduler)
+        login_brute_force_scheduler.start()
+        brute_force_scheduler.start()
+        reset_blocked_users_scheduler.start()
+        reset_users_delay_scheduler.start()
+
+    def is_request_blocked(self, request):
+        """
+        This function will check if the user that tries to login is blocked
         :param request: the request
-        :type request: mimtproxy request
+        :type request: mitmproxy.http.HTTPFlow.request
         :return: True if the request supposed to be blocked, otherwise False
         :rtype: bool
         """
         if self._is_login_request(request):
             username = self._get_username(request)
-            return self._is_username_blocked(username)
+            return username in self._blocked_users
         return False
 
-    def edit_response(self, response, client_ip):
+    def count_user_requests(self, request, user_ip_address):
         """
-        function add retry after header to the response,
-        if the response is for ip that brute force the server recently
-        :param response: the response to be changed
-        :param client_ip: the ip of the client
-        :type response: mitm proxy response
-        :type client_ip: str
-        :return: None
+        This function will count the requests each user sends
+        :param request: the user's request
+        :param user_ip_address: the user's ip address
+        :type request: mitmproxy.http.HTTPFlow.request
+        :type user_ip_address: str
         """
-        self._add_delay(client_ip, response)
+        self._count_login_attempt(request)
+        self._count_request(user_ip_address)
 
-    def _is_login_request(self, request):
+    def add_delay(self, response, user_ip_address):
         """
-        function checks if the request is a login request, by the url
-        :param request: the request
-        :type request mimt proxy request
-        :return: True if it is a login request, otherwise False
-        :rtype: bool
+        This function will add the Retry-After header to the response,
+        if the response is from an ip that brute forced the server recently
+        :param response: the response packet
+        :param user_ip_address: the ip of the response receiving user
+        :type response: mitmproxy.http.HTTPFlow.response
+        :type user_ip_address: str
         """
-        return request.url in self._load_login_url() or self._check_login_url(request)
+        with self._users_delay_lock:
+            if user_ip_address in self._users_delay.keys():
+                if self._users_delay[user_ip_address]:
+                    response.headers["Retry-After"] = self.DELAY_TIME
+                    self._users_delay[user_ip_address] = False
+                else:
+                    self._users_delay[user_ip_address] = True
 
-    def _get_username(self, login_request):
+    def _count_login_attempt(self, request):
         """
-        function returns the username of the login request
-        :param login_request: the login request
-        :type login_request: multidict
-        :return: the username which tries to login, if not found None
-        :rtype: str
-        """
-        for username_field in self._common_username_fields:
-            if username_field in login_request.keys():
-                return login_request[username_field]
-        return None
-
-    def _add_login_attempt(self, request):
-        """
-        function detect login brute force
-        :param request: the request
-        :type request: mitm proxy request
+        This function will count a login attempt to the user who sent it
+        :param request: the request a user sent
+        :type request: mitmproxy.http.HTTPFlow.request
         """
         if self._is_login_request(request):
             username = self._get_username(request.urlencoded_form)
             if username is not None:
-                self._add_user_login_attempt(username)
+                with self._logins_counter_lock:
+                    if username in self._users_logins_attempts.keys():
+                        self._users_logins_attempts[username] += 1
+                    else:
+                        self._users_logins_attempts[username] = 1
 
-    def _add_user_login_attempt(self, username):
+    def _count_request(self, user_ip_address):
         """
-        function add login attempt to the logins log with the key of the username
-        :param username: the username try to login
-        :type username: str
+        This function will count a request to the user who sent it
+        :param user_ip_address: the ip of the request's sender
+        :type user_ip_address: str
         """
-        with self._logins_log_lock:
-            if username in self._user_logins_log.keys():
-                self._user_logins_log[username] += 1
+        with self._requests_counter_lock:
+            if user_ip_address in self._users_requests_counter.keys():
+                self._users_requests_counter[user_ip_address] += 1
             else:
-                self._user_logins_log[username] = 1
+                self._users_requests_counter[user_ip_address] = 1
+
+    def _is_login_request(self, request):
+        """
+        This function will check if the given request is a login request,
+        by its URL, or fields, if its a POST request
+        :param request: the request
+        :type request mitmproxy.http.HTTPFlow.request
+        :return: True, if it is a login request, otherwise, False
+        :rtype: bool
+        """
+        login_fields_found = False
+        if request.method == "POST":
+            keys_set = set(request.urlencoded_form.keys())
+            login_fields_found = self.COMMON_LOGIN_FIELDS & keys_set and any(map(request.url.__contains__, self.COMMON_LOGIN_FIELDS))
+        return self._login_url in request.url or login_fields_found
+
+    def _get_username(self, login_request):
+        """
+        This function will return the username
+        of the user who sent a login request
+        :param login_request: the login request
+        :type login_request: MultiDict
+        :return: the username of the user that tries to login. if not found, None
+        :rtype: str
+        """
+        request_fields = login_request.keys()
+        for username_field in self.COMMON_USERNAME_FIELDS:
+            if username_field in request_fields:
+                return login_request[username_field]
+        return None
+
+    def _login_brute_force_scheduler(self):
+        """
+        This function will schedule the login brute force
+        detection function to be executed every minute
+        """
+        while True:
+            scheduler = sched.scheduler(time.time, time.sleep)
+            scheduler.enter(self.CHECK_LOGIN_BRUTE_FORCE_TIMER, 1, self._check_brute_force_login)
+            scheduler.run()
+
+    def _brute_force_scheduler(self):
+        """
+        This function will schedule the brute force
+        detection function to be executed every 30 seconds
+        """
+        while True:
+            scheduler = sched.scheduler(time.time, time.sleep)
+            scheduler.enter(self.CHECK_BRUTE_FORCE_TIMER, 1, self._check_brute_force)
+            scheduler.run()
+
+    def _reset_blocked_users_scheduler(self):
+        """
+        This function will schedule the reset blocked users
+        function to be executed every 2 hours
+        """
+        while True:
+            scheduler = sched.scheduler(time.time, time.sleep)
+            scheduler.enter(self.RESET_BLOCKED_USERS_TIMER, 1, self._reset_block_users)
+            scheduler.run()
+
+    def _reset_users_delay_scheduler(self):
+        """
+        This function will schedule the reset users delay
+        function to be executed every hour
+        """
+        while True:
+            scheduler = sched.scheduler(time.time, time.sleep)
+            scheduler.enter(self.RESET_DELAY_IP_TIMER, 1, self._reset_users_delay)
+            scheduler.run()
 
     def _check_brute_force_login(self):
         """
-        function checks if some user try to login too much times per minute,
-        if so, it will block its login attempts for permanent time
+        This function will check if a user tried to login too many times
+        per minute. if so, it will block his login attempts for a permanent time
         """
-        with self._logins_log_lock, self._block_users_lock:
-            for username, attempts_num in self._user_logins_log.items():
-                if attempts_num >= self.MAX_LOGIN_ATTEMPTS_PER_MINUTE:
-                    self._block_users.append(username)
-            self._user_logins_log.clear()
-
-    def _check_login_url(self, request):
-        """
-        function checks if the request is a login request
-        if so, returns true
-        :param request: the request
-        :type request: mitm proxy request
-        :return the login url, None if not found
-        :rtype: bool
-        """
-        if request.method == "POST":
-            keys_set = set(request.urlencoded_form.keys())
-            return self._common_login_fields_name & keys_set and any(map(request.url.__contains__, self._common_login_fields_name))
-        return False
-
-    def _load_login_url(self):
-        """
-        function load the login url from the .toml file
-        if its not exist return None
-        :return: the login url if found otherwise None
-        :rtype: str
-        """
-        if os.path.exists("url_login.toml"):
-            return toml.load("url_login.toml").get("url", None)
-        return None
-
-    def _is_username_blocked(self, username):
-        """
-        function checks if the username is in the block username list
-        :param username: the username
-        :type username: str
-        :return: True if the username is in the block list, otherwise False
-        :rtype: bool
-        """
-        return username in self._block_users
-
-    def _reset_block_users(self):
-        """
-        function reset the block users list
-        """
-        with self._logins_log_lock:
-            self._block_users.clear()
-
-    def _scheduling_login_brute_force(self):
-        """
-        function scheduling the login brute force detection function
-        to be execute every minute
-        """
-        while True:
-            scheduler = sched.scheduler(time.time, time.sleep)
-            scheduler.enter(self.TIME_SECONDS_CHECK_LOGIN_BRUTE_FORCE, 1, self._check_brute_force_login)
-            scheduler.run()
-
-    def _scheduling_reset_blocked_users(self):
-        """
-        function scheduling the reset block function to
-        be executed every half of an hour
-        """
-        while True:
-            scheduler = sched.scheduler(time.time, time.sleep)
-            scheduler.enter(self.TIME_RESET_BLOCKED_USERS, 1, self._reset_block_users)
-            scheduler.run()
-
-    def _scheduling_brute_force(self):
-        """
-        function start the scheduling for the brute force thread that
-        supposed to run every amount of time
-        """
-        while True:
-            scheduler = sched.scheduler(time.time, time.sleep)
-            scheduler.enter(self.TIME_SECONDS_CHECK_BRUTE_FORCE, 1, self._check_brute_force)
-            scheduler.run()
-
-    def _scheduling_reset_delay(self):
-        """
-        function start the scheduling for the reset delay ip thread that
-        supposed to run every amount of time
-        """
-        while True:
-            scheduler = sched.scheduler(time.time, time.sleep)
-            scheduler.enter(self.TIME_RESET_DELAY_IP, 1, self._reset_delay_ip)
-            scheduler.run()
-
-    def start_brute_force_scheduler_threads(self):
-        """
-        function start the brute force scheduler thread
-        """
-        login_brute_force_scheduler_thread = threading.Thread(target=self._scheduling_login_brute_force)
-        reset_blocked_users = threading.Thread(target=self._scheduling_reset_blocked_users)
-        brute_force_scheduler_thread = threading.Thread(target=self._scheduling_brute_force)
-        reset_delay_ip_thread = threading.Thread(target=self._scheduling_reset_delay)
-        login_brute_force_scheduler_thread.start()
-        reset_blocked_users.start()
-        brute_force_scheduler_thread.start()
-        reset_delay_ip_thread.start()
-
-    def _add_user_request(self, request_ip):
-        """
-        function add the request to the log
-        :param request_ip: the ip of the request
-        :type request_ip: str
-        """
-        with self._request_log_lock:
-            if request_ip in self._requests_log.keys():
-                self._requests_log[request_ip] += 1
-            else:
-                self._requests_log[request_ip] = 1
+        with self._logins_counter_lock, self._blocked_users_lock:
+            for username, logins_amount in self._users_logins_attempts.items():
+                if logins_amount >= self.MAX_LOGINS_PER_MINUTE:
+                    self._blocked_users.append(username)
+            self._users_logins_attempts.clear()
 
     def _check_brute_force(self):
         """
-        function check if there is brute force attack, according to the log
-        requests dictionary
+        This function will check if a user tried to send requests too many times
+        per half a minute. if so, it will delay his next requests for a permanent time
         """
-        with self._request_log_lock, self._delay_ip_lock:
-            for ip, ip_request_amount in self._requests_log.items():
-                if ip_request_amount >= self.MAX_REQUEST_IN_HALF_MINUTE:
-                    self._delay_ip[ip] = True
-            self._requests_log.clear()
+        with self._requests_counter_lock, self._users_delay_lock:
+            for user_ip_address, requests_amount in self._users_requests_counter.items():
+                if requests_amount >= self.MAX_REQUESTS_PER_HALF_MINUTE:
+                    self._users_delay[user_ip_address] = True
+            self._users_requests_counter.clear()
 
-    def _add_delay(self, ip, response):
+    def _reset_block_users(self):
         """
-        function add delay to the packet , with the header Retry-After
-        if the packet ip is in the delay_ip dict
-        do it alternately
-        :param ip: the ip of the packet
-        :param response: the response packet
-        :type ip: str
-        :type response: mitm proxy response
+        This function will reset the block users list
         """
-        with self._delay_ip_lock:
-            if ip in self._delay_ip.keys():
-                if self._delay_ip[ip]:
-                    response.headers["Retry-After"] = self.DELAY_TIME_SECONDS
-                    self._delay_ip[ip] = False
-                else:
-                    self._delay_ip[ip] = True
+        with self._blocked_users_lock:
+            self._blocked_users.clear()
 
-    def _reset_delay_ip(self):
+    def _reset_users_delay(self):
         """
-        function reset the delay ip dictionary of the class
+        This function will reset the delay ip dictionary
         """
-        with self._delay_ip_lock:
-            self._delay_ip.clear()
+        with self._users_delay_lock:
+            self._users_delay.clear()

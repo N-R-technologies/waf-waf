@@ -14,13 +14,12 @@ class WAF:
     SERVER_INFO_FILE_PATH = "server_info.toml"
 
     _detective = Detective()
+    _brute_force_detector = detector.BruteForceDetector()
     _blacklist = set()
     _is_first_request = True
-    _brute_force_detection = detector.BruteForceDetection()
 
     def __init__(self):
         self._load_blacklist_configuration(self.BLACKLIST_FILE_PATH)
-        self._brute_force_detection.start_brute_force_scheduler_threads()
 
     def _load_blacklist_configuration(self, blacklist_file_path):
         if os.path.exists(blacklist_file_path):
@@ -51,17 +50,17 @@ class WAF:
             self._is_first_request = False
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
-        if (is_client_blocked and flow.killable) or (self._brute_force_detection.is_request_block(flow.request)):
+        if (is_client_blocked and flow.killable) or (self._brute_force_detector.is_request_blocked(flow.request)):
             flow.kill()
         else:
-            self._brute_force_detection.detect(flow.request, str(flow.client_conn.ip_address[0]))
+            self._brute_force_detector.count_user_requests(flow.request, flow.client_conn.ip_address[0])
             if self._detective.investigate(flow.request):
                 if flow.killable:
                     flow.kill()
                 self._add_client_to_blacklist(client_ip_address)
 
     def response(self, flow: http.HTTPFlow) -> None:
-        self._brute_force_detection.edit_response(flow.response, str(flow.client_conn.ip_address[0]))
+        self._brute_force_detector.add_delay(flow.response, flow.client_conn.ip_address[0])
 
 
 addons = [
