@@ -3,8 +3,8 @@ from random import randint
 from PIL import Image
 from captcha.image import ImageCaptcha
 
-FIRST_FONT_FILE_PATH = "detective/toolbox/lenses/brute_force/fonts/font10.ttf"
-SECOND_FONT_FILE_PATH = "detective/toolbox/lenses/brute_force/fonts/font1.ttf"
+FIRST_FONT_FILE_PATH = "detective/toolbox/lenses/brute_force/fonts/font1.ttf"
+SECOND_FONT_FILE_PATH = "detective/toolbox/lenses/brute_force/fonts/font10.ttf"
 CAPTCHA_IMAGE_FILE_PATH = "detective/toolbox/lenses/brute_force/captcha.png"
 MIN_VALUE = 10000
 MAX_VALUE = 99999
@@ -13,7 +13,7 @@ MAX_VALUE = 99999
 def load_captcha():
     """
     This function will implement captcha in order
-    to prevent bot logins to the site.
+    to prevent bot logins to the site
     """
     user_code = ""
     number = 0
