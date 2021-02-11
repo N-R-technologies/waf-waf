@@ -11,6 +11,7 @@ PROXY_LISTEN_PORT = 8080
 class WAF:
     BLACKLIST_FILE_PATH = "blacklist.toml"
     SERVER_INFO_FILE_PATH = "server_info.toml"
+    MAX_ATTACK_ATTEMPTS = 2
 
     _detective = Detective()
     _blacklist = set()
@@ -18,6 +19,18 @@ class WAF:
 
     def __init__(self):
         self._load_blacklist_configuration(self.BLACKLIST_FILE_PATH)
+        self._attack_attempts = dict()
+
+    def _get_warning_message(self, client_ip_address):
+        warning_msg = "<html>" \
+                          '<body style="background-color:#211f20; color:red; font-family:sans-serif; text-align: center;">' \
+                          '<h1>WARNING!!!!!!</h1>' \
+                          '<h1>You getting this message because our WAF detect your attack attempt</h1>' \
+                          f'<h1>Be careful! if we are going to find you doing this more {self.MAX_ATTACK_ATTEMPTS + 1 - self._attack_attempts[client_ip_address]} times</h1>' \
+                          '<h1>You will be baned from the server permanently!!</h1>' \
+                          "</body>" \
+                          "</html>"
+        return warning_msg
 
     def _load_blacklist_configuration(self, blacklist_file_path):
         if os.path.exists(blacklist_file_path):
@@ -52,9 +65,20 @@ class WAF:
             flow.kill()
         else:
             if self._detective.investigate(flow.request):
-                if flow.killable:
-                    flow.kill()
-                self._add_client_to_blacklist(client_ip_address)
+                if client_ip_address in self._attack_attempts.keys() and self._attack_attempts[client_ip_address] >= self.MAX_ATTACK_ATTEMPTS:
+                    if flow.killable:
+                        flow.kill()
+                    self._add_client_to_blacklist(client_ip_address)
+                else:
+                    if client_ip_address not in self._attack_attempts.keys():
+                        self._attack_attempts[client_ip_address] = 1
+                    else:
+                        self._attack_attempts[client_ip_address] += 1
+                    flow.response = http.HTTPResponse.make(
+                        400,
+                        self._get_warning_message(client_ip_address),
+                        {"content-type": "text/html"},
+                    )
 
 
 addons = [
