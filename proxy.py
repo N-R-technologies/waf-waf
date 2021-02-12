@@ -23,13 +23,16 @@ class WAF:
 
     def _get_warning_message(self, client_ip_address):
         warning_msg = "<html>" \
-                          '<body style="background-color:#211f20; color:red; font-family:sans-serif; text-align: center;">' \
-                          '<h1>WARNING!!!!!!</h1>' \
-                          '<h1>You getting this message because our WAF detect your attack attempt</h1>' \
-                          f'<h1>Be careful! if we are going to find you doing this more {self.MAX_ATTACK_ATTEMPTS + 1 - self._attack_attempts[client_ip_address]} times</h1>' \
-                          '<h1>You will be baned from the server permanently!!</h1>' \
-                          "</body>" \
-                          "</html>"
+                      '<body style="background-color:#211f20; color:red; font-family:sans-serif; text-align: center;">' \
+                      '<h1>WARNING!!!!!!</h1>' \
+                      '<img src = "https://lh3.googleusercontent.com/gy5WPTVkuE1zCU0UC9R5KuKcPFwYXkyKsxoCBMyLEzY-oIRzblcsyTMZeLbayh697ysTk8W3QUKjWjCmPaXawsssus-agH3LGHUnm2-gSP8wcHQNnQ=w1280" alt = "warning" style="width:400px;height:300px;">'\
+                      '<h1>You getting this message because our WAF detect your attack attempt</h1>' \
+                      f'<h1>Be careful! if we are going to find you doing this {self.MAX_ATTACK_ATTEMPTS + 1 - self._attack_attempts[client_ip_address]} more times</h1>' \
+                      '<h1>You will be banned from the server permanently!!</h1>' \
+                      '<h1>Dont try to refresh this page!</h1>' \
+                      '<img src = "https://lh6.googleusercontent.com/YReznLOhSl3yiu9GhSfouZDUDjz-ocptXuvtIoOXKLZcBZLrf7Q5FfkdJfY_pYccrkDTSGPUPvb-gPZ8g6LHP65rOKpMtLDozzgRvzBJf6qYBLiF-nc=w1280" alt = "waf logo" style="width:500px;height:300px;"'\
+                      "</body>" \
+                      "</html>"
         return warning_msg
 
     def _load_blacklist_configuration(self, blacklist_file_path):
@@ -70,10 +73,12 @@ class WAF:
                         flow.kill()
                     self._add_client_to_blacklist(client_ip_address)
                 else:
+                    flow.request.headers["Host"] = "No such host"
                     if client_ip_address not in self._attack_attempts.keys():
                         self._attack_attempts[client_ip_address] = 1
                     else:
                         self._attack_attempts[client_ip_address] += 1
+
                     flow.response = http.HTTPResponse.make(
                         400,
                         self._get_warning_message(client_ip_address),
