@@ -44,7 +44,7 @@ class BruteForceDetector:
 
     def _schedule_threads(self):
         """
-        This function will start the all brute force scheduler threads
+        This function will start all the brute force scheduler threads
         """
         login_brute_force_scheduler = threading.Thread(target=self._login_brute_force_scheduler)
         brute_force_scheduler = threading.Thread(target=self._brute_force_scheduler)
@@ -60,7 +60,7 @@ class BruteForceDetector:
         This function will check if the user that tries to login is blocked
         :param request: the request
         :type request: mitmproxy.http.HTTPFlow.request
-        :return: True if the request supposed to be blocked, otherwise False
+        :return: True, if he is blocked, otherwise, False
         :rtype: bool
         """
         if self._is_login_request(request):
@@ -144,7 +144,7 @@ class BruteForceDetector:
         of the user who sent a login request
         :param login_request: the login request
         :type login_request: MultiDict
-        :return: the username of the user that tries to login. if not found, None
+        :return: the username of the user that tries to login, if not found then None
         :rtype: str
         """
         request_fields = login_request.keys()
@@ -217,14 +217,14 @@ class BruteForceDetector:
 
     def _reset_block_users(self):
         """
-        This function will reset the block users list
+        This function will reset the blocked users list
         """
         with self._blocked_users_lock:
             self._blocked_users.clear()
 
     def _reset_users_delay(self):
         """
-        This function will reset the delay ip dictionary
+        This function will reset the users delay dictionary
         """
         with self._users_delay_lock:
             self._users_delay.clear()
