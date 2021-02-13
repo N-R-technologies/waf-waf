@@ -1,5 +1,6 @@
-import toml
 import os
+from datetime import date
+import toml
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective import Detective
@@ -11,6 +12,8 @@ PROXY_LISTEN_PORT = 8080
 class WAF:
     BLACKLIST_FILE_PATH = "blacklist.toml"
     SERVER_INFO_FILE_PATH = "server_info.toml"
+    WRONG_DIAGNOSIS_FILE_PATH = "wrong_diagnosis.toml"
+    WARNING_MESSAGE_FILE_PATH = "warning_message.txt"
     MAX_ATTACK_ATTEMPTS = 2
 
     _detective = Detective()
@@ -20,20 +23,24 @@ class WAF:
     def __init__(self):
         self._load_blacklist_configuration(self.BLACKLIST_FILE_PATH)
         self._attack_attempts = dict()
+        with open(self.WARNING_MESSAGE_FILE_PATH, "r") as warning_msg_file:
+            self._warning_msg_format = warning_msg_file.read()
+            warning_msg_file.close()
 
-    def _get_warning_message(self, client_ip_address):
-        warning_msg = "<html>" \
-                      '<body style="background-color:#211f20; color:red; font-family:sans-serif; text-align: center;">' \
-                      '<h1>WARNING!!!!!!</h1>' \
-                      '<img src = "https://lh3.googleusercontent.com/gy5WPTVkuE1zCU0UC9R5KuKcPFwYXkyKsxoCBMyLEzY-oIRzblcsyTMZeLbayh697ysTk8W3QUKjWjCmPaXawsssus-agH3LGHUnm2-gSP8wcHQNnQ=w1280" alt = "warning" style="width:400px;height:300px;">'\
-                      '<h1>You getting this message because our WAF detect your attack attempt</h1>' \
-                      f'<h1>Be careful! if we are going to find you doing this {self.MAX_ATTACK_ATTEMPTS + 1 - self._attack_attempts[client_ip_address]} more times</h1>' \
-                      '<h1>You will be banned from the server permanently!!</h1>' \
-                      '<h1>Dont try to refresh this page!</h1>' \
-                      '<img src = "https://lh6.googleusercontent.com/YReznLOhSl3yiu9GhSfouZDUDjz-ocptXuvtIoOXKLZcBZLrf7Q5FfkdJfY_pYccrkDTSGPUPvb-gPZ8g6LHP65rOKpMtLDozzgRvzBJf6qYBLiF-nc=w1280" alt = "waf logo" style="width:500px;height:300px;"'\
-                      "</body>" \
-                      "</html>"
+    def _get_warning_message(self, client_ip_address, referer):
+        warning_msg = self._warning_msg_format.replace("{referer}", referer)
+        warning_msg = warning_msg.replace("{attempts_left}", str(self.MAX_ATTACK_ATTEMPTS + 1 - self._attack_attempts[client_ip_address]))
         return warning_msg
+
+    def _add_ip_to_wrong_diagnosis_file(self, ip):
+        current_date = date.today().strftime("%d/%m/%Y")
+        with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'a') as wrong_diagnosis_file:
+            toml.dump({ip: current_date}, wrong_diagnosis_file)
+            wrong_diagnosis_file.close()
+
+    def _is_wrong_diagnosis_request(self, request):
+        # a7ac7ea7c7af02759b404c0ccd188045 = WAF diagnosis in MD5 hash
+        return request.method == "POST" and "a7ac7ea7c7af02759b404c0ccd188045" in request.urlencoded_form.keys()
 
     def _load_blacklist_configuration(self, blacklist_file_path):
         if os.path.exists(blacklist_file_path):
@@ -53,12 +60,6 @@ class WAF:
             blacklist_file.close()
 
     def request(self, flow: http.HTTPFlow) -> None:
-        """
-        This function will check and handle received malicious requests
-        :param flow: The user's request
-        :type flow: http.HTTPFlow
-        :return: None
-        """
         if self._is_first_request:
             self._write_server_info_configuration(flow.request, self.SERVER_INFO_FILE_PATH)
             self._is_first_request = False
@@ -66,6 +67,8 @@ class WAF:
         is_client_blocked = client_ip_address in self._blacklist
         if is_client_blocked and flow.killable:
             flow.kill()
+        elif self._is_wrong_diagnosis_request(flow.request):
+            self._add_ip_to_wrong_diagnosis_file(client_ip_address)
         else:
             if self._detective.investigate(flow.request):
                 if client_ip_address in self._attack_attempts.keys() and self._attack_attempts[client_ip_address] >= self.MAX_ATTACK_ATTEMPTS:
@@ -78,10 +81,10 @@ class WAF:
                         self._attack_attempts[client_ip_address] = 1
                     else:
                         self._attack_attempts[client_ip_address] += 1
-
+                    referer = flow.request.headers["Referer"]
                     flow.response = http.HTTPResponse.make(
                         400,
-                        self._get_warning_message(client_ip_address),
+                        self._get_warning_message(client_ip_address, referer),
                         {"content-type": "text/html"},
                     )
 

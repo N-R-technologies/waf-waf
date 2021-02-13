@@ -1,0 +1,17 @@
+<html>
+<body style="background-color:#211f20; color:red; font-family:sans-serif; text-align: center;">
+<h1>WARNING!!!!!!</h1>
+<img src = "https://cdn.discordapp.com/attachments/776055582394286080/809733066787913768/warning_icon.png" alt = "warning" style="width:400px;height:300px;">
+<h2>You getting this message because our WAF detect your attack attempt</h1>
+<h2>Be careful! if we are going to find you doing this {attempts_left} more times</h1>
+<h2>You will be banned from the server permanently!!</h1>
+<img src = "https://cdn.discordapp.com/attachments/690607565683425280/797888925020061746/logoslogan_1.png" alt = "waf logo" style="width:500px;height:300px;">
+<br/>
+<a href="{referer}" style="text-decoration: none; font-size: 24px;">Return to the site</a>
+<form method = "POST" action = {referer}>
+<h2>Do you think our waf made false detection?</h2>
+<h2>click on the button in order to let the owners of the site know about it, and maybe fix it</h2>
+<button type="submit" value="wrong diagnosis" name="a7ac7ea7c7af02759b404c0ccd188045" style="height: 100px; width: 200px;"> I didn't try to attack the website</button>
+</form>
+</body>
+</html>
