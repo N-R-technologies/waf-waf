@@ -3,7 +3,7 @@ import os
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective import Detective
-from detective.toolbox.lenses.brute_force import CaptchaImplementer
+from detective.toolbox.brute_force import BruteForceDetector, CaptchaImplementer
 
 PROXY_LISTEN_HOST = "127.0.0.1"
 PROXY_LISTEN_PORT = 8080
@@ -14,6 +14,7 @@ class WAF:
     SERVER_INFO_FILE_PATH = "server_info.toml"
 
     _detective = Detective()
+    _brute_force_detector = BruteForceDetector()
     _captcha_implementer = CaptchaImplementer()
     _blacklist = set()
     _is_first_request = True
@@ -50,9 +51,10 @@ class WAF:
             self._is_first_request = False
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
-        if is_client_blocked and flow.killable:
+        if (is_client_blocked and flow.killable) or (self._brute_force_detector.is_request_blocked(flow.request, client_ip_address)):
             flow.kill()
         else:
+            self._brute_force_detector.count_user_requests(flow.request, client_ip_address)
             if self._detective.investigate(flow.request):
                 if flow.killable:
                     flow.kill()
@@ -68,6 +70,9 @@ class WAF:
                     flow.response = http.HTTPResponse.make(200, captcha, {"content-type": "text/html"})
             else:
                 self._captcha_implementer.remove_login_permission(user_ip_address)
+
+    def response(self, flow: http.HTTPFlow) -> None:
+        self._brute_force_detector.add_delay(flow.response, flow.client_conn.ip_address[0])
 
 
 addons = [

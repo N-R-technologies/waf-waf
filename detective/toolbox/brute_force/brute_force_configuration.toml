@@ -1,0 +1,7 @@
+delay_time = 3
+max_logins_per_minute = 15
+max_requests_per_half_minute = 20
+check_brute_force_timer = 30
+check_login_brute_force_timer = 60
+reset_blocked_users_timer = 7200
+reset_delay_ip_timer = 3600
