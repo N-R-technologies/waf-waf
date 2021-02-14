@@ -19,7 +19,7 @@ class MagnifyingGlass:
         :rtype: tuple
         """
         risk_findings = [0] * len(RiskLevels)
-        found_risks_info = list()
+        found_risks_info = []
 
         basic_checks = inspect.getmembers(lens[self.BASIC_CHECKS], predicate=inspect.isfunction)
         checks_dictionary = dict(basic_checks)

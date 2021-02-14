@@ -3,7 +3,6 @@ from detective.toolbox.risk_levels import RiskLevels
 
 
 class BasicChecks:
-
     @staticmethod
     def preparation(request) -> list:
         return re.findall(r"""(?:&{1,2}|\|{1,2}|;|\n|0x0a)\s*(?:`|\$\s*\()?(?P<command>(?:(?!&|\||\n|0x0a|;|`|\)).)+)""", request)
@@ -11,7 +10,7 @@ class BasicChecks:
     @staticmethod
     def server_information(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
-            if re.search("(?:whoami|ls)", command):
+            if re.search("whoami|ls", command):
                 return RiskLevels.MODERATE
         return RiskLevels.NO_RISK
 
@@ -25,7 +24,7 @@ class BasicChecks:
     @staticmethod
     def network_information(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
-            if re.search("i[fp]config(?:\s+\/all)?", command):
+            if re.search("i[fp]config(?:\s+/all)?", command):
                 return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
 
@@ -58,6 +57,13 @@ class BasicChecks:
         return RiskLevels.NO_RISK
 
     @staticmethod
+    def show_file(potential_commands_list) -> RiskLevels:
+        for command in potential_commands_list:
+            if re.search("cat.*/", command):
+                return RiskLevels.SLIGHT
+        return RiskLevels.NO_RISK
+
+    @staticmethod
     def show_sensitive_file(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
             if re.search("cat.*/etc/.+", command):
@@ -76,13 +82,6 @@ class BasicChecks:
         for command in potential_commands_list:
             if re.search("pwd($|\s+)", command):
                 return RiskLevels.MODERATE
-        return RiskLevels.NO_RISK
-
-    @staticmethod
-    def show_file(potential_commands_list) -> RiskLevels:
-        for command in potential_commands_list:
-            if re.search("cat.*/", command):
-                return RiskLevels.SLIGHT
         return RiskLevels.NO_RISK
 
     @staticmethod
@@ -107,7 +106,7 @@ class BasicChecks:
         return RiskLevels.NO_RISK
 
     @staticmethod
-    def sleep_server(potential_commands_list) -> RiskLevels:
+    def server_sleep(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
                 if re.search("sleep\s+\d", command):
                     return RiskLevels.SLIGHT
@@ -121,7 +120,7 @@ class BasicChecks:
         return RiskLevels.NO_RISK
 
     @staticmethod
-    def php_multiply_char_flag(potential_commands_list) -> RiskLevels:
+    def php_multiple_char_flag(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
             if re.search("php\s*--(ini|rf|rc|re|rz|ri)", command):
                 return RiskLevels.CRITICAL
@@ -135,7 +134,7 @@ class BasicChecks:
         return RiskLevels.NO_RISK
 
     @staticmethod
-    def upload_download_files_from_internet(potential_commands_list) -> RiskLevels:
+    def upload_download_internet_files(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
             if re.search("curl|wget", command):
                 return RiskLevels.CATASTROPHIC
