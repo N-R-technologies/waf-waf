@@ -22,6 +22,9 @@ class MagnifyingGlass:
         found_risks_info = []
 
         basic_checks = inspect.getmembers(lens[self.BASIC_CHECKS], predicate=inspect.isfunction)
+        checks_dictionary = dict(basic_checks)
+        if "preparation" in checks_dictionary.keys():
+            request = checks_dictionary["preparation"]
         for basic_check_name, basic_check in basic_checks:
             basic_check_result = basic_check(request)
             risk_findings[basic_check_result] += 1
