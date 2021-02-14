@@ -2,7 +2,7 @@
     <input type="hidden" id="skip_WhereToSend" name="skip_WhereToSend"
         value="your@email.com" />
     <input type="hidden" id="skip_WhereToReturn" name="skip_WhereToReturn"
-        value="<LOGIN_URL>" />
+        value="{login_url}" />
     <input type="hidden" id="skip_SnapHostID" name="skip_SnapHostID"
         value="GFJAH2N2MQ2J" />
     <table cellspacing="0" border="0" cellpadding="8">

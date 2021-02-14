@@ -3,7 +3,6 @@ import os
 
 class CaptchaImplementer:
     CAPTCHA_FILE_PATH = "detective/toolbox/lenses/brute_force/captcha.txt"
-    LOGIN_URL_PATTERN = "<LOGIN_URL>"
 
     _users_login_permission = dict()
     _captcha = None
@@ -62,7 +61,7 @@ class CaptchaImplementer:
         if os.path.exists(captcha_file_path):
             with open(captcha_file_path, 'r') as captcha_file:
                 self._captcha = captcha_file.read()
-                self._captcha = self._captcha.replace(self.LOGIN_URL_PATTERN, login_url)
+                self._captcha = self._captcha.replace("{login_url}", login_url)
                 captcha_file.close()
             return True
         return False
