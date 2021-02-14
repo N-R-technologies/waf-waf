@@ -6,9 +6,9 @@ import sched
 
 
 class BruteForceDetector:
+    CONFIGURATION_FILE_PATH = "brute_force_configuration.toml"
     DEFAULT_TIME = 10000
 
-    CONFIGURATION_FILE_PATH = "brute_force_configuration.toml"
     _blocked_users = list()
     _users_logins_attempts = dict()
     _users_requests_counter = dict()

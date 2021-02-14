@@ -61,18 +61,16 @@ class WAF:
                 self._add_client_to_blacklist(client_ip_address)
 
     def response(self, flow: http.HTTPFlow) -> None:
-        login_url = ""  # get login url using the brute force detector
+        user_ip_address = flow.client_conn.ip_address[0]
+        self._brute_force_detector.add_delay(flow.response, user_ip_address)
+        login_url = self._captcha_implementer.get_login_url(flow.request)
         if login_url is not None:
-            user_ip_address = flow.client_conn.ip_address
             if not self._captcha_implementer.has_login_permission(user_ip_address):
                 captcha = self._captcha_implementer.implement(user_ip_address, login_url)
                 if captcha is not None:
                     flow.response = http.HTTPResponse.make(200, captcha, {"content-type": "text/html"})
             else:
                 self._captcha_implementer.remove_login_permission(user_ip_address)
-
-    def response(self, flow: http.HTTPFlow) -> None:
-        self._brute_force_detector.add_delay(flow.response, flow.client_conn.ip_address[0])
 
 
 addons = [
