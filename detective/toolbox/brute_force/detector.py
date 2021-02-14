@@ -1,27 +1,30 @@
+import os
 import time
+import toml
 import threading
 import sched
-import toml
 
 
 class BruteForceDetector:
-
     DEFAULT_TIME = 10000
 
-    def __init__(self):
-        self._config_file_path = "brute_force_config.toml"
-        self._schedule_threads()
-        self._blocked_users = list()
-        self._users_logins_attempts = dict()
-        self._users_requests_counter = dict()
-        self._users_delay = dict()
-        self._blocked_users_lock = threading.Lock()
-        self._logins_counter_lock = threading.Lock()
-        self._requests_counter_lock = threading.Lock()
-        self._users_delay_lock = threading.Lock()
+    CONFIGURATION_FILE_PATH = "brute_force_configuration.toml"
+    _blocked_users = list()
+    _users_logins_attempts = dict()
+    _users_requests_counter = dict()
+    _users_delay = dict()
+    _blocked_users_lock = threading.Lock()
+    _logins_counter_lock = threading.Lock()
+    _requests_counter_lock = threading.Lock()
+    _users_delay_lock = threading.Lock()
 
-    def _load_config(self, config_name):
-        return toml.load(self._config_file_path).get(config_name, self.DEFAULT_TIME)
+    def __init__(self):
+        self._schedule_threads()
+
+    def _load_configuration(self, config_name, default_value):
+        if os.path.exists(self.CONFIGURATION_FILE_PATH):
+            return toml.load(self.CONFIGURATION_FILE_PATH).get(config_name, default_value)
+        return default_value
 
     def _schedule_threads(self):
         login_brute_force_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._check_brute_force_login, "check_login_brute_force_timer"))
@@ -34,7 +37,7 @@ class BruteForceDetector:
         reset_users_delay_scheduler.start()
 
     def is_request_blocked(self, request, user_ip):
-        login_url = toml.load(self._config_file_path).get("login_url", "")
+        login_url = self._load_configuration("login_url", None)
         if login_url is not None and login_url in request.url:
             return user_ip in self._blocked_users
         return False
@@ -47,13 +50,13 @@ class BruteForceDetector:
         with self._users_delay_lock:
             if user_ip_address in self._users_delay.keys():
                 if self._users_delay[user_ip_address]:
-                    response.headers["Retry-After"] = self._load_config("delay_time")
+                    response.headers["Retry-After"] = self._load_configuration("delay_time", self.DEFAULT_TIME)
                     self._users_delay[user_ip_address] = False
                 else:
                     self._users_delay[user_ip_address] = True
 
     def _count_login_attempt(self, request, user_ip_address):
-        login_url = toml.load(self._config_file_path).get("login_url", "")
+        login_url = self._load_configuration("login_url", None)
         if login_url is not None and login_url in request.url:
             with self._logins_counter_lock:
                 if user_ip_address in self._users_logins_attempts.keys():
@@ -71,20 +74,20 @@ class BruteForceDetector:
     def _start_function_scheduler(self, function, time_until_start_field):
         while True:
             scheduler = sched.scheduler(time.time, time.sleep)
-            scheduler.enter(self._load_config(time_until_start_field), 1, function)
+            scheduler.enter(self._load_configuration(time_until_start_field, self.DEFAULT_TIME), 1, function)
             scheduler.run()
 
     def _check_brute_force_login(self):
         with self._logins_counter_lock, self._blocked_users_lock:
             for user_ip, logins_amount in self._users_logins_attempts.items():
-                if logins_amount >= self._load_config("max_logins_per_minute"):
+                if logins_amount >= self._load_configuration("max_logins_per_minute", self.DEFAULT_TIME):
                     self._blocked_users.append(user_ip)
             self._users_logins_attempts.clear()
 
     def _check_brute_force(self):
         with self._requests_counter_lock, self._users_delay_lock:
             for user_ip_address, requests_amount in self._users_requests_counter.items():
-                if requests_amount >= self._load_config("max_requests_per_half_minute"):
+                if requests_amount >= self._load_configuration("max_requests_per_half_minute", self.DEFAULT_TIME):
                     self._users_delay[user_ip_address] = True
             self._users_requests_counter.clear()
 

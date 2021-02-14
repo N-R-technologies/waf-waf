@@ -1,4 +1,3 @@
-
 delay_time = 3
 max_logins_per_minute = 15
 max_requests_per_half_minute = 20

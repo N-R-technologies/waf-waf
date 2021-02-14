@@ -3,7 +3,7 @@ import os
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective import Detective
-from detective.toolbox.brute_force import detector
+from detective.toolbox.brute_force import BruteForceDetector
 
 PROXY_LISTEN_HOST = "127.0.0.1"
 PROXY_LISTEN_PORT = 8080
@@ -14,7 +14,7 @@ class WAF:
     SERVER_INFO_FILE_PATH = "server_info.toml"
 
     _detective = Detective()
-    _brute_force_detector = detector.BruteForceDetector()
+    _brute_force_detector = BruteForceDetector()
     _blacklist = set()
     _is_first_request = True
 
@@ -50,10 +50,10 @@ class WAF:
             self._is_first_request = False
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
-        if (is_client_blocked and flow.killable) or (self._brute_force_detector.is_request_blocked(flow.request)):
+        if (is_client_blocked and flow.killable) or (self._brute_force_detector.is_request_blocked(flow.request, client_ip_address)):
             flow.kill()
         else:
-            self._brute_force_detector.count_user_requests(flow.request, flow.client_conn.ip_address[0])
+            self._brute_force_detector.count_user_requests(flow.request, client_ip_address)
             if self._detective.investigate(flow.request):
                 if flow.killable:
                     flow.kill()
