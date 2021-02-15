@@ -10,7 +10,7 @@ from colors import Colors
 class MainMenu:
     _main_menu = Menu()
     _ignore_input = False
-    LOGIN_URL_FILE = "detective/toolbox/lenses/brute_force/url_login.toml"
+    LOGIN_URL_FILE = "detective/toolbox/brute_force/brute_force_configuration.toml"
 
     def _start_scan(self, router_username, router_password):
         """
