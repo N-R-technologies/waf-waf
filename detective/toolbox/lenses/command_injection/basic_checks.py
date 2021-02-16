@@ -1,11 +1,12 @@
 import re
+import sys
 from detective.toolbox.risk_levels import RiskLevels
 
 
 class BasicChecks:
     @staticmethod
     def preparation(request) -> list:
-        return re.findall(r"""(?:&{1,2}|\|{1,2}|;|\n|0x0a)\s*(?:`|\$\s*\()?(?P<command>(?:(?!&|\||\n|0x0a|;|`|\)).)+)""", request)
+         return re.findall(r"""(?:&{1,2}|\|{1,2}|;|\n|0x0a)\s*(?:`|\$\s*\()?(?P<command>(?:(?!&|\||\n|0x0a|;|`|\)).)+)""", str(request))
 
     @staticmethod
     def server_information(potential_commands_list) -> RiskLevels:
