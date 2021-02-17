@@ -1,0 +1,15 @@
+<html>
+    <body style="background-color:#211f20; color:red; font-family:sans-serif; text-align:center;">
+        <h1>WARNING!!!!!!</h1>
+        <img src="https://cdn.discordapp.com/attachments/776055582394286080/809733066787913768/warning_icon.png" alt="warning icon" style="width:250px; height:200px;"><br/>
+        <h2>You are receiving this message because our WAF has detected your attack attempt.</h2>
+        <h2>Beware! If you will attack {attempts_left} more times you will be blocked from the server permanently!!</h2><br/>
+	    <a href="{referer}" style="text-decoration:none; font-size:24px;">Return to the site</a><br/><br/>
+        <img src="https://cdn.discordapp.com/attachments/690607565683425280/797888925020061746/logoslogan_1.png" alt="WAF logo" style="width:500px;height:300px;"><br/>
+	    <form method="POST" action={referer}>
+            <h2>Do you think our WAF identification is incorrect?</h2>
+            <h2>Click on the button below to let the site owners know.</h2>
+            <button type="submit" value="wrong diagnosis" name="a7ac7ea7c7af02759b404c0ccd188045" style="height:75px; width:350px; font-size:24px;">You made a false detection</button>
+        </form>
+    </body>
+</html>
