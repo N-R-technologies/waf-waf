@@ -68,16 +68,12 @@ class WAF:
             self._is_first_request = False
         client_ip_address = flow.client_conn.ip_address[0]
         is_client_blocked = client_ip_address in self._blacklist
-        if (is_client_blocked and flow.killable) or (self._brute_force_detector.is_request_blocked(flow.request, client_ip_address)):
+        if (is_client_blocked or self._brute_force_detector.is_request_blocked(flow.request, client_ip_address)) and flow.killable:
             flow.kill()
         elif self._is_wrong_diagnosis_request(flow.request):
             self._add_client_to_wrong_diagnosis(client_ip_address)
         else:
             self._brute_force_detector.count_user_requests(flow.request, client_ip_address)
-            if self._detective.investigate(flow.request):
-                if flow.killable:
-                    flow.kill()
-                self._add_client_to_blacklist(client_ip_address)
             if self._detective.investigate(flow.request, client_ip_address):
                 if client_ip_address in self._attack_attempts.keys() and self._attack_attempts[client_ip_address] >= self.MAX_ATTACK_ATTEMPTS:
                     if flow.killable:
