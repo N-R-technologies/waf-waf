@@ -1,3 +1,5 @@
+from os import path
+import toml
 from curtsies import Input
 from menu import Menu
 from network_scanner import NetworkScanner
@@ -8,6 +10,7 @@ from colors import Colors
 class MainMenu:
     _main_menu = Menu()
     _ignore_input = False
+    LOGIN_URL_FILE = "detective/toolbox/brute_force/brute_force_configuration.toml"
 
     def _start_scan(self, router_username, router_password):
         """
@@ -31,6 +34,21 @@ class MainMenu:
         self._main_menu.get_input(self._start_scan, "Enter Router Credentials", '*',
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
+
+    def _create_login_url_configuration(self):
+        if not path.exists(self.LOGIN_URL_FILE):
+            return toml.load(self.LOGIN_URL_FILE).get("login_url", None)
+        return None
+
+    def _get_login_url(self):
+        self._create_login_url_configuration()
+        self._main_menu.get_input(self._edit_login_url, "Enter your website's login url", "Login url")
+
+    def _edit_login_url(self, login_url_entity):
+        login_url = login_url_entity.get()
+        with open(self.LOGIN_URL_FILE, 'w') as login_url_file:
+            toml.dump({"login_url": login_url}, login_url_file)
+            login_url_file.close()
 
     def _manage_emails(self):
         """
@@ -60,7 +78,9 @@ class MainMenu:
         self._main_menu.add_option("1. Start the network scan", self._call_start_scan)
         self._main_menu.add_option("2. Manage your emails configuration file", self._manage_emails)
         self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
-        self._main_menu.add_option("4. Exit (or simply press Q)", "exit")
+        self._main_menu.add_option("4. Add your site's url. In order to improve and to be more precise\n"
+                                   "in our brute force detection, we should now what is your login url", self._get_login_url)
+        self._main_menu.add_option("5. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
                 print(Colors.YELLOW + self._main_menu.menu[menu_item])
