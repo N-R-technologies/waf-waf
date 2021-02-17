@@ -11,10 +11,10 @@ PROXY_LISTEN_PORT = 8080
 
 
 class WAF:
-    BLACKLIST_FILE_PATH = "blacklist.toml"
-    SERVER_INFO_FILE_PATH = "server_info.toml"
-    WRONG_DIAGNOSIS_FILE_PATH = "wrong_diagnosis.toml"
-    WARNING_MESSAGE_FILE_PATH = "warning_message.txt"
+    BLACKLIST_FILE_PATH = "waf_data/blacklist.toml"
+    SERVER_INFO_FILE_PATH = "waf_data/server_info.toml"
+    WRONG_DIAGNOSIS_FILE_PATH = "waf_data/wrong_diagnosis.toml"
+    WARNING_MESSAGE_FILE_PATH = "waf_data/warning_message.txt"
     WAF_DIAGNOSIS_HASH = "a7ac7ea7c7af02759b404c0ccd188045"
     MAX_ATTACK_ATTEMPTS = 2
 

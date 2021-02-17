@@ -1,5 +1,4 @@
 import re
-import sys
 from detective.toolbox.risk_levels import RiskLevels
 
 

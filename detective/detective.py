@@ -1,7 +1,7 @@
 from importlib import import_module
 from urllib.parse import unquote_plus
 import detective.toolbox as toolbox
-from attacks_logger.logger import AttacksLogger
+from .attacks_logger import AttacksLogger
 
 
 class Detective:

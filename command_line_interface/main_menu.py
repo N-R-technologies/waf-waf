@@ -1,10 +1,10 @@
 from os import path
 import toml
 from curtsies import Input
-from menu import Menu
-from network_scanner import NetworkScanner
-from email_manager import EmailManager
-from colors import Colors
+from .menu import Menu
+from .network_scanner import NetworkScanner
+from .email_manager import EmailManager
+from misc import Colors
 
 
 class MainMenu:
