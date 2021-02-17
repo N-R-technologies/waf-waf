@@ -160,4 +160,4 @@ logger/data/user_emails.toml
 logger/data/logs/
 logger/data/graphs/
 command_line_interface/network_scanner/data/logs/
-attacks_logger/attacks.toml
+detective/attacks_logger/attacks.toml

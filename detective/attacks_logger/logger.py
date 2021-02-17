@@ -1,4 +1,3 @@
-import os
 import sched
 import toml
 from time import time, sleep
@@ -14,11 +13,28 @@ class AttacksLogger:
         self._attacks_log_lock = Lock()
         self._attacks_statistics_lock = Lock()
         self._attacks_statistics = dict()
-        open(self.ATTACKS_LOG_FILE_PATH, 'r').close()
+        open(self.ATTACKS_LOG_FILE_PATH, 'w').close()
         clear_attacks_log = Thread(target=self._schedule_clear_attacks_log)
         clear_attacks_log.start()
 
     def add_attack_attempt(self, attacker_ip, attack_content, risks_level):
+        current_date = date.today().strftime("%d_%m_%Y")
+
+        if toml.load(self.ATTACKS_LOG_FILE_PATH).get(current_date, None) is None:
+            with open(self.ATTACKS_LOG_FILE_PATH, 'a') as attacks_file:
+                with self._attacks_log_lock:
+                    toml.dump(toml.loads(f'[{current_date}]'), attacks_file)
+                attacks_file.close()
+        with self._attacks_log_lock:
+            attacks = toml.load(self.ATTACKS_LOG_FILE_PATH)
+        if attacker_ip in attacks[current_date].keys():
+            attacks[current_date][attacker_ip].append(attack_content)
+        else:
+            attacks[current_date][attacker_ip] = [attack_content]
+        with self._attacks_log_lock:
+            with open(self.ATTACKS_LOG_FILE_PATH, 'w') as attacks_file:
+                toml.dump(attacks, attacks_file)
+        attacks_file.close()
         for risk_level in risks_level:
             if risk_level < 1:
                 with self._attacks_statistics_lock:
@@ -26,21 +42,13 @@ class AttacksLogger:
                         self._attacks_statistics[attacker_ip] += risk_level
                     else:
                         self._attacks_statistics[attacker_ip] = risk_level
-            if not os.path.exists(self.ATTACKS_LOG_FILE_PATH):
-                with self._attacks_log_lock:
-                    open(self.ATTACKS_LOG_FILE_PATH, 'w').close()
-            with self._attacks_log_lock:
-                attacks = list(toml.load(self.ATTACKS_LOG_FILE_PATH).get(date.today().strftime("%d/%m/%Y"), []))
-            attacks.append((attacker_ip, attack_content))
-            with self._attacks_log_lock:
-                toml.dump({date.today().strftime("%d/%m/%Y"): [(attacker_ip, attack_content)]}, self.ATTACKS_LOG_FILE_PATH)
 
     def get_attack(self, search_attacker_ip, search_attack_date):
+        attacks = {}
         with self._attacks_log_lock:
-            attacks_dict = dict(toml.load(self.ATTACKS_LOG_FILE_PATH).get(search_attack_date, []))
-        for attacker_ip, attack_content in attacks_dict.items():
-            if attacker_ip == search_attacker_ip:
-                return attack_content
+            attacks = toml.load(self.ATTACKS_LOG_FILE_PATH).get(search_attack_date, {})
+        if search_attacker_ip in attacks.keys():
+            return attacks[search_attacker_ip]
         return None
 
     def is_continuity_attacks_in_continuity(self, attacker_ip):

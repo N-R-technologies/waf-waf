@@ -57,9 +57,14 @@ class WAF:
         return request.method == "POST" and self.WAF_DIAGNOSIS_HASH in request.urlencoded_form.keys()
 
     def _add_client_to_wrong_diagnosis(self, client_ip_address):
-        current_date = date.today().strftime("%d/%m/%Y")
-        with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'a') as wrong_diagnosis_file:
-            toml.dump({client_ip_address: current_date}, wrong_diagnosis_file)
+        current_date = date.today().strftime("%d_%m_%Y")
+        current_wrong_diagnosis = toml.load(self.WRONG_DIAGNOSIS_FILE_PATH)
+        if current_date not in current_wrong_diagnosis.keys():
+            current_wrong_diagnosis[current_date] = [client_ip_address]
+        elif client_ip_address not in current_wrong_diagnosis[current_date]:
+            current_wrong_diagnosis[current_date].append([client_ip_address])
+        with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'w') as wrong_diagnosis_file:
+            toml.dump(current_wrong_diagnosis, wrong_diagnosis_file)
             wrong_diagnosis_file.close()
 
     def request(self, flow: http.HTTPFlow) -> None:
