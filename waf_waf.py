@@ -60,12 +60,12 @@ class WAF:
         current_date = date.today().strftime("%d_%m_%Y")
         current_wrong_diagnosis = toml.load(self.WRONG_DIAGNOSIS_FILE_PATH)
         if current_date not in current_wrong_diagnosis.keys():
-            current_wrong_diagnosis[current_date] = [client_ip_address]
-        elif client_ip_address not in current_wrong_diagnosis[current_date]:
+            current_wrong_diagnosis[current_date] = []
+        if client_ip_address not in current_wrong_diagnosis[current_date]:
             current_wrong_diagnosis[current_date].append([client_ip_address])
-        with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'w') as wrong_diagnosis_file:
-            toml.dump(current_wrong_diagnosis, wrong_diagnosis_file)
-            wrong_diagnosis_file.close()
+            with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'w') as wrong_diagnosis_file:
+                toml.dump(current_wrong_diagnosis, wrong_diagnosis_file)
+                wrong_diagnosis_file.close()
 
     def request(self, flow: http.HTTPFlow) -> None:
         if self._is_first_request:
