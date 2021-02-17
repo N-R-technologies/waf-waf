@@ -70,7 +70,7 @@ class WAF:
         elif self._is_wrong_diagnosis_request(flow.request):
             self._add_client_to_wrong_diagnosis(client_ip_address)
         else:
-            if self._detective.investigate(flow.request):
+            if self._detective.investigate(flow.request, client_ip_address):
                 if client_ip_address in self._attack_attempts.keys() and self._attack_attempts[client_ip_address] >= self.MAX_ATTACK_ATTEMPTS:
                     if flow.killable:
                         flow.kill()
