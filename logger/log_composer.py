@@ -4,11 +4,11 @@ from fpdf import FPDF
 
 
 class LogComposer:
-    LOG_FILE_PATH = "log_related/data/logs/daily_log_"
-    GRAPH_FILE_PATH = "log_related/data/graphs/risks_graph_"
-    BACKGROUND_FILE_PATH = "log_related/data/images/background.jpg"
-    CALIBRI_BOLD_FILE_PATH = "log_related/data/fonts/calibri_bold.ttf"
-    CALIBRI_LIGHT_FILE_PATH = "log_related/data/fonts/calibri_light.ttf"
+    LOG_FILE_PATH = "logger/data/logs/daily_log_"
+    GRAPH_FILE_PATH = "logger/data/graphs/risks_graph_"
+    BACKGROUND_FILE_PATH = "logger/data/images/background.jpg"
+    CALIBRI_BOLD_FILE_PATH = "logger/data/fonts/calibri_bold.ttf"
+    CALIBRI_LIGHT_FILE_PATH = "logger/data/fonts/calibri_light.ttf"
     LOG_TITLE = "WAF Daily Log"
     GRAPH_TITLE = "Risks Found In The Last Day"
 

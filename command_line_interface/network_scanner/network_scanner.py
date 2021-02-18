@@ -2,7 +2,7 @@ from .scan_functions import ScanFunctions
 from .password_engines import PasswordEngines
 from .runner import Runner
 from .reporter import Reporter
-from colors import Colors
+from misc import Colors
 
 
 class NetworkScanner:

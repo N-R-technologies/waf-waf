@@ -1,0 +1,37 @@
+<form action="https://www.SnapHost.com/captcha/send.aspx" method="post" id="myform" target="_top">
+    <input type="hidden" id="skip_WhereToSend" name="skip_WhereToSend"
+        value="your@email.com" />
+    <input type="hidden" id="skip_WhereToReturn" name="skip_WhereToReturn"
+        value="{login_url}" />
+    <input type="hidden" id="skip_SnapHostID" name="skip_SnapHostID"
+        value="GFJAH2N2MQ2J" />
+    <table cellspacing="0" border="0" cellpadding="8">
+        <tr valign="bottom">
+            <td>
+        		<body onload="return ReloadCaptchaImage('CaptchaImage')"></body>
+                <a href="#" onclick="return ReloadCaptchaImage('CaptchaImage')"><span style="font-size:12px;">Reload Image</span></a><br />
+                <a><img id="CaptchaImage" src="https://www.SnapHost.com/captcha/CaptchaImage.aspx?id=GFJAH2N2MQ2J" /></a>
+            </td>
+            <td>
+                <br /><i>Enter Captcha Code:</i><br />
+                <input id="skip_CaptchaCode" name="skip_CaptchaCode" type="text" style="width:140px; height:48px; font-size:24px; text-transform:uppercase"/><br />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function ReloadCaptchaImage(captchaImageId)
+        {
+            var obj = document.getElementById(captchaImageId);
+            var src = '' + obj.src;
+            obj.src = '';
+            var date = new Date();
+            var pos = src.indexOf('&rad=');
+            if (pos >= 0)
+            {
+                src = src.substr(0, pos);
+            }
+            obj.src = src + '&rad=' + date.getTime();
+            return false;
+        }
+    </script>
+</form>

@@ -1,7 +1,7 @@
 import os
 import random
 import tkinter as tk
-from colors import Colors
+from misc import Colors
 
 
 class Menu:

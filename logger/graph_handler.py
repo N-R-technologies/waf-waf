@@ -5,12 +5,12 @@ from detective.toolbox.risk_levels import RiskLevels
 
 
 class GraphHandler:
-    GRAPH_FILE_PATH = "log_related/data/graphs/risks_graph_"
+    GRAPH_FILE_PATH = "logger/data/graphs/risks_graph_"
     GRAPH_Y_TITLE = "Risks Found"
     GRAPH_X_TITLE = "Risk Levels"
     NEGLIGIBLE = 1/5
-    SLIGHT = 1/2
-    MODERATE = 1/3
+    SLIGHT = 2/5
+    MODERATE = 3/5
     CRITICAL = 1
     CATASTROPHIC = 1
     GREEN_IMPACT = 0.2

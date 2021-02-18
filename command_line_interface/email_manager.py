@@ -3,12 +3,12 @@ import toml
 import re
 from curtsies import Input
 from tkinter import messagebox
-from menu import Menu
-from colors import Colors
+from .menu import Menu
+from misc import Colors
 
 
 class EmailManager:
-    USER_EMAILS_FILE_PATH = "log_related/data/user_emails.toml"
+    USER_EMAILS_FILE_PATH = "../logger/data/user_emails.toml"
 
     _user_emails = dict()
 

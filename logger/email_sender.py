@@ -9,9 +9,9 @@ from email.utils import formatdate
 
 
 class EmailSender:
-    LOG_FILE_PATH = "log_related/data/logs/daily_log_"
-    BOT_EMAIL_FILE_PATH = "log_related/data/bot_email.toml"
-    USER_EMAILS_FILE_PATH = "log_related/data/user_emails.toml"
+    LOG_FILE_PATH = "logger/data/logs/daily_log_"
+    BOT_EMAIL_FILE_PATH = "logger/data/bot_email.toml"
+    USER_EMAILS_FILE_PATH = "logger/data/user_emails.toml"
     LOG_SUBJECT = "Daily Log - "
     LOG_DESCRIPTION = "Hello there, this is your daily log from the WAF.\nIf you have any problems you can " \
                       "contact us anytime.\nIn addition, if you recognize that you have been attacked and we " \

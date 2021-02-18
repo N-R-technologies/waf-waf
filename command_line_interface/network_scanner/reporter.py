@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from .data.vulnerabilities_info import info
-from colors import Colors
+from misc import Colors
 
 
 class Reporter:

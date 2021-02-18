@@ -16,7 +16,7 @@ class AdvancedChecks:
             return RiskLevels.NO_RISK
         detect_url_result = re.findall(r"""(?P<url>(?:ht|f)tps?:\/\/[^\.]+?\.\w{2,3})""", request)
         if len(detect_url_result) > 0:
-            server_url = toml.load("server_info.toml")["host"]
+            server_url = toml.load("waf_data/server_info.toml")["host"]
             for url in detect_url_result:
                 if server_url not in url:
                     return RiskLevels.CRITICAL
