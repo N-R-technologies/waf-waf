@@ -6,9 +6,9 @@ from misc import Colors
 
 
 class NetworkScanner:
-    COMMON_SSIDS = "network_scanner/data/files/common_ssids.txt"
-    COMMON_ROUTER_USERNAMES = "network_scanner/data/files/router_usernames.txt"
-    COMMON_ROUTER_PASSWORDS = "network_scanner/data/files/router_passwords.txt"
+    COMMON_SSIDS = "command_line_interface/network_scanner/data/files/common_ssids.txt"
+    COMMON_ROUTER_USERNAMES = "command_line_interface/network_scanner/data/files/router_usernames.txt"
+    COMMON_ROUTER_PASSWORDS = "command_line_interface/network_scanner/data/files/router_passwords.txt"
 
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
