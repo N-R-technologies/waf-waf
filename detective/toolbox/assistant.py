@@ -4,7 +4,7 @@ from threading import Thread
 from importlib import import_module
 from detective.toolbox import lenses
 from detective.toolbox.risk_levels import RiskLevels
-import log_related
+import logger
 
 
 class Assistant:
@@ -12,9 +12,9 @@ class Assistant:
     _info = {}
     _general_info = {}
     _links = {}
-    _email_sender = log_related.EmailSender()
-    _log_composer = log_related.LogComposer()
-    _graph_handler = log_related.GraphHandler()
+    _email_sender = logger.EmailSender()
+    _log_composer = logger.LogComposer()
+    _graph_handler = logger.GraphHandler()
 
     def __init__(self):
         thread = Thread(target=self._report_log)

@@ -1,7 +1,7 @@
 import time
 import threading
 import itertools
-from colors import Colors
+from misc import Colors
 
 
 class Loader:

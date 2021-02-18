@@ -9,7 +9,7 @@ class AdvancedChecks:
     def blind_xxe(request) -> RiskLevels:
         urls_found = re.findall(r"""!\s*entity\s+.+?\s+system\s+(?:\"|')(?P<url>.+?|)(?:\"|')""", request)
         if urls_found is not None:
-            server_url = toml.load("server_info.toml")["host"]
+            server_url = toml.load("waf_data/server_info.toml")["host"]
             white_spaces = re.compile(r"\s+")
             for url in urls_found:
                 parse_result = urlparse(re.sub(white_spaces, '', url))

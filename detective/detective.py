@@ -1,7 +1,7 @@
 from importlib import import_module
 from urllib.parse import unquote_plus
 import detective.toolbox as toolbox
-from attacks_logger.logger import AttacksLogger
+from .attacks_logger import AttacksLogger
 
 
 class Detective:
@@ -13,13 +13,13 @@ class Detective:
     INFO_INDEX = 2
 
     _multiplying_factors = ()
+    _magnifying_glass = toolbox.MagnifyingGlass()
+    _assistant = toolbox.Assistant()
     _attacks_logger = AttacksLogger()
+    _lenses = []
 
     def __init__(self):
         self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
-        self._magnifying_glass = toolbox.MagnifyingGlass()
-        self._assistant = toolbox.Assistant()
-        self._lenses = []
         for lens in toolbox.lenses.__all__:
             lens_package = f"detective.toolbox.lenses.{lens}"
             basic_checks = getattr(import_module(".basic_checks", lens_package), "BasicChecks")
@@ -45,8 +45,7 @@ class Detective:
                 found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[toolbox.RiskLevels.NEGLIGIBLE:])
                 if found_risk:
                     self._attacks_logger.add_attack_attempt(client_ip, content, attack_risks_findings)
-                    if self._is_malicious_request(attack_risks_findings) or \
-                            self._attacks_logger.is_continuity_attacks_in_continuity(client_ip):
+                    if self._is_malicious_request(attack_risks_findings) or self._attacks_logger.is_continuity_attacks_in_continuity(client_ip):
                         self._assistant.set_findings(attack_risks_findings)
                         self._assistant.set_info(lens[self.INFO_INDEX].category, attack_info)
                         return True

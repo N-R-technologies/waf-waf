@@ -1,6 +1,6 @@
 # WAF V1.0
 <div align="center">
-![waf logo](logo.png)
+![waf logo](misc/logo.png)
 </div>
 
 ![RN|INDUSTRIES](https://cldup.com/dTxpPi9lDf.thumb.png)
