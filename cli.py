@@ -1,6 +1,7 @@
 from command_line_interface import MainMenu
 
-if __name__ == "__main__":
+
+def main():
     main_menu = MainMenu()
     try:
         main_menu.start_menu()
@@ -9,3 +10,7 @@ if __name__ == "__main__":
         print(e)
     finally:
         print("\nGoodbye!")
+
+
+if __name__ == "__main__":
+    main()
