@@ -1,0 +1,2 @@
+[19_02_2021]
+"::ffff:127.0.0.1" = [ "/vulnerabilities/sqli/?id=' or '1' = '1&submit=submit",]
