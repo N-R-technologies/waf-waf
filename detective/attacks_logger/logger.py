@@ -44,14 +44,6 @@ class AttacksLogger:
                     else:
                         self._attacks_statistics[attacker_ip] = risk_level
 
-    def get_attack(self, searched_attacker_ip, searched_attack_date):
-        attacks = {}
-        with self._attacks_log_lock:
-            attacks = toml.load(self.ATTACKS_LOG_FILE_PATH).get(searched_attack_date, {})
-        if searched_attacker_ip in attacks.keys():
-            return attacks[searched_attacker_ip]
-        return None
-
     def is_continuity_attacks_in_continuity(self, attacker_ip):
         with self._attacks_statistics_lock:
             if self._attacks_statistics[attacker_ip] >= 1:
