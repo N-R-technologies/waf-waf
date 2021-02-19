@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
+from shutil import get_terminal_size
 from .data.vulnerabilities_info import info
 from misc import Colors
 
 
 class Reporter:
-    LOG_FILE_PATH = "network_scanner/data/logs/scan_log_"
+    LOG_FILE_PATH = "command_line_interface/network_scanner/data/logs/scan_log_"
     IS_FOUND = 0
     PRINT_COLOR = 1
 
@@ -15,9 +16,11 @@ class Reporter:
         :param results: the results of the scan
         :type results: dict
         """
-        print(f"\n{Colors.GREEN}*****************************Scan Conclusions*****************************\n")
+        columns_on_screen = get_terminal_size().columns
+        print((f"*****************************{Colors.GREEN}Scan Conclusions*****************************").center(columns_on_screen))
         for potential_risk_name, potential_risk_detected in results.items():
             if potential_risk_detected[self.IS_FOUND]:
+                print((potential_risk_detected[self.PRINT_COLOR] + "*****************************" + potential_risk_name + " Results" + "*****************************").center(columns_on_screen))
                 print(potential_risk_detected[self.PRINT_COLOR] + info[potential_risk_name])
         print(Colors.BLUE)
         self._report_log(results)
@@ -34,6 +37,7 @@ class Reporter:
             scan_log.write("*****************************Scan Conclusions*****************************\n\n")
             for potential_risk_name, potential_risk_detected in results.items():
                 if potential_risk_detected[self.IS_FOUND]:
+                    scan_log.write("*****************************" + potential_risk_name + " Results" + "*****************************\n")
                     scan_log.write(info[potential_risk_name] + '\n')
             scan_log.close()
         print(f"The report has also been saved at:\n{os.path.abspath(scan_file_path)}")

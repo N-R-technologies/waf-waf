@@ -5,6 +5,7 @@ from .menu import Menu
 from .network_scanner import NetworkScanner
 from .email_manager import EmailManager
 from misc import Colors
+from tkinter import messagebox
 
 
 class MainMenu:
@@ -43,13 +44,20 @@ class MainMenu:
 
     def _get_login_url(self):
         self._create_login_url_configuration()
-        self._main_menu.get_input(self._edit_login_url, "Enter your website's login url", "Login url")
+        self._main_menu.get_input(self._edit_login_url, "Enter your website's login url", "", "Login url")
 
     def _edit_login_url(self, login_url_entity):
         login_url = login_url_entity.get()
-        with open(self.LOGIN_URL_FILE, 'w') as login_url_file:
-            toml.dump({"login_url": login_url}, login_url_file)
-            login_url_file.close()
+        if login_url == "":
+            messagebox.showerror("Invalid Input", "Login url cannot be empty!")
+        else:
+            brute_force_configuration = toml.load(self.LOGIN_URL_FILE)
+            brute_force_configuration["login_url"] = login_url
+            with open(self.LOGIN_URL_FILE, 'w') as login_url_file:
+                toml.dump(brute_force_configuration, login_url_file)
+                login_url_file.close()
+            messagebox.showinfo("Success", f"Successfully modified the login url!")
+        self._main_menu.close_input()
 
     def _manage_emails(self):
         """
@@ -79,7 +87,7 @@ class MainMenu:
         self._main_menu.add_option("1. Start the network scan", self._call_start_scan)
         self._main_menu.add_option("2. Manage your emails configuration file", self._manage_emails)
         self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
-        self._main_menu.add_option("4. Modify your site's URL. In order to improve and to be more precise\n  "
+        self._main_menu.add_option("4. Modify your site's URL. In order to improve and to be more precise\n   "
                                    "in our brute force detection, we should know what is your sites' login URL", self._get_login_url)
         self._main_menu.add_option("5. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
@@ -97,14 +105,3 @@ class MainMenu:
                     self._main_menu.handle_menu_navigation(repr(user_input))
                 if self._main_menu.exit:
                     break
-
-
-if __name__ == "__main__":
-    main_menu = MainMenu()
-    try:
-        main_menu.start_menu()
-    except Exception as e:
-        print("\nAn error has occurred...")
-        print(e)
-    finally:
-        print("\nGoodbye!")

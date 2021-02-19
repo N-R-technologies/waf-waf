@@ -28,7 +28,7 @@ class InvalidChar(Exception):
 
 
 class PasswordEngines:
-    COMMON_NETWORK_PASSWORDS = "network_scanner/data/files/network_passwords.txt"
+    COMMON_NETWORK_PASSWORDS = "command_line_interface/network_scanner/data/files/network_passwords.txt"
     KEYS_PER_SECOND = 17042497
 
     def _convert_to_suitable_format(self, estimated_time):

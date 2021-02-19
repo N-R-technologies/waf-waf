@@ -6,9 +6,9 @@ from misc import Colors
 
 
 class NetworkScanner:
-    COMMON_SSIDS = "network_scanner/data/files/common_ssids.txt"
-    COMMON_ROUTER_USERNAMES = "network_scanner/data/files/router_usernames.txt"
-    COMMON_ROUTER_PASSWORDS = "network_scanner/data/files/router_passwords.txt"
+    COMMON_SSIDS = "command_line_interface/network_scanner/data/files/common_ssids.txt"
+    COMMON_ROUTER_USERNAMES = "command_line_interface/network_scanner/data/files/router_usernames.txt"
+    COMMON_ROUTER_PASSWORDS = "command_line_interface/network_scanner/data/files/router_passwords.txt"
 
     _scan_functions = ScanFunctions()
     _engines = PasswordEngines()
@@ -29,11 +29,11 @@ class NetworkScanner:
             results["evil twin"] = (self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid), Colors.WHITE)
             find_in_file = self._scan_functions.find_in_file
             results["open ssid"] = (ssid != "--", Colors.BEIGE)
-            results["common ssid"] = (self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS), Colors.BEIGE)
+            results["router ssid"] = (self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS), Colors.BEIGE)
             if router_username != "":
-                results["common router username"] = (self._runner.execute_operation("Checking router's username", Colors.PURPLE, find_in_file, router_username, self.COMMON_ROUTER_USERNAMES), Colors.PURPLE)
+                results["router username"] = (self._runner.execute_operation("Checking router's username", Colors.PURPLE, find_in_file, router_username, self.COMMON_ROUTER_USERNAMES), Colors.PURPLE)
             if router_password != "":
-                results["common router password"] = (self._runner.execute_operation("Checking router's password", Colors.CYAN, find_in_file, router_password, self.COMMON_ROUTER_PASSWORDS), Colors.CYAN)
+                results["router password"] = (self._runner.execute_operation("Checking router's password", Colors.CYAN, find_in_file, router_password, self.COMMON_ROUTER_PASSWORDS), Colors.CYAN)
             network_details = self._scan_functions.get_network_details(ssid)
             password = network_details["password"]
             self._runner.execute_operation("Checking network's password", Colors.ORANGE, self._engines.password_engines, password)

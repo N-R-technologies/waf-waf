@@ -8,7 +8,7 @@ from misc import Colors
 
 
 class EmailManager:
-    USER_EMAILS_FILE_PATH = "../logger/data/user_emails.toml"
+    USER_EMAILS_FILE_PATH = "logger/data/user_emails.toml"
 
     _user_emails = dict()
 
