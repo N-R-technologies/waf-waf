@@ -45,7 +45,6 @@ class MainMenu:
     def _call_remove_ip_black_list(self):
         self._main_menu.get_input()
 
-    def _remove_ip_from_black_list
     def _print_wrong_diagnosis(self):
         with open(self.WRONG_DIAGNOSIS_FILE, "r") as wrong_diagnosis_file:
             for wrong_diagnosis in wrong_diagnosis_file:
@@ -98,8 +97,7 @@ class MainMenu:
                                    "in our brute force detection, we should know what is your sites' login URL", self._get_login_url)
         self._main_menu.add_option("5. Get all users whose complainant that our waf made a mistake by blocking them", self._print_wrong_diagnosis)
         self._main_menu.add_option("6. Get specific ip attacks", self._call_get_attacks_ip)
-        self._main_menu.add_option("7. Remove ip from the black list", self._call_remove_ip_black_list)
-        self._main_menu.add_option("8. Exit (or simply press Q)", "exit")
+        self._main_menu.add_option("7. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
                 print(Colors.YELLOW + self._main_menu.menu[menu_item])
