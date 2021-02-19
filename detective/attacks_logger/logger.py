@@ -2,7 +2,6 @@ from time import time, sleep
 from datetime import datetime
 from threading import Thread, Lock
 import sched
-import toml
 
 
 class AttacksLogger:
@@ -20,6 +19,8 @@ class AttacksLogger:
 
     def add_attack_attempt(self, attacker_ip, attack_content, risks_level):
         current_date = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
+        if "ffff:" in attacker_ip and len(attacker_ip) > 5:
+            attacker_ip = attacker_ip[attacker_ip.find("ffff:")+5:]
         with open(self.ATTACKS_LOG_FILE_PATH, "a") as attacks_log_file:
             attacks_log_file.write(f"{attacker_ip},{current_date},{attack_content}\n")
             attacks_log_file.close()

@@ -29,14 +29,23 @@ class MainMenu:
                                   "Router's password. If you don't know, leave blank")
 
     def _get_wrong_diagnosis(self, client_ip_address):
-        wrong_diagnosis = list()
+        client_ip_address = client_ip_address.get()
         with open(self.ATTACKS_LOG_FILE, "r") as attacks_file:
             for attack in attacks_file:
                 attack_info = tuple(attack.split(","))
                 if attack_info[0] == client_ip_address:
-                    wrong_diagnosis.append(f"attack date: {attack_info[1]}, the attack packet:\n"
-                                           f"{attack_info[2]}")
+                    print(f"attack date: {attack_info[1]}, the attack packet:\n"
+                          f"{attack_info[2]}\n")
+            attacks_file.close()
+        self._main_menu.close_input()
 
+    def _call_get_attacks_ip(self):
+        self._main_menu.get_input(self._get_wrong_diagnosis, "Enter the attacker ip you are looking for:", "", "Attacker ip")
+
+    def _call_remove_ip_black_list(self):
+        self._main_menu.get_input()
+
+    def _remove_ip_from_black_list
     def _print_wrong_diagnosis(self):
         with open(self.WRONG_DIAGNOSIS_FILE, "r") as wrong_diagnosis_file:
             for wrong_diagnosis in wrong_diagnosis_file:
@@ -87,8 +96,10 @@ class MainMenu:
         self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
         self._main_menu.add_option("4. Modify your site's URL. In order to improve and to be more precise\n   "
                                    "in our brute force detection, we should know what is your sites' login URL", self._get_login_url)
-        self._main_menu.add_option("5. Get all users up whose complainant that our waf made a mistake by blocking them", self._print_wrong_diagnosis)
-        self._main_menu.add_option("6. Exit (or simply press Q)", "exit")
+        self._main_menu.add_option("5. Get all users whose complainant that our waf made a mistake by blocking them", self._print_wrong_diagnosis)
+        self._main_menu.add_option("6. Get specific ip attacks", self._call_get_attacks_ip)
+        self._main_menu.add_option("7. Remove ip from the black list", self._call_remove_ip_black_list)
+        self._main_menu.add_option("8. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
                 print(Colors.YELLOW + self._main_menu.menu[menu_item])

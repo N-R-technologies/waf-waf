@@ -58,8 +58,10 @@ class WAF:
 
     def _add_client_to_wrong_diagnosis(self, client_ip_address):
         current_date = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
+        if "ffff:" in client_ip_address and len(client_ip_address) > 5:
+            client_ip_address = client_ip_address[client_ip_address.find("ffff:")+5:]
         with open(self.WRONG_DIAGNOSIS_FILE_PATH, "a") as wrong_diagnosis_file:
-            wrong_diagnosis_file.write(f"{client_ip_address}:{current_date}\n")
+            wrong_diagnosis_file.write(f"{client_ip_address},{current_date}\n")
             wrong_diagnosis_file.close()
 
     def request(self, flow: http.HTTPFlow) -> None:
