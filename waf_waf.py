@@ -1,6 +1,6 @@
 import os
 import toml
-from datetime import date
+from datetime import datetime
 from mitmproxy import proxy, options, http
 from mitmproxy.tools.dump import DumpMaster
 from detective import Detective
@@ -13,7 +13,7 @@ PROXY_LISTEN_PORT = 8080
 class WAF:
     BLACKLIST_FILE_PATH = "waf_data/blacklist.toml"
     SERVER_INFO_FILE_PATH = "waf_data/server_info.toml"
-    WRONG_DIAGNOSIS_FILE_PATH = "waf_data/wrong_diagnosis.toml"
+    WRONG_DIAGNOSIS_FILE_PATH = "waf_data/wrong_diagnosis.waf_waf"
     WARNING_MESSAGE_FILE_PATH = "waf_data/warning_message.txt"
     WAF_DIAGNOSIS_HASH = "a7ac7ea7c7af02759b404c0ccd188045"
     MAX_ATTACK_ATTEMPTS = 2
@@ -57,15 +57,12 @@ class WAF:
         return request.method == "POST" and self.WAF_DIAGNOSIS_HASH in request.urlencoded_form.keys()
 
     def _add_client_to_wrong_diagnosis(self, client_ip_address):
-        current_date = date.today().strftime("%d_%m_%Y")
-        wrong_diagnosis = toml.load(self.WRONG_DIAGNOSIS_FILE_PATH)
-        if current_date not in wrong_diagnosis.keys():
-            wrong_diagnosis[current_date] = []
-        if client_ip_address not in wrong_diagnosis[current_date]:
-            wrong_diagnosis[current_date].append([client_ip_address])
-            with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'w') as wrong_diagnosis_file:
-                toml.dump(wrong_diagnosis, wrong_diagnosis_file)
-                wrong_diagnosis_file.close()
+        current_date = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
+        if "ffff:" in client_ip_address and len(client_ip_address) > 5:
+            client_ip_address = client_ip_address[client_ip_address.find("ffff:")+5:]
+        with open(self.WRONG_DIAGNOSIS_FILE_PATH, "a") as wrong_diagnosis_file:
+            wrong_diagnosis_file.write(f"{client_ip_address},{current_date}\n")
+            wrong_diagnosis_file.close()
 
     def request(self, flow: http.HTTPFlow) -> None:
         if self._is_first_request:

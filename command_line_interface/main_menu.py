@@ -10,18 +10,13 @@ from tkinter import messagebox
 
 class MainMenu:
     LOGIN_URL_FILE = "detective/toolbox/brute_force/brute_force_configuration.toml"
+    WRONG_DIAGNOSIS_FILE = "waf_data/wrong_diagnosis.waf_waf"
+    ATTACKS_LOG_FILE = "detective/attacks_logger/attacks.waf_waf"
 
     _main_menu = Menu()
     _ignore_input = False
 
     def _start_scan(self, router_username, router_password):
-        """
-        This function will start the network scan
-        :param router_username: the username of the router
-        :param router_password: the password of the router
-        :type router_username: tkinter.Entry
-        :type router_password: tkinter.Entry
-        """
         router_username = router_username.get()
         router_password = router_password.get()
         self._main_menu.close_input()
@@ -29,13 +24,34 @@ class MainMenu:
         scanner.scan(router_username, router_password)
 
     def _call_start_scan(self):
-        """
-        This function will call the start_scan function
-        with the appropriate parameters
-        """
         self._main_menu.get_input(self._start_scan, "Enter Router Credentials", '*',
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
+
+    def _get_wrong_diagnosis(self, client_ip_address):
+        client_ip_address = client_ip_address.get()
+        with open(self.ATTACKS_LOG_FILE, "r") as attacks_file:
+            for attack in attacks_file:
+                attack_info = tuple(attack.split(","))
+                if attack_info[0] == client_ip_address:
+                    print(f"attack date: {attack_info[1]}, the attack packet:\n"
+                          f"{attack_info[2]}\n")
+            attacks_file.close()
+        self._main_menu.close_input()
+
+    def _call_get_attacks_ip(self):
+        self._main_menu.get_input(self._get_wrong_diagnosis, "Enter the attacker ip you are looking for:", "", "Attacker ip")
+
+    def _call_remove_ip_black_list(self):
+        self._main_menu.get_input()
+
+    def _remove_ip_from_black_list
+    def _print_wrong_diagnosis(self):
+        with open(self.WRONG_DIAGNOSIS_FILE, "r") as wrong_diagnosis_file:
+            for wrong_diagnosis in wrong_diagnosis_file:
+                wrong_diagnosis_info = tuple(wrong_diagnosis.split(","))
+                print(f"attacker ip: {wrong_diagnosis_info[0]}, attack date: {wrong_diagnosis_info[1]}")
+            wrong_diagnosis_file.close()
 
     def _create_login_url_configuration(self):
         if not path.exists(self.LOGIN_URL_FILE):
@@ -60,16 +76,10 @@ class MainMenu:
         self._main_menu.close_input()
 
     def _manage_emails(self):
-        """
-        This function will start the emails manager menu
-        """
         email_manager = EmailManager()
         email_manager.start_manage_emails()
 
     def _print_help(self):
-        """
-        This function will print information about the program
-        """
         print("Our project can do couple of useful stuff to your server.\n"
               "Our WAF (Web Application Firewall) runs in the background and protects your server\n"
               "from web attacks and hackers. In addition, our tool can scan your network and see if its safe.\n"
@@ -80,16 +90,16 @@ class MainMenu:
               "https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf\n")
 
     def start_menu(self):
-        """
-        This function will start the main menu of the program
-        """
         self._main_menu.clear()
         self._main_menu.add_option("1. Start the network scan", self._call_start_scan)
         self._main_menu.add_option("2. Manage your emails configuration file", self._manage_emails)
         self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
         self._main_menu.add_option("4. Modify your site's URL. In order to improve and to be more precise\n   "
                                    "in our brute force detection, we should know what is your sites' login URL", self._get_login_url)
-        self._main_menu.add_option("5. Exit (or simply press Q)", "exit")
+        self._main_menu.add_option("5. Get all users whose complainant that our waf made a mistake by blocking them", self._print_wrong_diagnosis)
+        self._main_menu.add_option("6. Get specific ip attacks", self._call_get_attacks_ip)
+        self._main_menu.add_option("7. Remove ip from the black list", self._call_remove_ip_black_list)
+        self._main_menu.add_option("8. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
                 print(Colors.YELLOW + self._main_menu.menu[menu_item])
