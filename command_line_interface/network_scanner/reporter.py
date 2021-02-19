@@ -5,7 +5,7 @@ from misc import Colors
 
 
 class Reporter:
-    LOG_FILE_PATH = "network_scanner/data/logs/scan_log_"
+    LOG_FILE_PATH = "command_line_interface/network_scanner/data/logs/scan_log_"
     IS_FOUND = 0
     PRINT_COLOR = 1
 
