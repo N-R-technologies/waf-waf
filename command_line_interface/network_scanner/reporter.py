@@ -17,7 +17,7 @@ class Reporter:
         :type results: dict
         """
         columns_on_screen = get_terminal_size().columns
-        print(f"\n{Colors.GREEN}Scan Conclusions\n".center(columns_on_screen))
+        print((f"*****************************{Colors.GREEN}Scan Conclusions*****************************").center(columns_on_screen))
         for potential_risk_name, potential_risk_detected in results.items():
             if potential_risk_detected[self.IS_FOUND]:
                 print((potential_risk_detected[self.PRINT_COLOR] + "*****************************" + potential_risk_name + " Results" + "*****************************").center(columns_on_screen))
