@@ -14,7 +14,10 @@ class EmailManager:
 
     def __init__(self):
         self._email_manager_menu = Menu()
-
+        if os.environ.get('DISPLAY','') == '':
+            print('no display found. Using :0.0')
+            os.environ.__setitem__('DISPLAY', ':0.0')
+    
     def _display_emails(self):
         """
         This function will display all the existing emails to the user

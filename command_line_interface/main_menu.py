@@ -1,4 +1,4 @@
-from os import path
+import os
 import toml
 from curtsies import Input
 from .menu import Menu
@@ -8,6 +8,7 @@ from misc import Colors
 from tkinter import messagebox
 
 
+
 class MainMenu:
     LOGIN_URL_FILE = "detective/toolbox/brute_force/brute_force_configuration.toml"
     WRONG_DIAGNOSIS_FILE = "waf_data/wrong_diagnosis.waf_waf"
@@ -15,6 +16,10 @@ class MainMenu:
 
     _main_menu = Menu()
     _ignore_input = False
+    if os.environ.get('DISPLAY','') == '':
+        print('no display found. Using :0.0')
+        os.environ.__setitem__('DISPLAY', ':0.0')
+
 
     def _start_scan(self, router_username, router_password):
         router_username = router_username.get()
