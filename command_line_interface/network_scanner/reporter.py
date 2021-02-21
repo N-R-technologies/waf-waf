@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-from shutil import get_terminal_size
 from .data.vulnerabilities_info import info
 from misc import Colors
 
@@ -16,11 +15,10 @@ class Reporter:
         :param results: the results of the scan
         :type results: dict
         """
-        columns_on_screen = get_terminal_size().columns
-        print((f"*****************************{Colors.GREEN}Scan Conclusions*****************************").center(columns_on_screen))
+        print(f"\n*****************************{Colors.GREEN}Scan Conclusions*****************************\n")
         for potential_risk_name, potential_risk_detected in results.items():
             if potential_risk_detected[self.IS_FOUND]:
-                print((potential_risk_detected[self.PRINT_COLOR] + "*****************************" + potential_risk_name + " Results" + "*****************************").center(columns_on_screen))
+                print(potential_risk_detected[self.PRINT_COLOR] + "*****************************" + potential_risk_name + " Results" + "*****************************")
                 print(potential_risk_detected[self.PRINT_COLOR] + info[potential_risk_name])
         print(Colors.BLUE)
         self._report_log(results)

@@ -1,5 +1,6 @@
 FROM python:3
 ADD run.sh ./run.sh
+ADD run_demo.sh ./run_demo.sh
 ADD cli.py ./cli.py
 ADD README.md ./README.md
 ADD waf_waf.py ./waf_waf.py
@@ -74,6 +75,8 @@ ADD manual/executing_info.md manual/executing_info.md
 ADD misc/colors.py misc/colors.py
 ADD misc/logo.png misc/logo.png
 ADD misc/__init__.py misc/__init__.py
+ADD logger/data/logs logger/data/logs
+ADD logger/data/graphs logger/data/graphs
 ADD logger/graph_handler.py logger/graph_handler.py
 ADD logger/email_sender.py logger/email_sender.py
 ADD logger/__init__.py logger/__init__.py
@@ -85,8 +88,10 @@ ADD logger/data/fonts/calibri_bold.ttf logger/data/fonts/calibri_bold.ttf
 ADD logger/data/images/background.jpg logger/data/images/background.jpg
 RUN apt-get update
 RUN apt-get -y install network-manager
+RUN apt-get -y install vim
 RUN pip3 install mitmproxy
 RUN pip3 install toml
 RUN pip3 install curtsies
 RUN pip3 install matplotlib
-CMD ["python3", "./cli.py"]
+RUN pip3 install fpdf
+CMD ["./run.sh"]

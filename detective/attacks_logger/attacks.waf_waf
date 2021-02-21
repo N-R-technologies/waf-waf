@@ -1,2 +1,2 @@
-127.0.0.1,19_02_2021__12_36_23,; nslookup submit 
-127.0.0.1,19_02_2021__12_36_54,hacker <script>alert(document.cookie)</script> sign guestbook 
+::1,20_02_2021__13_45_35,/vulnerabilities/sqli/?id=' or 1=1;&submit=submit
+::1,20_02_2021__13_45_43,/vulnerabilities/xss_r/?name=<script>alert(document.cookie)</script>
