@@ -1,2 +1,0 @@
-::1,20_02_2021__13_45_35,/vulnerabilities/sqli/?id=' or 1=1;&submit=submit
-::1,20_02_2021__13_45_43,/vulnerabilities/xss_r/?name=<script>alert(document.cookie)</script>
