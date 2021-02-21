@@ -8,7 +8,6 @@ from misc import Colors
 from tkinter import messagebox
 
 
-
 class MainMenu:
     LOGIN_URL_FILE = "detective/toolbox/brute_force/brute_force_configuration.toml"
     WRONG_DIAGNOSIS_FILE = "waf_data/wrong_diagnosis.waf_waf"
@@ -16,10 +15,6 @@ class MainMenu:
 
     _main_menu = Menu()
     _ignore_input = False
-    if os.environ.get('DISPLAY','') == '':
-        print('no display found. Using :0.0')
-        os.environ.__setitem__('DISPLAY', ':0.0')
-
 
     def _start_scan(self, router_username, router_password):
         router_username = router_username.get()
@@ -59,7 +54,7 @@ class MainMenu:
             wrong_diagnosis_file.close()
 
     def _create_login_url_configuration(self):
-        if not path.exists(self.LOGIN_URL_FILE):
+        if not os.path.exists(self.LOGIN_URL_FILE):
             return toml.load(self.LOGIN_URL_FILE).get("login_url", None)
         return None
 
