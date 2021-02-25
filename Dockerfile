@@ -4,6 +4,7 @@ ADD run_demo.sh ./run_demo.sh
 ADD cli.py ./cli.py
 ADD README.md ./README.md
 ADD waf_waf.py ./waf_waf.py
+# detective files
 ADD detective/detective.py detective/detective.py
 ADD detective/__init__.py detective/__init__.py
 ADD detective/toolbox/assistant.py detective/toolbox/assistant.py
@@ -46,15 +47,9 @@ ADD detective/toolbox/brute_force/__init__.py detective/toolbox/brute_force/__in
 ADD detective/toolbox/brute_force/brute_force_configuration.toml detective/toolbox/brute_force/brute_force_configuration.toml
 ADD detective/attacks_logger/logger.py detective/attacks_logger/logger.py
 ADD detective/attacks_logger/__init__.py detective/attacks_logger/__init__.py
-ADD detective/attacks_logger/attacks.waf_waf detective/attacks_logger/attacks.waf_waf
-ADD environment/pyvenv.cfg environment/pyvenv.cfg
-ADD environment/bin/activate environment/bin/activate
-ADD environment/bin/activate.csh environment/bin/activate.csh
-ADD environment/bin/activate.fish environment/bin/activate.fish
+#waf data files
 ADD waf_data/warning_message.txt waf_data/warning_message.txt
-ADD waf_data/server_info.toml waf_data/server_info.toml
-ADD waf_data/blacklist.toml waf_data/blacklist.toml
-ADD waf_data/wrong_diagnosis.waf_waf waf_data/wrong_diagnosis.waf_waf
+# command line interface files
 ADD command_line_interface/menu.py command_line_interface/menu.py
 ADD command_line_interface/main_menu.py command_line_interface/main_menu.py
 ADD command_line_interface/email_manager.py command_line_interface/email_manager.py
@@ -66,15 +61,19 @@ ADD command_line_interface/network_scanner/loader.py command_line_interface/netw
 ADD command_line_interface/network_scanner/password_engines.py command_line_interface/network_scanner/password_engines.py
 ADD command_line_interface/network_scanner/__init__.py command_line_interface/network_scanner/__init__.py
 ADD command_line_interface/network_scanner/runner.py command_line_interface/network_scanner/runner.py
+ADD command_line_interface/network_scanner/data/logs command_line_interface/network_scanner/data/logs
 ADD command_line_interface/network_scanner/data/vulnerabilities_info.py command_line_interface/network_scanner/data/vulnerabilities_info.py
 ADD command_line_interface/network_scanner/data/files/network_passwords.txt command_line_interface/network_scanner/data/files/network_passwords.txt
 ADD command_line_interface/network_scanner/data/files/router_usernames.txt command_line_interface/network_scanner/data/files/router_usernames.txt
 ADD command_line_interface/network_scanner/data/files/router_passwords.txt command_line_interface/network_scanner/data/files/router_passwords.txt
 ADD command_line_interface/network_scanner/data/files/common_ssids.txt command_line_interface/network_scanner/data/files/common_ssids.txt
+# manual
 ADD manual/executing_info.md manual/executing_info.md
+# miscellaneous files
 ADD misc/colors.py misc/colors.py
 ADD misc/logo.png misc/logo.png
 ADD misc/__init__.py misc/__init__.py
+# logger files
 ADD logger/data/logs logger/data/logs
 ADD logger/data/graphs logger/data/graphs
 ADD logger/graph_handler.py logger/graph_handler.py
@@ -86,6 +85,7 @@ ADD logger/data/bot_email.toml logger/data/bot_email.toml
 ADD logger/data/fonts/calibri_light.ttf logger/data/fonts/calibri_light.ttf
 ADD logger/data/fonts/calibri_bold.ttf logger/data/fonts/calibri_bold.ttf
 ADD logger/data/images/background.jpg logger/data/images/background.jpg
+# installation commands
 RUN apt-get update
 RUN apt-get -y install network-manager
 RUN apt-get -y install vim
@@ -95,3 +95,4 @@ RUN pip3 install curtsies
 RUN pip3 install matplotlib
 RUN pip3 install fpdf
 CMD ["./run.sh"]
+
