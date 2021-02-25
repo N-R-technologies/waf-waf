@@ -28,8 +28,10 @@ class MainMenu:
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
 
-    def _get_wrong_diagnosis(self, client_ip_address):
+    def _get_wrong_diagnosis_attack(self, client_ip_address):
         client_ip_address = client_ip_address.get()
+        if not path.exists(self.ATTACKS_LOG_FILE):
+            open(self.ATTACKS_LOG_FILE, "w").close()
         with open(self.ATTACKS_LOG_FILE, "r") as attacks_file:
             for attack in attacks_file:
                 attack_info = tuple(attack.split(","))
@@ -42,10 +44,9 @@ class MainMenu:
     def _call_get_attacks_ip(self):
         self._main_menu.get_input(self._get_wrong_diagnosis, "Enter the attacker ip you are looking for:", "", "Attacker ip")
 
-    def _call_remove_ip_black_list(self):
-        self._main_menu.get_input()
-
     def _print_wrong_diagnosis(self):
+        if not path.exists(self.WRONG_DIAGNOSIS_FILE):
+            open(self.WRONG_DIAGNOSIS_FILE, "w").close()
         with open(self.WRONG_DIAGNOSIS_FILE, "r") as wrong_diagnosis_file:
             for wrong_diagnosis in wrong_diagnosis_file:
                 wrong_diagnosis_info = tuple(wrong_diagnosis.split(","))
