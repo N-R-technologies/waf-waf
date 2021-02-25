@@ -42,7 +42,7 @@ class MainMenu:
         self._main_menu.close_input()
 
     def _call_get_attacks_ip(self):
-        self._main_menu.get_input(self._get_wrong_diagnosis, "Enter the attacker ip you are looking for:", "", "Attacker ip")
+        self._main_menu.get_input(self._get_wrong_diagnosis_attack, "Enter the attacker ip you are looking for:", "", "Attacker ip")
 
     def _print_wrong_diagnosis(self):
         if not path.exists(self.WRONG_DIAGNOSIS_FILE):
