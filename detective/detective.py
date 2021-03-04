@@ -46,6 +46,7 @@ class Detective:
                 if found_risk:
                     self._attacks_logger.add_attack_attempt(client_ip, content, attack_risks_findings)
                     if self._is_malicious_request(attack_risks_findings) or self._attacks_logger.is_continuity_attacks_in_continuity(client_ip):
+                        self._attacks_logger.is_continuity_attacks_in_continuity(client_ip)
                         self._assistant.set_findings(attack_risks_findings)
                         self._assistant.set_info(lens[self.INFO_INDEX].category, attack_info)
                         return True
