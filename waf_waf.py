@@ -80,15 +80,7 @@ class WAF:
                 if client_ip_address in self._attack_attempts.keys() and self._attack_attempts[client_ip_address] >= self.MAX_ATTACK_ATTEMPTS:
                     if flow.killable:
                         flow.kill()
-                    else:
-                        flow.request.headers["Host"] = "No such host"
-                        if client_ip_address in self._attack_attempts.keys():
-                            self._attack_attempts[client_ip_address] += 1
-                        else:
-                            self._attack_attempts[client_ip_address] = 1
-                        referer = flow.request.headers["Referer"]
-                        flow.response = http.HTTPResponse.make(400, self._get_warning_message(client_ip_address, referer), {"content-type": "text/html"})
-                        self._add_client_to_blacklist(client_ip_address)
+                    self._add_client_to_blacklist(client_ip_address)
                 else:
                     flow.request.headers["Host"] = "No such host"
                     if client_ip_address in self._attack_attempts.keys():
