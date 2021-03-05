@@ -1,3 +1,5 @@
-python3 automation/automation.py no_waf_waf
-python3 automation/automation.py waf_waf
-
+echo "Without WAF WAF"
+python3 automation/automation.py False
+echo
+echo "With WAF WAF"
+python3 automation/automation.py True
