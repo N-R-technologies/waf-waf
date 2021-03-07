@@ -50,7 +50,7 @@ class BruteForceDetector:
     def add_delay(self, response, user_ip_address):
         with self._users_delay_lock:
             if user_ip_address in self._users_delay.keys():
-                if self._users_delay[user_ip_address] <= 3:
+                if self._users_delay[user_ip_address] <= 2:
                     self._users_delay[user_ip_address] += 1
                 else:
                     response = http.HTTPResponse.make(429, "", {"Retry-After": "3"})
