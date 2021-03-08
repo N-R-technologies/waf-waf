@@ -1,6 +1,6 @@
 import re
-from detective.toolbox.risk_levels import RiskLevels
 from html import escape
+from detective.toolbox.risk_levels import RiskLevels
 
 
 class BasicChecks:
