@@ -4,9 +4,11 @@ from time import sleep
 from threading import Thread
 import subprocess
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 
 FILES_TO_DELETE = ("geckodriver.log", "waf_data/blacklist.toml", "waf_data/server_info.toml",
                    "waf_data/wrong_diagnosis.waf_waf", "detective/attacks_logger/attacks.waf_waf")
+PROCESSES_TO_KILL = ("geckodriver", "firefox", "selenium")
 
 
 class Automation:
@@ -22,7 +24,7 @@ class Automation:
         if self._with_waf_waf:
             waf_waf_thread = Thread(target=run_waf_waf)
             waf_waf_thread.start()
-            sleep(1)
+            sleep(30)
             self._driver.get(self.WITH_WAF_WAF_ADDRESS)
         else:
             self._driver.get(self.WITHOUT_WAF_WAF_ADDRESS)
@@ -31,6 +33,7 @@ class Automation:
         gecko_driver_path = subprocess.Popen(["realpath", "automation/geckodriver"], stdout=subprocess.PIPE).communicate()[0].decode()[:-1]
         gecko_driver_path = gecko_driver_path[:gecko_driver_path.find("/geckodriver")]
         environ["PATH"] += "$PATH:" + str(gecko_driver_path)
+        environ["LANG"] = "en_US.UTF-8"
         self._driver = webdriver.Firefox()
 
     def run(self):
@@ -49,7 +52,10 @@ class Automation:
         if self._with_waf_waf:
             self._scroll_down()
             self._click_link("Return to the site")
-        self._automate_attack("Command Injection", "ip", "; pwd")
+        try:
+            self._automate_attack("Command Injection", "ip", "; pwd")
+        except WebDriverException:
+            pass
         self._driver.close()
 
     def _click_button(self, input_value):
@@ -89,6 +95,8 @@ def run_waf_waf():
 def main():
     for file in FILES_TO_DELETE:
         run_command(f"rm {file}")
+    for process in PROCESSES_TO_KILL:
+        run_command(f"pkill {run_command}")
     run_command("docker rm -f $(docker ps -a -q)")
     run_command("docker run --rm -d -p 7777:80 vulnerables/web-dvwa")
     automation = Automation(eval(argv[1]))
