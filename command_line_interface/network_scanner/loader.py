@@ -34,7 +34,7 @@ class Loader:
         :type color: Colors
         """
         self._finish_load = False
-        self._current_thread = threading.Thread(target=self._load, args=(loading_str, color,))
+        self._current_thread = threading.Thread(target=self._load, args=(loading_str, color,), daemon=True)
         self._current_thread.start()
 
     def stop_loading(self):
