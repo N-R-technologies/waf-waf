@@ -134,7 +134,6 @@ pip-selfcheck.json
 *.iws
 
 ## Plugin-specific files:
-
 # IntelliJ
 /out/
 
@@ -149,7 +148,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
 
 # Our WAF project's files
 waf_data/blacklist.toml
