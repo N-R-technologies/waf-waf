@@ -33,8 +33,6 @@ deep_info = {
 
     "img_src": "* img src: An attacker can use the image tag in order to include malicious code.\n",
 
-    "old_img_src": "* Old img src: An attacker can use the old image tag in order to include malicious code.\n",
-
     "tags_src": "* Tags src: An attacker can use tags like input or xml\n  to include malicious code that will be "
                 "stored\n  on the server side, and user will run it.\n",
 
@@ -71,10 +69,10 @@ deep_info = {
     "list_style_image": "* list style image: list style image attribute is a way which an attacker\n  can inject "
                         "malicious script with XSS into the server.\n",
 
-    "xss_style_comments": "* XSS Style Comments: Those are not dangerous for themselves,\n  but there is an "
+    "xss_style_comment": "* XSS Style Comments: Those are not dangerous for themselves,\n  but there is an "
                           "indicator of an attack that will harm the server.\n",
 
-    "xss_html_comments": "* HTML Style Comments: Those are not dangerous for themselves,\n  but there is an "
+    "xss_html_comment": "* HTML Style Comments: Those are not dangerous for themselves,\n  but there is an "
                          "indicator of an attack that will harm the server.\n",
 
     "fscommand": "* fscommand: An attacker can use this when executed\n  from within an embedded flash object.\n",
