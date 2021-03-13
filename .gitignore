@@ -134,6 +134,7 @@ pip-selfcheck.json
 *.iws
 
 ## Plugin-specific files:
+
 # IntelliJ
 /out/
 
