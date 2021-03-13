@@ -34,7 +34,7 @@ class AttacksLogger:
 
     def is_continuity_attacks_in_continuity(self, attacker_ip):
         with self._attacks_statistics_lock:
-            if self._attacks_statistics[attacker_ip] >= 1:
+            if attacker_ip in self._attacks_statistics.keys() and self._attacks_statistics[attacker_ip] >= 1:
                 self._attacks_statistics[attacker_ip] = 0
                 return True
         return False

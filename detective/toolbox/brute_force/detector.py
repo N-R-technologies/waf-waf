@@ -28,10 +28,10 @@ class BruteForceDetector:
         return default_value
 
     def _schedule_threads(self):
-        login_brute_force_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._check_brute_force_login, "check_login_brute_force_timer"))
-        brute_force_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._check_brute_force, "check_brute_force_timer"))
-        reset_blocked_users_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._reset_block_users, "reset_blocked_users_timer"))
-        reset_users_delay_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._reset_users_delay, "reset_delay_ip_timer"))
+        login_brute_force_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._check_brute_force_login, "check_login_brute_force_timer"), daemon=True)
+        brute_force_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._check_brute_force, "check_brute_force_timer"), daemon=True)
+        reset_blocked_users_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._reset_block_users, "reset_blocked_users_timer"), daemon=True)
+        reset_users_delay_scheduler = threading.Thread(target=self._start_function_scheduler, args=(self._reset_users_delay, "reset_delay_ip_timer"), daemon=True)
         login_brute_force_scheduler.start()
         brute_force_scheduler.start()
         reset_blocked_users_scheduler.start()
