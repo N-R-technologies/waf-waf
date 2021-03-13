@@ -19,8 +19,6 @@ class AttacksLogger:
 
     def add_attack_attempt(self, attacker_ip, attack_content, risks_level):
         current_date = datetime.now().strftime("%d_%m_%Y__%H_%M_%S")
-        if "ffff:" in attacker_ip and len(attacker_ip) > 5:
-            attacker_ip = attacker_ip[attacker_ip.find("ffff:")+5:]
         with open(self.ATTACKS_LOG_FILE_PATH, "a") as attacks_log_file:
             attacks_log_file.write(f"{attacker_ip},{current_date},{attack_content}\n")
             attacks_log_file.close()
@@ -34,7 +32,7 @@ class AttacksLogger:
 
     def is_continuity_attacks_in_continuity(self, attacker_ip):
         with self._attacks_statistics_lock:
-            if self._attacks_statistics[attacker_ip] >= 1:
+            if attacker_ip in self._attacks_statistics.keys() and self._attacks_statistics[attacker_ip] >= 1:
                 self._attacks_statistics[attacker_ip] = 0
                 return True
         return False

@@ -9,7 +9,7 @@
 	    <form method="POST" action={referer}>
             <h2>Do you think our WAF identification is incorrect?</h2>
             <h2>Click on the button below to let the site owners know.</h2>
-            <button type="submit" value="wrong diagnosis" name="a7ac7ea7c7af02759b404c0ccd188045" style="height:75px; width:350px; font-size:24px;">You made a false detection</button>
+            <input type="submit" value="You made a false detection" name="a7ac7ea7c7af02759b404c0ccd188045" style="height:75px; width:400px; font-size:24px;">
         </form>
     </body>
 </html>
