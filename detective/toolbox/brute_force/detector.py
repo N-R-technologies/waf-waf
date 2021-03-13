@@ -3,10 +3,11 @@ import time
 import toml
 import threading
 import sched
+from mitmproxy import http
 
 
 class BruteForceDetector:
-    CONFIGURATION_FILE_PATH = "brute_force_configuration.toml"
+    CONFIGURATION_FILE_PATH = "detective/toolbox/brute_force/brute_force_configuration.toml"
     DEFAULT_TIME = 10000
 
     _blocked_users = list()
@@ -49,11 +50,12 @@ class BruteForceDetector:
     def add_delay(self, response, user_ip_address):
         with self._users_delay_lock:
             if user_ip_address in self._users_delay.keys():
-                if self._users_delay[user_ip_address]:
-                    response.headers["Retry-After"] = self._load_configuration("delay_time", self.DEFAULT_TIME)
-                    self._users_delay[user_ip_address] = False
+                if self._users_delay[user_ip_address] <= 2:
+                    self._users_delay[user_ip_address] += 1
                 else:
-                    self._users_delay[user_ip_address] = True
+                    response = http.HTTPResponse.make(429, "", {"Retry-After": "3"})
+                    self._users_delay[user_ip_address] = 0
+        return response
 
     def _count_login_attempt(self, request, user_ip_address):
         login_url = self._load_configuration("login_url", None)
