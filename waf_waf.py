@@ -87,12 +87,15 @@ class WAF:
                         self._attack_attempts[client_ip_address] += 1
                     else:
                         self._attack_attempts[client_ip_address] = 1
-                    referer = flow.request.headers["Referer"]
+                    if "Referer" in flow.request.headers.keys():
+                        referer = flow.request.headers["Referer"]
+                    else:
+                        referer = "www.google.com"
                     flow.response = http.HTTPResponse.make(400, self._get_warning_message(client_ip_address, referer), {"content-type": "text/html"})
 
     def response(self, flow: http.HTTPFlow) -> None:
         user_ip_address = flow.client_conn.ip_address[0]
-        self._brute_force_detector.add_delay(flow.response, user_ip_address)
+        flow.response = self._brute_force_detector.add_delay(flow.response, user_ip_address)
         login_url = self._captcha_implementer.get_login_url(flow.request)
         if login_url is not None:
             if not self._captcha_implementer.has_login_permission(user_ip_address):

@@ -45,12 +45,6 @@ class BasicChecks:
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def old_img_src(request) -> RiskLevels:
-        return RiskLevels.MODERATE \
-            if re.search(r"""(?:<|%3c)\s*img(?:/|\s).*?(?:src|dnysrc|lowsrc)\s*=\s*(?:(?:\"|'|`)\s*)?(?:vbscript\s*:\s*msgbox|livescript\s*:\s*\[)""", request) \
-            else RiskLevels.NO_RISK
-
-    @staticmethod
     def tags_src(request) -> RiskLevels:
         return RiskLevels.MODERATE if re.search(r"""(?:<|%3c)\s*(?:input|bgsound|xml)(?:/|\s).*?src\s*=""", request) \
             else RiskLevels.NO_RISK
@@ -64,7 +58,7 @@ class BasicChecks:
     @staticmethod
     def style_background(request) -> RiskLevels:
         return RiskLevels.MODERATE \
-            if re.search(r"""(?:<|%3c)\s*style(?:/|\s)*(?:>|%3e).*?{\s*(?:(?:\"|'|`)\s*)?background-image\s*:""", request) \
+            if re.search(r"""(?:<|%3c)\s*style(?:/|\s)*.*?{\s*(?:(?:\"|'|`)\s*)?background(?:-image)?\s*:""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -106,16 +100,16 @@ class BasicChecks:
 
     @staticmethod
     def list_style_image(request) -> RiskLevels:
-        return RiskLevels.MODERATE if re.search(r"""(?:<|%3c)\s*style(?:/|\s).*?{\s*list-style-image\s*:""", request) \
+        return RiskLevels.MODERATE if re.search(r"""(?:<|%3c)\s*style(?:/|\s)*.*?{\s*list-style-image\s*:""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def xss_style_comments(request) -> RiskLevels:
-        return RiskLevels.SLIGHT if re.search(r"""style\s*=\s*.*?(/\*.*?\*/)""", request) \
+    def xss_style_comment(request) -> RiskLevels:
+        return RiskLevels.SLIGHT if re.search(r"""style\s*=\s*.*?(?:/\*.*?\*/)""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
-    def xss_html_comments(request) -> RiskLevels:
+    def xss_html_comment(request) -> RiskLevels:
         return RiskLevels.NEGLIGIBLE if re.search(r"""(?:<|%3c)!--.*--(?:>|%3e)""", request) \
             else RiskLevels.NO_RISK
 
@@ -552,7 +546,7 @@ class BasicChecks:
     @staticmethod
     def c_style_loops(request) -> RiskLevels:
         return RiskLevels.MODERATE \
-            if re.search(r"""(?:\b(?:do|while|for)\b.*?\([^)]*\).*?\{)|(?:\}.*?\b(?:do|while|for)\b.*?\([^)]*\))""", request) \
+            if re.search(r"""(?:\b(?:do|while|for)\b.*?\([^)]*\).*?{)|(?:}.*?\b(?:do|while|for)\b.*?\([^)]*\))""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
@@ -567,7 +561,7 @@ class BasicChecks:
 
     @staticmethod
     def conditional_tokens(request) -> RiskLevels:
-        return RiskLevels.SLIGHT if re.search(r""" @(?:cc_on|set)\b""", request) \
+        return RiskLevels.SLIGHT if re.search(r"""@(?:cc_on|set)\b""", request) \
             else RiskLevels.NO_RISK
 
     @staticmethod
