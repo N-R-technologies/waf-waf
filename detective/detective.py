@@ -1,5 +1,5 @@
 from importlib import import_module
-from urllib.parse import unquote_plus
+from html import escape, unescape
 import detective.toolbox as toolbox
 from .attacks_logger import AttacksLogger
 
@@ -48,36 +48,33 @@ class Detective:
                     if self._is_malicious_request(attack_risks_findings) or self._attacks_logger.is_continuity_attacks_in_continuity(client_ip):
                         self._assistant.set_findings(attack_risks_findings)
                         self._assistant.set_info(lens[self.INFO_INDEX].category, attack_info)
+                        self._parse_escape_characters(request)
                         return True
+        self._parse_escape_characters(request)
         return False
 
     def _parse_request_content(self, request):
-        """
-        This function will check which type of request is
-        the given request and it will return its content
-        :param request: the user's request
-        :type request: mitmproxy.http.HTTPFlow.request
-        :return: the content of the request if any, otherwise, None
-        :rtype: string or None
-        """
+        request_content = ""
         if request.method == "GET":
-            return unquote_plus(request.data.path.decode().lower())
+            for parameter in request.query.values():
+                request_content += str(unescape(parameter)).lower()
+            return request_content
         elif request.method == "POST":
-            request_content = ""
             for content in request.urlencoded_form.values():
-                request_content += str(content) + " "
+                request_content += str(content)
             return request_content.lower().replace('\n', "")
         return None
 
     def _is_malicious_request(self, findings):
-        """
-        This function will decide if the request is dangerous according to the findings
-        :param findings: the risk levels the detector have found
-        :type findings: list
-        :return: True if the request is dangerous, otherwise, False
-        :rtype: boolean
-        """
         impact_level = 0
         for risk_occurrences, multiplying_factor in zip(findings[toolbox.RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
             impact_level += risk_occurrences * multiplying_factor
         return impact_level >= 1
+
+    def _parse_escape_characters(self, request):
+        if request.method == "GET":
+            for parameter_name in request.query.keys():
+                request.query[parameter_name] = escape(request.query[parameter_name])
+        elif request.method == "POST":
+            for parameter_name in request.urlencoded_form.keys():
+                request.urlencoded_form[parameter_name] = escape(request.urlencoded_form[parameter_name])

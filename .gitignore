@@ -150,7 +150,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-
 # Our WAF project's files
 waf_data/blacklist.toml
 waf_data/server_info.toml
