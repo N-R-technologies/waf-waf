@@ -15,7 +15,10 @@ class Menu:
         self._functions = []
         self._input_window = None
         self._ignore = False
-
+        if os.environ.get('DISPLAY','') == '':
+            print('no display found. Using :0.0')
+            os.environ.__setitem__('DISPLAY', ':0.0')
+    
     def clear(self):
         """
         This function will clear the terminal's screen

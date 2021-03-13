@@ -1,4 +1,4 @@
-from os import path
+import os
 import toml
 from curtsies import Input
 from .menu import Menu
@@ -54,7 +54,7 @@ class MainMenu:
             wrong_diagnosis_file.close()
 
     def _create_login_url_configuration(self):
-        if not path.exists(self.LOGIN_URL_FILE):
+        if not os.path.exists(self.LOGIN_URL_FILE):
             return toml.load(self.LOGIN_URL_FILE).get("login_url", None)
         return None
 
