@@ -53,14 +53,6 @@ class Detective:
         self._parse_escape_characters(request)
         return False
 
-    def _parse_escape_characters(self, request):
-        if request.method == "GET":
-            for parameter_name in request.query.keys():
-                request.query[parameter_name] = escape(request.query[parameter_name])
-        elif request.method == "POST":
-            for parameter_name in request.urlencoded_form.keys():
-                request.urlencoded_form[parameter_name] = escape(request.urlencoded_form[parameter_name])
-
     def _parse_request_content(self, request):
         request_content = ""
         if request.method == "GET":
@@ -78,3 +70,11 @@ class Detective:
         for risk_occurrences, multiplying_factor in zip(findings[toolbox.RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
             impact_level += risk_occurrences * multiplying_factor
         return impact_level >= 1
+
+    def _parse_escape_characters(self, request):
+        if request.method == "GET":
+            for parameter_name in request.query.keys():
+                request.query[parameter_name] = escape(request.query[parameter_name])
+        elif request.method == "POST":
+            for parameter_name in request.urlencoded_form.keys():
+                request.urlencoded_form[parameter_name] = escape(request.urlencoded_form[parameter_name])
