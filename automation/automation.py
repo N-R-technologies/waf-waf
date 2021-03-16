@@ -1,19 +1,14 @@
-from os import environ, system
+from os import environ
 from sys import argv
 from time import sleep
-from threading import Thread
 import subprocess
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
-FILES_TO_DELETE = ("geckodriver.log", "waf_data/blacklist.toml", "waf_data/server_info.toml",
-                   "waf_data/wrong_diagnosis.waf_waf", "detective/attacks_logger/attacks.waf_waf")
-PROCESSES_TO_KILL = ("geckodriver", "firefox", "selenium")
-
 
 class Automation:
-    WITH_WAF_WAF_ADDRESS = "http://localhost:1234/login.php"
-    WITHOUT_WAF_WAF_ADDRESS = "http://localhost:7777/login.php"
+    WITH_WAF_WAF_ADDRESS = "http://localhost:7777/login.php"
+    WITHOUT_WAF_WAF_ADDRESS = "http://localhost:1234/login.php"
 
     _driver = None
     _with_waf_waf = None
@@ -22,9 +17,6 @@ class Automation:
         self._with_waf_waf = with_waf_waf
         self._start_website()
         if self._with_waf_waf:
-            waf_waf_thread = Thread(target=run_waf_waf)
-            waf_waf_thread.start()
-            sleep(30)
             self._driver.get(self.WITH_WAF_WAF_ADDRESS)
         else:
             self._driver.get(self.WITHOUT_WAF_WAF_ADDRESS)
@@ -37,10 +29,6 @@ class Automation:
         self._driver = webdriver.Firefox()
 
     def run(self):
-        self._click_button("Login")
-        self._click_button("Create / Reset Database")
-        sleep(8)
-        self._click_button("Login")
         self._fill_input("username", "admin")
         self._fill_input("password", "password")
         self._click_button("Login")
@@ -84,24 +72,9 @@ class Automation:
         sleep(5)
 
 
-def run_command(command):
-    subprocess.call(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-
-def run_waf_waf():
-    system("mitmproxy -p 1234 -m reverse:http://localhost:7777 -s waf_waf.py")
-
-
 def main():
-    for file in FILES_TO_DELETE:
-        run_command(f"rm {file}")
-    for process in PROCESSES_TO_KILL:
-        run_command(f"pkill {run_command}")
-    run_command("docker rm -f $(docker ps -a -q)")
-    run_command("docker run --rm -d -p 7777:80 vulnerables/web-dvwa")
     automation = Automation(eval(argv[1]))
     automation.run()
-    run_command("docker rm -f $(docker ps -a -q)")
 
 
 if __name__ == "__main__":
