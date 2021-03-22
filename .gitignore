@@ -160,5 +160,6 @@ logger/data/user_emails.toml
 logger/data/logs/
 logger/data/graphs/
 command_line_interface/network_scanner/data/logs/
-auto.py
 Dockerfile
+auto.py
+efficient_test.py
