@@ -7,13 +7,16 @@ class DataManager:
     BLACKLIST_FILE_PATH = "waf_data/blacklist.toml"
     SERVER_INFO_FILE_PATH = "waf_data/server_info.toml"
     WRONG_DIAGNOSIS_FILE_PATH = "waf_data/wrong_diagnosis.waf_waf"
-    WARNING_MESSAGE_FILE_PATH = "waf_data/warning_message.txt"
+    WARNING_MSG_FILE_PATH = "waf_data/warning_message.txt"
     WAF_DIAGNOSIS_HASH = "a7ac7ea7c7af02759b404c0ccd188045"
 
     _warning_msg_format = ""
 
     def __init__(self):
-        with open(self.WARNING_MESSAGE_FILE_PATH, 'r') as warning_msg_file:
+        self._load_warning_msg(self.WARNING_MSG_FILE_PATH)
+
+    def _load_warning_msg(self, warning_msg_file_path):
+        with open(warning_msg_file_path, 'r') as warning_msg_file:
             self._warning_msg_format = warning_msg_file.read()
             warning_msg_file.close()
 
