@@ -1,5 +1,5 @@
-from time import sleep
-from datetime import datetime
+import sched
+import time
 from threading import Thread
 from importlib import import_module
 from detective.toolbox import lenses
@@ -15,16 +15,22 @@ class Assistant:
     _email_sender = logger.EmailSender()
     _log_composer = logger.LogComposer()
     _graph_handler = logger.GraphHandler()
+    SECONDS_IN_DAY = 86400
 
     def __init__(self):
-        thread = Thread(target=self._report_log)
-        thread.daemon = True
+        thread = Thread(target=self._start_send_emails_scheduler, args=(self.SECONDS_IN_DAY, ), daemon=True)
         thread.start()
 
         for lens in lenses.__all__:
             lens_info = import_module(f"detective.toolbox.lenses.{lens}.info")
             self._general_info[lens_info.category] = lens_info.general_info
             self._links[lens_info.category] = lens_info.links_for_info
+
+    def _start_send_emails_scheduler(self, time_until_send):
+        while True:
+            scheduler = sched.scheduler(time.time, time.sleep)
+            scheduler.enter(time_until_send, 1, self._report_log)
+            scheduler.run()
 
     def set_findings(self, attack_risks_findings):
         """
@@ -79,12 +85,8 @@ class Assistant:
         the user at the end of every day
         """
         while True:
-            current_time = datetime.now()
-            report_time = current_time.replace(hour=23, minute=59, second=55)
-            seconds_until_tomorrow = abs((report_time - current_time).total_seconds())
-            sleep(seconds_until_tomorrow)
             self._graph_handler.create_graph(self._risks_findings)
             self._log_composer.write_log(self._get_info())
             self._email_sender.send_log()
             self._reset()
-            sleep(5)
+            time.sleep(5)

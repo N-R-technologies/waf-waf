@@ -39,7 +39,7 @@ class Detective:
         :rtype: boolean
         """
         content = self._parse_request_content(request)
-        if content is not None:
+        if content is not None and content != "":
             for lens in self._lenses:
                 attack_risks_findings, attack_info = self._magnifying_glass.detect(content, lens)
                 found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[toolbox.RiskLevels.NEGLIGIBLE:])
