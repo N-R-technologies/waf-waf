@@ -4,4 +4,4 @@ echo
 echo "With WAF WAF"
 python3 automation/automation.py True
 docker rm -f $(docker ps -a -q)
-python3 automation/delete_resources
+python3 automation/delete_resources.py
