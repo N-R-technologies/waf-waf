@@ -1,5 +1,5 @@
 import re
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class BasicChecks:
@@ -59,14 +59,14 @@ class BasicChecks:
     @staticmethod
     def show_file(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
-            if re.search("cat.*/", command):
+            if re.search("cat\s+.+", command):
                 return RiskLevels.SLIGHT
         return RiskLevels.NO_RISK
 
     @staticmethod
     def show_sensitive_file(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
-            if re.search("cat.*/etc/.+", command):
+            if re.search("cat\s+.*/etc/.+", command):
                 return RiskLevels.CATASTROPHIC
         return RiskLevels.NO_RISK
 
@@ -80,7 +80,7 @@ class BasicChecks:
     @staticmethod
     def server_running_path(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
-            if re.search("pwd($|\s+)", command):
+            if re.search("pwd", command):
                 return RiskLevels.MODERATE
         return RiskLevels.NO_RISK
 

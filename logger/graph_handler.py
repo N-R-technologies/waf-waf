@@ -1,18 +1,14 @@
 from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
+from detective.toolbox import risks_factors
 
 
 class GraphHandler:
     GRAPH_FILE_PATH = "logger/data/graphs/risks_graph_"
     GRAPH_Y_TITLE = "Risks Found"
     GRAPH_X_TITLE = "Risk Levels"
-    NEGLIGIBLE = 1/5
-    SLIGHT = 2/5
-    MODERATE = 3/5
-    CRITICAL = 1
-    CATASTROPHIC = 1
     GREEN_IMPACT = 0.2
     YELLOW_IMPACT = 0.4
     ORANGE_IMPACT = 0.6
@@ -23,10 +19,7 @@ class GraphHandler:
     RED = "#FF0000"
     BLANK = "#FFFFFF"
 
-    _multiplying_factors = ()
-
     def __init__(self):
-        self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
         plt.rcdefaults()
 
     def create_graph(self, risks_found_today):
@@ -61,7 +54,7 @@ class GraphHandler:
         :rtype: list
         """
         graph_colors = [self.BLANK]
-        for risk_occurrences, multiplying_factor in zip(risks_found_today[RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
+        for risk_occurrences, multiplying_factor in zip(risks_found_today[RiskLevels.NEGLIGIBLE:], risks_factors.__all__):
             current_impact_level = risk_occurrences * multiplying_factor
             if self.GREEN_IMPACT <= current_impact_level < self.YELLOW_IMPACT:
                 graph_colors.append(self.GREEN)
