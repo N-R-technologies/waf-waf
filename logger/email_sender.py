@@ -12,12 +12,8 @@ class EmailSender:
     LOG_FILE_PATH = "logger/data/logs/daily_log_"
     BOT_EMAIL_FILE_PATH = "logger/data/bot_email.toml"
     USER_EMAILS_FILE_PATH = "logger/data/user_emails.toml"
+    LOG_DESCRIPTION_FILE_PATH = "logger/data/log_description.txt"
     LOG_SUBJECT = "Daily Log - "
-    LOG_DESCRIPTION = "Hello there, this is your daily log from the WAF.\nIf you have any problems you can " \
-                      "contact us anytime.\nIn addition, if you recognize that you have been attacked and we " \
-                      "were unable to identify it, we would like you to send a full report of the case.\n\n" \
-                      "Please do not reply to this address! You will not receive any response.\n" \
-                      "Instead, contact noammiz918@gmail.com or ronkonis1@gmail.com.\nHave a good one!"
 
     _bot_address = ""
     _bot_pass = ""
@@ -26,9 +22,6 @@ class EmailSender:
         self._load_bot_email_configuration(self.BOT_EMAIL_FILE_PATH)
 
     def send_log(self):
-        """
-        This function will send the daily log to the users email addresses
-        """
         user_addresses = self._load_user_addresses_configuration(self.USER_EMAILS_FILE_PATH)
         if len(user_addresses) > 0:
             daily_log_mail = MIMEMultipart()
@@ -36,7 +29,10 @@ class EmailSender:
             daily_log_mail["To"] = ", ".join(user_addresses)
             daily_log_mail["Date"] = formatdate(localtime=True)
             daily_log_mail["Subject"] = self.LOG_SUBJECT + date.today().strftime("%d/%m/%Y")
-            daily_log_description = self.LOG_DESCRIPTION
+            daily_log_description = ""
+            with open(self.LOG_DESCRIPTION_FILE_PATH, 'r') as log_description_file:
+                daily_log_description = log_description_file.read()
+                log_description_file.close()
             daily_log_mail.attach(MIMEText(daily_log_description))
 
             daily_log_path = self.LOG_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".pdf"

@@ -1,0 +1,8 @@
+Our project can do couple of useful stuff to your server.
+Our WAF (Web Application Firewall) runs in the background and protects your server
+from web attacks and hackers. In addition, our tool can scan your network and see if its safe.
+More than that, every 24 hours our WAF will send to your email a log containing information about all
+the attacks it blocked. You have the option to see the current Emails the WAF will send to them
+the log, or even add Email or remove Email from the list.
+This is an open source project, if you would like to see the source, enter to the link below:
+https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf

@@ -10,7 +10,7 @@ general_info = "Command injection is an attack in which the goal is execution of
                "Command injection attacks are possible largely due to insufficient input validation.\n"
 
 deep_info = {
-    "server_information": "* Server Information: With using one of the commands 'whoami' or 'lst'\n  "
+    "server_information": "* Server Information: With using one of the commands 'whoami' or 'ls'\n  "
                           "in linux terminal, a potential attacker can see information\n  "
                           "about the server's system and files.\n",
 

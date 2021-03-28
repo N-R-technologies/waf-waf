@@ -3,10 +3,6 @@ from .data.vulnerabilities_info import info
 
 
 class EngineError(Exception):
-    """
-    This class will handle errors if one of the engines
-    cant work properly with the given password
-    """
     def __init__(self, engine_num):
         self._engine_num = engine_num
 
@@ -15,10 +11,6 @@ class EngineError(Exception):
 
 
 class InvalidChar(Exception):
-    """
-    This class will handle errors if the password
-    contains non ascii characters
-    """
     def __init__(self, invalid_char):
         self._invalid_char = invalid_char
 

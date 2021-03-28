@@ -3,7 +3,7 @@ import sched
 from threading import Thread
 from importlib import import_module
 from detective.toolbox import lenses
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 import logger
 
 
@@ -59,8 +59,7 @@ class Assistant:
             scheduler.run()
 
     def _report_log(self):
-        self._graph_handler.create_graph(self._risks_findings)
+        self._graph_handler.create_graph(self._risks_findings[RiskLevels.NEGLIGIBLE:])
         self._log_composer.write_log(self._get_info())
         self._email_sender.send_log()
         self._reset()
-        time.sleep(3)

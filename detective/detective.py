@@ -5,22 +5,14 @@ from .attacks_logger import AttacksLogger
 
 
 class Detective:
-    NEGLIGIBLE = 1/5
-    SLIGHT = 2/5
-    MODERATE = 3/5
-    CRITICAL = 1
-    CATASTROPHIC = 1
     INFO_INDEX = 2
 
-    _multiplying_factors = ()
     _magnifying_glass = toolbox.MagnifyingGlass()
     _assistant = toolbox.Assistant()
     _attacks_logger = AttacksLogger()
     _lenses = []
 
     def __init__(self):
-        self._multiplying_factors = (self.NEGLIGIBLE, self.SLIGHT, self.MODERATE, self.CRITICAL, self.CATASTROPHIC)
-
         for lens in toolbox.lenses.__all__:
             lens_package = f"detective.toolbox.lenses.{lens}"
             basic_checks = getattr(import_module(".basic_checks", lens_package), "BasicChecks")
@@ -46,7 +38,7 @@ class Detective:
                 found_risk = any(amount_of_risks > 0 for amount_of_risks in attack_risks_findings[toolbox.RiskLevels.NEGLIGIBLE:])
                 if found_risk:
                     self._attacks_logger.add_attack_attempt(client_ip, content, attack_risks_findings)
-                    if self._is_malicious_request(attack_risks_findings) or self._attacks_logger.is_continuity_attacks_in_continuity(client_ip):
+                    if self._is_malicious_request(attack_risks_findings) or self._attacks_logger.is_continuity_attacks(client_ip):
                         self._assistant.set_findings(attack_risks_findings)
                         self._assistant.set_info(lens[self.INFO_INDEX].category, attack_info)
                         self._parse_escape_characters(request)
@@ -68,7 +60,7 @@ class Detective:
 
     def _is_malicious_request(self, findings):
         impact_level = 0
-        for risk_occurrences, multiplying_factor in zip(findings[toolbox.RiskLevels.NEGLIGIBLE:], self._multiplying_factors):
+        for risk_occurrences, multiplying_factor in zip(findings[toolbox.RiskLevels.NEGLIGIBLE:], toolbox.risks_factors.__all__):
             impact_level += risk_occurrences * multiplying_factor
         return impact_level >= 1
 
