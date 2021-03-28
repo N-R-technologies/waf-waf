@@ -23,19 +23,14 @@ class GraphHandler:
         plt.rcdefaults()
 
     def create_graph(self, risks_found_today):
-        """
-        This function will create an image graph based on the lenses findings
-        :param risks_found_today: all the risk levels which were found today
-        :type risks_found_today: list
-        """
-        objects = tuple([risk_level for risk_level in vars(RiskLevels)["_member_names_"]])
+        objects = tuple([risk_level for risk_level in vars(RiskLevels)["_member_names_"]])[RiskLevels.NEGLIGIBLE:]
         y_pos = np.arange(len(objects))
         graph_colors = self._calculate_risk_colors(risks_found_today)
         y_limit = 5
-        if y_limit < max(risks_found_today[RiskLevels.NEGLIGIBLE:]) < 10:
+        if y_limit < max(risks_found_today) < 10:
             y_limit = 10
-        elif max(risks_found_today[RiskLevels.NEGLIGIBLE:]) > 10:
-            y_limit = max(risks_found_today[RiskLevels.NEGLIGIBLE:])
+        elif max(risks_found_today) > 10:
+            y_limit = max(risks_found_today)
         plt.ylim([0, y_limit])
         plt.locator_params(axis='y', nbins=y_limit)
         plt.xticks(y_pos, objects, fontsize=8)
@@ -53,8 +48,8 @@ class GraphHandler:
         :return: each of the risk levels colors
         :rtype: list
         """
-        graph_colors = [self.BLANK]
-        for risk_occurrences, multiplying_factor in zip(risks_found_today[RiskLevels.NEGLIGIBLE:], risks_factors.__all__):
+        graph_colors = []
+        for risk_occurrences, multiplying_factor in zip(risks_found_today, risks_factors.__all__):
             current_impact_level = risk_occurrences * multiplying_factor
             if self.GREEN_IMPACT <= current_impact_level < self.YELLOW_IMPACT:
                 graph_colors.append(self.GREEN)

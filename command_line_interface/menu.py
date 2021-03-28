@@ -15,14 +15,11 @@ class Menu:
         self._functions = []
         self._input_window = None
         self._ignore = False
-        if os.environ.get('DISPLAY','') == '':
+        if os.environ.get('DISPLAY', '') == '':
             print('no display found. Using :0.0')
             os.environ.__setitem__('DISPLAY', ':0.0')
     
     def clear(self):
-        """
-        This function will clear the terminal's screen
-        """
         os.system("clear")
 
     def add_option(self, str_display, function):
@@ -109,19 +106,10 @@ class Menu:
         input_window.mainloop()
 
     def close_input(self):
-        """
-        This function will close the tiny input GUI window
-        """
         self._input_window.destroy()
 
     def get_ignore(self):
-        """
-        This function will return the ignore property
-        """
         return self._ignore
 
     def reset_ignore(self):
-        """
-        This function will reset the ignore property to false
-        """
         self._ignore = False

@@ -25,10 +25,10 @@ info = {
                    "something less common.\n",
 
     "router username": "Your router's username has been found in our common router usernames database.\n"
-                              "You should change it to something less common.\n",
+                       "You should change it to something less common.\n",
 
     "router password": "Your router's password has been found in our common router passwords database.\n"
-                              "You should change it to something less common.\n",
+                       "You should change it to something less common.\n",
 
     "good password recommendation": "Remember, good and strong passwords must contain at "
                                     "least 8 characters, including\nboth, upper and lower case "

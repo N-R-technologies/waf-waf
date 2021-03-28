@@ -13,7 +13,6 @@ class Detective:
     _lenses = []
 
     def __init__(self):
-
         for lens in toolbox.lenses.__all__:
             lens_package = f"detective.toolbox.lenses.{lens}"
             basic_checks = getattr(import_module(".basic_checks", lens_package), "BasicChecks")

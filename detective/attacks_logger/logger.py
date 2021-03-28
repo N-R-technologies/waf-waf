@@ -2,7 +2,7 @@ from time import time, sleep
 from datetime import datetime
 from threading import Thread, Lock
 import sched
-from detective.toolbox import risks_factors
+from detective.toolbox import RiskLevels, risks_factors
 
 
 class AttacksLogger:
@@ -14,7 +14,7 @@ class AttacksLogger:
     _attacks_statistics_lock = Lock()
 
     def __init__(self):
-        open(self.ATTACKS_LOG_FILE_PATH, 'w').close()
+        self._clear_log()
         clear_attacks_log = Thread(target=self._schedule_clear_attacks_log)
         clear_attacks_log.start()
 
@@ -23,10 +23,10 @@ class AttacksLogger:
         attacker_ip_format = attacker_ip
         if "ffff:" in attacker_ip and len(attacker_ip) > 5:
             attacker_ip_format = attacker_ip[attacker_ip.find("ffff:") + 5:]
-        with open(self.ATTACKS_LOG_FILE_PATH, "a") as attacks_log_file:
+        with open(self.ATTACKS_LOG_FILE_PATH, 'a') as attacks_log_file:
             attacks_log_file.write(f"{attacker_ip_format},{current_date},{attack_content}\n")
             attacks_log_file.close()
-        for risk_occurrences, risk_factor in zip(risks_occurrences[1:], risks_factors.__all__):
+        for risk_occurrences, risk_factor in zip(risks_occurrences[RiskLevels.NEGLIGIBLE:], risks_factors.__all__):
             risk_impact = risk_occurrences * risk_factor
             if risk_impact < 1:
                 with self._attacks_statistics_lock:

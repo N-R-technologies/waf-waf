@@ -16,17 +16,10 @@ class NetworkScanner:
     _reporter = Reporter()
 
     def scan(self, router_username, router_password):
-        """
-        This function will scan the network
-        :param router_username: the username of the router
-        :param router_password: the password of the router
-        :type router_username: string
-        :type router_password: string
-        """
         ssid = self._runner.execute_operation("Receiving network's SSID", Colors.BLUE, self._scan_functions.get_ssid)
         if ssid is not None:
             results = dict()
-            results["evil twin"] = (self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid), Colors.WHITE)
+            results["Evil Twin"] = (self._runner.execute_operation("Checking Evil Twin", Colors.WHITE, self._scan_functions.check_evil_twin, ssid), Colors.WHITE)
             find_in_file = self._scan_functions.find_in_file
             results["Open SSID"] = (ssid != "--", Colors.BEIGE)
             results["Router SSID"] = (self._runner.execute_operation("Checking router's SSID", Colors.BEIGE, find_in_file, ssid, self.COMMON_SSIDS), Colors.BEIGE)
