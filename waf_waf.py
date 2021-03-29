@@ -38,6 +38,7 @@ class WAF:
             open(blacklist_file_path, 'w').close()
 
     def _write_server_info_configuration(self, first_request, server_info_file_path):
+        print("here")
         with open(server_info_file_path, 'w') as server_info_file:
             toml.dump({"host": first_request.host_header}, server_info_file)
             server_info_file.close()
