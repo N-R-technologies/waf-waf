@@ -29,7 +29,6 @@ class EmailSender:
             daily_log_mail["To"] = ", ".join(user_addresses)
             daily_log_mail["Date"] = formatdate(localtime=True)
             daily_log_mail["Subject"] = self.LOG_SUBJECT + date.today().strftime("%d/%m/%Y")
-            daily_log_description = ""
             with open(self.LOG_DESCRIPTION_FILE_PATH, 'r') as log_description_file:
                 daily_log_description = log_description_file.read()
                 log_description_file.close()
@@ -47,6 +46,10 @@ class EmailSender:
                 server_ssl.login(self._bot_address, self._bot_pass)
                 server_ssl.sendmail(daily_log_mail["From"], daily_log_mail["To"], daily_log_mail.as_string())
                 server_ssl.close()
+                # notify here everything went fine
+                # also check if the dict is empty
+            except smtplib.SMTPRecipientsRefused:
+                pass  # notify here that something went wrong
             except Exception:
                 pass
 
