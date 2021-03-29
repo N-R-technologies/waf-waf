@@ -1,6 +1,7 @@
 import os
 import toml
 from datetime import datetime
+import notify2
 
 
 class DataManager:
@@ -8,6 +9,7 @@ class DataManager:
     SERVER_INFO_FILE_PATH = "waf_data/server_info.toml"
     WRONG_DIAGNOSIS_FILE_PATH = "waf_data/wrong_diagnosis.waf_waf"
     WARNING_MSG_FILE_PATH = "waf_data/warning_message.txt"
+    ICONS_FILE_PATH = os.getcwd() + "/misc/icons/"
     WAF_DIAGNOSIS_HASH = "a7ac7ea7c7af02759b404c0ccd188045"
 
     _warning_msg_format = ""
@@ -26,10 +28,14 @@ class DataManager:
         return set(toml.load(self.BLACKLIST_FILE_PATH).get("blacklist", []))
 
     def add_client_to_blacklist(self, attacker_ip_address, blacklist):
+        if "ffff:" in attacker_ip_address and len(attacker_ip_address) > 5:
+            represent_ip = attacker_ip_address[attacker_ip_address.find("ffff:") + 5:]
         blacklist.add(attacker_ip_address)
         with open(self.BLACKLIST_FILE_PATH, 'w') as blacklist_file:
             toml.dump({"blacklist": blacklist}, blacklist_file)
             blacklist_file.close()
+        self._notify_user("Client Blocked", f"WAF WAF has blocked an attack attempt from {represent_ip}"
+                                            f"\nMore information can be found in the CLI", "hacker.png")
 
     def is_wrong_diagnosis_request(self, request):
         return request.method == "POST" and self.WAF_DIAGNOSIS_HASH in request.urlencoded_form.keys()
@@ -41,6 +47,8 @@ class DataManager:
         with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'a') as wrong_diagnosis_file:
             wrong_diagnosis_file.write(f"{client_ip_address},{current_date}\n")
             wrong_diagnosis_file.close()
+        self._notify_user("User Complained", f"The user with the ip {client_ip_address} has complain about wrong diagnosis\n"
+                                             f"More information can be found in the CLI", "complain.png")
 
     def get_warning_message(self, attempts_left, max_attack_attempts, referer):
         warning_msg = self._warning_msg_format.replace("{referer}", referer)
@@ -51,3 +59,10 @@ class DataManager:
         with open(self.SERVER_INFO_FILE_PATH, 'w') as server_info_file:
             toml.dump({"host": first_request.host_header}, server_info_file)
             server_info_file.close()
+
+    def _notify_user(self, title, content, icon_name):
+        notify2.init("WAF WAF")
+        icon_path = self.ICONS_FILE_PATH + icon_name
+        notifier = notify2.Notification(title, content, icon_path)
+        notifier.set_timeout(5000)
+        notifier.show()
