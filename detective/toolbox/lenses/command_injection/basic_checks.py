@@ -81,7 +81,7 @@ class BasicChecks:
     def server_running_path(potential_commands_list) -> RiskLevels:
         for command in potential_commands_list:
             if re.search(r"""pwd""", command):
-                return RiskLevels.MODERATE
+                return RiskLevels.CRITICAL
         return RiskLevels.NO_RISK
 
     @staticmethod
