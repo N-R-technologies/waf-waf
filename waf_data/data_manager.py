@@ -28,14 +28,15 @@ class DataManager:
         return set(toml.load(self.BLACKLIST_FILE_PATH).get("blacklist", []))
 
     def add_client_to_blacklist(self, attacker_ip_address, blacklist):
+        ip_representation = attacker_ip_address
         if "ffff:" in attacker_ip_address and len(attacker_ip_address) > 5:
-            represent_ip = attacker_ip_address[attacker_ip_address.find("ffff:") + 5:]
+            ip_representation = attacker_ip_address[attacker_ip_address.find("ffff:") + 5:]
         blacklist.add(attacker_ip_address)
         with open(self.BLACKLIST_FILE_PATH, 'w') as blacklist_file:
             toml.dump({"blacklist": blacklist}, blacklist_file)
             blacklist_file.close()
-        self._notify_user("Client Blocked", f"WAF WAF has blocked an attack attempt from {represent_ip}"
-                                            f"\nMore information can be found in the CLI", "hacker.png")
+        self._notify_user("Attacker Blocked", f"WAF WAF has blocked an attack attempt from {ip_representation}\n"
+                                              f"More information can be found in the CLI", "hacker.png")
 
     def is_wrong_diagnosis_request(self, request):
         return request.method == "POST" and self.WAF_DIAGNOSIS_HASH in request.urlencoded_form.keys()
@@ -47,8 +48,8 @@ class DataManager:
         with open(self.WRONG_DIAGNOSIS_FILE_PATH, 'a') as wrong_diagnosis_file:
             wrong_diagnosis_file.write(f"{client_ip_address},{current_date}\n")
             wrong_diagnosis_file.close()
-        self._notify_user("User Complained", f"The user with the ip {client_ip_address} has complain about wrong diagnosis\n"
-                                             f"More information can be found in the CLI", "complain.png")
+        self._notify_user("Client Complained", f"The client {client_ip_address} has complained about wrong diagnosis\n"
+                                               f"More information can be found in the CLI", "complain.png")
 
     def get_warning_message(self, attempts_left, max_attack_attempts, referer):
         warning_msg = self._warning_msg_format.replace("{referer}", referer)
