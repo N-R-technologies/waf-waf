@@ -47,7 +47,7 @@ class AttacksLogger:
             scheduler = sched.scheduler(time, sleep)
             scheduler.enter(self.SECONDS_IN_WEEK, 1, self._clear_log)
             scheduler.run()
-    
+
     def _clear_log(self):
         with self._attacks_log_lock:
             open(self.ATTACKS_LOG_FILE_PATH, 'w').close()
