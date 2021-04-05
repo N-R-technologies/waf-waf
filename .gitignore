@@ -164,8 +164,11 @@ waf_data/wrong_diagnosis.waf_waf
 detective/attacks_logger/attacks.waf_waf
 command_line_interface/network_scanner/data/logs/
 
+
 # Other
 Dockerfile
 run_demo.sh
 auto.py
 efficient_test.py
+QuickPasswords.txt
+test.py
