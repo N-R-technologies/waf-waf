@@ -170,5 +170,3 @@ Dockerfile
 run_demo.sh
 auto.py
 efficient_test.py
-QuickPasswords.txt
-test.py
