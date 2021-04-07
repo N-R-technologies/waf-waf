@@ -55,7 +55,7 @@ class EmailManager:
         self._email_manager_menu.close_input()
 
     def _call_add_email(self):
-        self._email_manager_menu.get_input(self._add_email, "Add New Email", "", "Name", "Address")
+        self._email_manager_menu.get_input(self._add_email, "Add Email", "", "Name", "Address")
 
     def _remove_email(self, email_index):
         email_index = email_index.get()

@@ -25,7 +25,7 @@ class MainMenu:
         scanner.scan(router_username, router_password)
 
     def _call_start_scan(self):
-        self._main_menu.get_input(self._start_scan, "Enter Router Credentials", '*',
+        self._main_menu.get_input(self._start_scan, "Router Credentials", '*',
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
 
@@ -42,7 +42,7 @@ class MainMenu:
         self._main_menu.close_input()
 
     def _call_get_attacks_ip(self):
-        self._main_menu.get_input(self._get_wrong_diagnosis_attack, "Enter the attacker IP you are looking for:", "", "Attacker IP")
+        self._main_menu.get_input(self._get_wrong_diagnosis_attack, "Wrong Diagnosis", "", "Client IP")
 
     def _print_wrong_diagnosis(self):
         if not os.path.exists(self.WRONG_DIAGNOSIS_FILE):
@@ -50,7 +50,7 @@ class MainMenu:
         with open(self.WRONG_DIAGNOSIS_FILE, 'r') as wrong_diagnosis_file:
             for wrong_diagnosis in wrong_diagnosis_file:
                 wrong_diagnosis_info = tuple(wrong_diagnosis.split(","))
-                print(f"Attacker IP: {wrong_diagnosis_info[0]}, Attack date: {wrong_diagnosis_info[1]}")
+                print(f"IP: {wrong_diagnosis_info[0]}, Attack date: {wrong_diagnosis_info[1]}")
             wrong_diagnosis_file.close()
 
     def _create_login_url_configuration(self):
@@ -60,7 +60,7 @@ class MainMenu:
 
     def _get_login_url(self):
         self._create_login_url_configuration()
-        self._main_menu.get_input(self._edit_login_url, "Enter your website's login URL", "", "Login URL")
+        self._main_menu.get_input(self._edit_login_url, "Modify URL", "", "Login URL")
 
     def _edit_login_url(self, login_url_entity):
         login_url = login_url_entity.get()
