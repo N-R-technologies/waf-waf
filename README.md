@@ -15,7 +15,7 @@ docker pull wafwafdetective/waf_waf:V1.1
 ```
 
 ## Usage
-Can be found in the [WAF WAF Manual](https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf/-/blob/fifth_sprint/manual/waf_waf_manual.md), or in the docker at `waf_waf/manual/manual.md`.
+Can be found in the [WAF WAF Manual](https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf/-/blob/fifth_sprint/manual/manual.md), or in the docker at `waf_waf/manual/manual.md`.
 
 ## Features & Technology
 At the end of each day, an email attached with a detailed log will be sent, containing information about all the attempted attacks on the server.<br>
