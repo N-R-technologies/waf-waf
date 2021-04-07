@@ -57,7 +57,7 @@ class EmailSender:
                 self._notify_user("Authentication Error!", "WAF WAF account failed to authenticate\n"
                                                            "Please contact the manufacturers", "lock.png")
             except smtplib.SMTPRecipientsRefused:
-                self._notify_user("Refuse Error!", "All recipients have refused to receive the daily log", "refuse.png")
+                self._notify_user("Mass Refuse Error!", "All recipients have refused to receive the daily log", "refuse.png")
             except smtplib.SMTPException:
                 self._notify_user("Unexpected Error!", "An error has occurred while sending the daily log", "error.png")
 

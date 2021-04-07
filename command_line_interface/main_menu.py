@@ -29,7 +29,7 @@ class MainMenu:
                                   "Router's username. If you don't know, leave blank",
                                   "Router's password. If you don't know, leave blank")
 
-    def _get_wrong_diagnosis_attack(self, client_ip_address):
+    def _get_client_attacks_log(self, client_ip_address):
         client_ip_address = client_ip_address.get()
         if not os.path.exists(self.ATTACKS_LOG_FILE):
             open(self.ATTACKS_LOG_FILE, 'w').close()
@@ -41,8 +41,8 @@ class MainMenu:
             attacks_file.close()
         self._main_menu.close_input()
 
-    def _call_get_attacks_ip(self):
-        self._main_menu.get_input(self._get_wrong_diagnosis_attack, "Wrong Diagnosis", "", "Client IP")
+    def _call_get_client_attacks_log(self):
+        self._main_menu.get_input(self._get_client_attacks_log, "Detected Attacks", "", "Client IP")
 
     def _print_wrong_diagnosis(self):
         if not os.path.exists(self.WRONG_DIAGNOSIS_FILE):
@@ -89,11 +89,10 @@ class MainMenu:
         self._main_menu.clear()
         self._main_menu.add_option("1. Start the network scan", self._call_start_scan)
         self._main_menu.add_option("2. Manage your emails configuration file", self._manage_emails)
-        self._main_menu.add_option("3. Get help and explanation about our tool", self._print_help)
-        self._main_menu.add_option("4. Modify your site's URL. In order to improve and to be more precise\n   "
-                                   "in our brute force detection, we should know what is your sites' login URL", self._get_login_url)
-        self._main_menu.add_option("5. Get all users whose complainant that our WAF made a mistake by blocking them", self._print_wrong_diagnosis)
-        self._main_menu.add_option("6. Get specific IP attacks", self._call_get_attacks_ip)
+        self._main_menu.add_option("3. Modify your site's URL", self._get_login_url)
+        self._main_menu.add_option("4. See wrong diagnosis file", self._print_wrong_diagnosis)
+        self._main_menu.add_option("5. Get specific IP attacks", self._call_get_client_attacks_log)
+        self._main_menu.add_option("6. Get help and explanation about WAF WAF", self._print_help)
         self._main_menu.add_option("7. Exit (or simply press Q)", "exit")
         for menu_item in range(len(self._main_menu.menu)):
             if self._main_menu.controller[menu_item] == 1:
