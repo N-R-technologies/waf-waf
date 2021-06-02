@@ -8,17 +8,17 @@ from misc import Colors
 
 
 class EmailManager:
-    USER_EMAILS_FILE_PATH = "../logger/data/user_emails.toml"
+    USER_EMAILS_FILE_PATH = "logger/data/user_emails.toml"
 
     _user_emails = dict()
 
     def __init__(self):
         self._email_manager_menu = Menu()
+        if os.environ.get('DISPLAY', '') == '':
+            print('no display found. Using :0.0')
+            os.environ.__setitem__('DISPLAY', ':0.0')
 
     def _display_emails(self):
-        """
-        This function will display all the existing emails to the user
-        """
         self._user_emails = dict()
         if os.path.exists(self.USER_EMAILS_FILE_PATH):
             self._user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
@@ -30,13 +30,6 @@ class EmailManager:
             index += 1
 
     def _add_email(self, name, address):
-        """
-        This function will add an email to the configuration file
-        :param name: the email owner name
-        :param address: the email address
-        :type name: tkinter.Entry
-        :type address: tkinter.Entry
-        """
         name = name.get()
         address = address.get()
         valid_email = True
@@ -62,18 +55,9 @@ class EmailManager:
         self._email_manager_menu.close_input()
 
     def _call_add_email(self):
-        """
-        This function will call the add_email function
-        with the appropriate parameters
-        """
-        self._email_manager_menu.get_input(self._add_email, "Add New Email", "", "Name", "Address")
+        self._email_manager_menu.get_input(self._add_email, "Add Email", "", "Name", "Address")
 
     def _remove_email(self, email_index):
-        """
-        This function will remove an email from the configuration file
-        :param email_index: the index of the email to remove in the list
-        :type email_index: tkinter.Entry
-        """
         email_index = email_index.get()
         user_emails = toml.load(self.USER_EMAILS_FILE_PATH).get("emails", {})
         if not email_index.isdigit():
@@ -100,45 +84,21 @@ class EmailManager:
         self._email_manager_menu.close_input()
 
     def _call_remove_email(self):
-        """
-        This function will call the add_email function
-        with the appropriate parameters
-        """
         self._display_emails()
         if len(self._user_emails) > 0:
             print("\nPlease enter the index of the email you wish to remove")
             self._email_manager_menu.get_input(self._remove_email, "Remove Email", "", "Index")
 
     def _is_valid_address(self, address):
-        """
-        This function will check if the given email address is valid
-        :param address: the email address to check
-        :type address: string
-        :return: True if valid, otherwise, False
-        :rtype: boolean
-        """
         return re.search(r"""^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$""", address)
 
     def _is_valid_name(self, name, user_names):
-        """
-        This function will check if the given name is valid,
-        which means if its not already exists
-        :param name: the new name to check
-        :param user_names: the existing user names
-        :type name: string
-        :type user_names: list
-        :return: True if valid, otherwise, False
-        :rtype: boolean
-        """
         for existing_name in user_names:
             if name == existing_name:
                 return False
         return True
 
     def start_manage_emails(self):
-        """
-        This function will start the emails manager menu
-        """
         self._email_manager_menu.add_option("1. Display all the emails", self._display_emails)
         self._email_manager_menu.add_option("2. Add an email to the list", self._call_add_email)
         self._email_manager_menu.add_option("3. Remove an email from the list", self._call_remove_email)

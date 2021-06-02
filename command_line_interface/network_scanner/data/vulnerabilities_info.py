@@ -20,15 +20,15 @@ info = {
                  "   Pay attention, these steps are not the same for all kind of routers, so if you can't find\n"
                  "   the exact key words, try looking for similar ones instead.\n",
 
-    "common ssid": "Your router's SSID has been found in our common SSID names database. "
+    "router ssid": "Your router's SSID has been found in our common SSID names database. "
                    "This is not safe at all!\nWe recommended you to change your network's SSID to "
                    "something less common.\n",
 
-    "common router username": "Your router's username has been found in our common router usernames database.\n"
-                              "You should change it to something less common.\n",
+    "router username": "Your router's username has been found in our common router usernames database.\n"
+                       "You should change it to something less common.\n",
 
-    "common router password": "Your router's password has been found in our common router passwords database.\n"
-                              "You should change it to something less common.\n",
+    "router password": "Your router's password has been found in our common router passwords database.\n"
+                       "You should change it to something less common.\n",
 
     "good password recommendation": "Remember, good and strong passwords must contain at "
                                     "least 8 characters, including\nboth, upper and lower case "

@@ -1,11 +1,11 @@
 import re
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class BasicChecks:
     @staticmethod
     def cstyle_comment(request) -> RiskLevels:
-        return RiskLevels.NEGLIGIBLE if re.search(r"""\/\*.*?\*\/""", request) else RiskLevels.NO_RISK
+        return RiskLevels.NEGLIGIBLE if re.search(r"""/\*.*?\*/""", request) else RiskLevels.NO_RISK
 
     @staticmethod
     def find_in_set(request) -> RiskLevels:

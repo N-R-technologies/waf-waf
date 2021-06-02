@@ -150,14 +150,22 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-
-# Our WAF project's files
+## WAF WAF files
+# Configurations
 waf_data/blacklist.toml
 waf_data/server_info.toml
-waf_data/wrong_diagnosis.toml
-detective/attacks_logger/attacks.toml
 logger/data/bot_email.toml
 logger/data/user_emails.toml
+
+# Logs
 logger/data/logs/
 logger/data/graphs/
+waf_data/wrong_diagnosis.waf_waf
+detective/attacks_logger/attacks.waf_waf
 command_line_interface/network_scanner/data/logs/
+
+# Other
+Dockerfile
+run_demo.sh
+auto.py
+efficient_test.py

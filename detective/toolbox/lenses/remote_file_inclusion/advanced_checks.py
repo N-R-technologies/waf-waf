@@ -1,6 +1,6 @@
 import re
 import toml
-from detective.toolbox.risk_levels import RiskLevels
+from detective.toolbox import RiskLevels
 
 
 class AdvancedChecks:

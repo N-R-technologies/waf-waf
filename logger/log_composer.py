@@ -15,9 +15,6 @@ class LogComposer:
     _daily_log = FPDF()
 
     def __init__(self):
-        """
-        This function will initialize the pdf log document and will set the title
-        """
         self._daily_log.add_page()
         self._load_calibri_font(self.CALIBRI_BOLD_FILE_PATH, self.CALIBRI_LIGHT_FILE_PATH)
         self._set_main_page(self.LOG_TITLE)
@@ -37,11 +34,6 @@ class LogComposer:
         os.remove(calibri_light_configuration)
 
     def _set_main_page(self, log_title):
-        """
-        This function will write the log's main page date, title and background
-        :param log_title: the title of the main page
-        :type log_title: string
-        """
         self._daily_log.image(self.BACKGROUND_FILE_PATH, x=0, y=0, w=200, h=300)
         self._daily_log.set_font("Calibri Light", size=12)
         self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align='R')
@@ -49,12 +41,6 @@ class LogComposer:
         self._daily_log.cell(w=200, h=250, txt=log_title, ln=1, align='C')
 
     def write_log(self, info):
-        """
-        This function will write all the attacks information
-        into the daily log file and will save it
-        :param info: all the attacks information
-        :type info: dict
-        """
         for attack_name, attack_info in info.items():
             self._daily_log.add_page()
             self._set_page_header(attack_name)
@@ -65,11 +51,6 @@ class LogComposer:
         self._daily_log.output(self.LOG_FILE_PATH + date.today().strftime("%d_%m_%Y") + ".pdf")
 
     def _set_page_header(self, title):
-        """
-        This function will write the the log's page date, title and background
-        :param title: the title of the page
-        :type title: string
-        """
         self._daily_log.image(self.BACKGROUND_FILE_PATH, x=0, y=0, w=200, h=300)
         self._daily_log.set_font("Calibri Light", size=12)
         self._daily_log.cell(w=190, h=5, txt=date.today().strftime("%d/%m/%Y"), ln=1, align='R')
@@ -77,13 +58,6 @@ class LogComposer:
         self._daily_log.cell(w=200, h=20, txt=title, ln=1, align='C')
 
     def _add_graph(self, graph_title, graph_file_path):
-        """
-        This function will add the risks graph to the daily log
-        :param graph_title: the graph's page title
-        :param graph_file_path: the graph's file path
-        :type graph_title: string
-        :type graph_file_path: string
-        """
         self._daily_log.add_page()
         self._set_page_header(graph_title)
         self._daily_log.image(graph_file_path, x=-10, y=35, w=240, h=230)

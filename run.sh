@@ -1,13 +1,39 @@
 #!/bin/bash
 
-dvwa="dvwa"
+main()
+{
+    h_flag="-h"
+    help_flag="--help"
 
-if [ "$dvwa" = "$1" ]; then
-    docker run --rm -d -p 7777:80 vulnerables/web-dvwa #run the docker contain for the website
-    firefox http://localhost:7891/login.php & #run the firefox browser in the address of the docker container
-    mitmproxy -p 7891 -m reverse:http://localhost:7777 -s waf_waf.py # run the mimtproxy in reverse mode on localhost port 7777
-else
-    docker run --rm -d -p 1234:8000 appsecco/dsvw #run the docker contain for apseco website
-    firefox http://localhost:4567/ & #run the firefox browser in the address of the docker container
-    mitmproxy -p 4567 -m reverse:http://localhost:1234 -s waf_waf.py # run the mimtproxy in reverse mode on localhost port 7777
-fi
+    cd waf_waf
+    if [ $# -eq 0 ]; then
+        read -p "Enter site's URL: " url
+        read -p "Enter users accessing port: " port
+        mitmproxy -p "$port" -m reverse:"$url" -s waf_waf.py
+    elif [ $# -eq 2 ]; then
+        mitmproxy -p "$2" -m reverse:"$1" -s waf_waf.py
+    elif [ "$1" = "$h_flag" ] || [ "$1" = "$help_flag" ]; then
+        print_help
+    else
+        echo "Invalid option."
+        echo "Try './run.sh --help' for more information."
+    fi
+}
+
+print_help()
+{
+    echo "Usage: ./run.sh <URL> <PORT>"
+    echo "Starts WAF WAF, the servers watchdog."
+    echo
+    echo "Examples:"
+    echo "./run.sh localhost:7777 7891"
+    echo "./run.sh http://localhost:80 1234"
+    echo
+    echo "When URL is -, read standard input."
+    echo "  -h, --help     Display this message and exit."
+    echo
+    echo "Report bugs to: wafdetectivebot@gmail.com."
+    echo "Full documentation in the docker at: waf_waf/manual/manual.md."
+}
+
+main "$@"; exit
