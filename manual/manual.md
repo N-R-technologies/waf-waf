@@ -1,4 +1,4 @@
-# WAF WAF 1.1 Manual
+# WAF WAF V1.1 Manual
 <div align="center">
 ![waf waf logo](misc/logo.png)
 </div>
