@@ -1,7 +1,7 @@
 # WAF WAF V1.1 Manual
-<div align="center">
-![waf waf logo](misc/logo.png)
-</div>
+<p align="center">
+  <img src="https://github.com/N-R-technologies/WAF-WAF/blob/master/misc/logo.png" alt="WAF WAF logo">
+</p>
 
 # Getting started
 ## Installation
