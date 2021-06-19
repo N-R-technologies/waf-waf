@@ -52,7 +52,7 @@ Information about the different notifications can be found in the WAF WAF manual
 If using WAF WAF on your local machine, the notifications are already installed.<br>
 If using docker, you may download an extension on your local machine that will display the notifications.<br>
 On top of that, you may also download icons that will make the notifications more interactive.<br>
-Click [here](https://drive.google.com/drive/folders/11Bm9YtwWrHXmXJhasSBlUgZx7g0BBXRN?usp=sharing) to download the notifications. If downloaded, make sure to place the icons folder in the same path as the notifications server file.<br>
+Click [here](https://drive.google.com/drive/folders/11Bm9YtwWrHXmXJhasSBlUgZx7g0BBXRN?usp=sharing) to download the extension. If downloaded, make sure to place the icons folder in the same path as the notifications server file.<br>
 
 ## WAF WAF Automation
 Still not convinced WAF WAF is the best?<br>
