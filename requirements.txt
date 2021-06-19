@@ -1,0 +1,6 @@
+toml==0.10.2
+mitmproxy==5.3.0
+notify2==0.3.1
+fpdf==1.7.2
+matplotlib==3.3.3
+curtsies==0.3.4
