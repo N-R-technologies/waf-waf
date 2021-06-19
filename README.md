@@ -24,7 +24,7 @@ docker pull wafwafdetective/waf_waf:V1.1
 ```
 
 ## Usage
-Can be found in the [WAF WAF Manual](https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf/-/blob/fifth_sprint/manual/manual.md).<br>
+Can be found in the [WAF WAF Manual](https://gitlab.com/magshimim-markez-2021/10/1003/pardes-hana-1003-waf/-/blob/master/manual/manual.md).<br>
 The manual is also installed with WAF WAF at `waf_waf/manual/manual.md`.
 
 ## Features & Technology
