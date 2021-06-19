@@ -8,7 +8,7 @@ WAF WAF is an open-source advanced web application firewall that works with a sm
 With an interactive CLI you can easily scan weaknesses on your local network, configure WAF WAF, and see what is happening on your server.
 
 ## Installation
-You are able to use WAF WAF from both, your local machine and [docker](https://docs.docker.com/).
+You are able to use WAF WAF on both, your local machine and [docker](https://docs.docker.com/).
 
 ### Local Machine
 After downloading WAF WAF, you first need to run the following command to install requirements:
