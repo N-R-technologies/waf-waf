@@ -38,15 +38,6 @@ WAF WAF Version 1.1 is capable of protecting servers from the following attacks:
 - XSS
 - XXE
 
-## Flow
-```mermaid
-graph LR
-
-Client--Request-->WAF{WAF WAF}
-WAF--Secured and Harmless Request-->Server
-WAF--Malicious Request-->D&B(Drop Request & Block Connection)
-```
-
 ## WAF WAF Notifications
 Information about the different notifications can be found in the WAF WAF manual.<br>
 If using WAF WAF on your local machine, the notifications are already installed.<br>
