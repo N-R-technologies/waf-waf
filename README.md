@@ -1,7 +1,6 @@
 # WAF WAF V1.1
 <p align="center">
   <img src="misc/logo.png" alt="WAF WAF logo">
-  
 </p>
 
 # Summary
