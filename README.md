@@ -50,8 +50,10 @@ Click [here](https://drive.google.com/drive/folders/11Bm9YtwWrHXmXJhasSBlUgZx7g0
 Still not convinced WAF WAF is the best?<br>
 Click [here](https://drive.google.com/drive/folders/1pBd6fWv1kkBuKZqtJfThHg1Jn0sRj42d?usp=sharing) to download a VM we have made for you, showing what WAF WAF can really do.
 
-# Contact
+## Contact
 We would like to hear reviews about WAF WAF!<br>
 Contact us at [wafdetectivebot@gmail.com](mailto:wafdetectivebot@gmail.com).
 
-### All rights reserved to our developers, Noam Mizrahi & Ron Konis
+## License
+Distributed under the MIT License. See LICENSE.txt for more information.
+
