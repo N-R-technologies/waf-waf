@@ -5,7 +5,8 @@
   [![Python 3.8](https://img.shields.io/badge/Python-3.8-yellow.svg)](https://www.python.org/) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 </div>
 
-## Summary
+<hr>
+
 WAF WAF is an open-source advanced web application firewall that works with a smart and new detection technology, achieving 99% of precise answers!<br>
 With an interactive CLI you can easily scan weaknesses on your local network, configure WAF WAF, and see what is happening on your server.
 
